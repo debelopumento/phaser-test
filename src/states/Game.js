@@ -8,11 +8,15 @@ export default class extends Phaser.State {
   preload() {}
 
   create() {
-    //create world
+    //initial physics in world
     this.physics.startSystem(Phaser.Physics.ARCADE);
 
     this.add.sprite(0, 0, 'star');
 
+    this.ledges = this.add.group();
+    this.ledges.enableBody = true;
+
+    //create ledges
     this.ledge = new StaticAsset({
       game: this,
       x: 50,
@@ -69,7 +73,6 @@ export default class extends Phaser.State {
       asset: 'dude',
     });
     this.add.existing(this.player);
-    this.physics.arcade.enable(this.player);
     this.player.body.bounce.y = 0.2;
     this.player.body.gravity.y = 400;
     this.player.body.collideWorldBounds = true;
