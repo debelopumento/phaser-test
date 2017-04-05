@@ -67,7 +67,7 @@ export default class extends Phaser.State {
 
     //create player
     this.player = new Player({
-      game: this,
+      game: this.game,
       x: 50,
       y: 150,
       asset: 'dude',
@@ -76,7 +76,8 @@ export default class extends Phaser.State {
     this.player.body.bounce.y = 0.2;
     this.player.body.gravity.y = 400;
     this.player.body.collideWorldBounds = true;
-
+    this.player.animations.add('run', [5, 6, 7, 8], 10, true);
+    this.player.animations.play('run');
     //this.cursors = this.input.keyboard.createCursorKeys();
   }
 
