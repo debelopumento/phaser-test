@@ -3961,10 +3961,14 @@ var Player = function (_Phaser$Sprite) {
         _this.game = game;
         _this.anchor.setTo(0, 0);
         game.physics.arcade.enable(_this);
+        _this.body.gravity.y = 980;
+        _this.body.collideWorldBounds = false;
+        _this.body.bounce.y = 0.2;
+
         game.input.onUp.add(function () {
-            _this.position.y -= 100;
+            _this.body.velocity.y = -400;
         });
-        _this.frame = 7;
+
         var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 
         function startSpeechRecognition() {
@@ -4230,21 +4234,25 @@ var _class = function (_Phaser$State) {
 
       this.add.sprite(0, 0, 'star');
 
+      //create ledge group
       this.ledges = this.add.group();
+      this.physics.arcade.enable(this.ledges);
       this.ledges.enableBody = true;
 
-      //create ledges
+      //generate ledge and add it to ledge group
       this.ledge = new _staticAsset2.default({
         game: this,
         x: 50,
         y: 250,
         asset: 'platform'
       });
-      this.add.existing(this.ledge);
-      this.ledge.scale.setTo(0.5, 0.9);
       this.physics.arcade.enable(this.ledge);
+      this.ledge.scale.setTo(0.5, 0.9);
       this.ledge.enableBody = true;
       this.ledge.body.immovable = true;
+      this.ledges.add(this.ledge);
+
+      //create ledges
 
       this.ledge2 = new _staticAsset2.default({
         game: this,
@@ -4257,6 +4265,7 @@ var _class = function (_Phaser$State) {
       this.physics.arcade.enable(this.ledge2);
       this.ledge2.enableBody = true;
       this.ledge2.body.immovable = true;
+      this.ledges.add(this.ledge2);
 
       this.ledge3 = new _staticAsset2.default({
         game: this,
@@ -4269,6 +4278,7 @@ var _class = function (_Phaser$State) {
       this.physics.arcade.enable(this.ledge3);
       this.ledge3.enableBody = true;
       this.ledge3.body.immovable = true;
+      this.ledges.add(this.ledge3);
 
       this.ledge4 = new _staticAsset2.default({
         game: this,
@@ -4281,6 +4291,7 @@ var _class = function (_Phaser$State) {
       this.physics.arcade.enable(this.ledge4);
       this.ledge4.enableBody = true;
       this.ledge4.body.immovable = true;
+      this.ledges.add(this.ledge4);
 
       //create player
       this.player = new _player2.default({
@@ -4290,26 +4301,13 @@ var _class = function (_Phaser$State) {
         asset: 'dude'
       });
       this.add.existing(this.player);
-      this.player.body.bounce.y = 0.2;
-      this.player.body.gravity.y = 400;
-      this.player.body.collideWorldBounds = true;
       this.player.animations.add('run', [5, 6, 7, 8], 10, true);
       this.player.animations.play('run');
-      //this.cursors = this.input.keyboard.createCursorKeys();
     }
   }, {
     key: 'update',
     value: function update() {
-      //setInterval(this.generateLedge, 1000);
-      //console.log(this.game.physics.arcade.collide);
-      this.physics.arcade.collide(this.player, this.ledge);
-      this.physics.arcade.collide(this.player, this.ledge2);
-      this.physics.arcade.collide(this.player, this.ledge3);
-      this.physics.arcade.collide(this.player, this.ledge4);
-
-      //if (this.cursors.space.isDown) {
-      //  this.player.body.position.y += 100;
-      //}
+      this.physics.arcade.collide(this.player, this.ledges);
     }
   }, {
     key: 'render',

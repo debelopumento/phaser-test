@@ -6,10 +6,14 @@ export default class Player extends Phaser.Sprite {
         this.game = game;
         this.anchor.setTo(0, 0);
         game.physics.arcade.enable(this);
+        this.body.gravity.y = 980;
+        this.body.collideWorldBounds = false;
+        this.body.bounce.y = 0.2;
+
         game.input.onUp.add(() => {
-            this.position.y -= 100;
+            this.body.velocity.y = -400;
         });
-        this.frame = 7;
+
         const SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 
         function startSpeechRecognition() {
