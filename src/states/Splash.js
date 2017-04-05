@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { centerGameObjects } from '../utils';
 
-export default class extends Phaser.State {
+export default class SplashState extends Phaser.State {
   init() {}
 
   preload() {
@@ -23,6 +23,7 @@ export default class extends Phaser.State {
     this.load.spritesheet('dude', 'assets/images/dude.png', 32, 48);
     this.load.image('mushroom', 'assets/images/mushroom2.png');
     this.load.image('platform', 'assets/images/platform.png');
+    this.load.image('button', 'assets/images/button.png', 40, 10, 3);
   }
 
   create() {
