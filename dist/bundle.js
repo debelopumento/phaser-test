@@ -4341,7 +4341,7 @@ var GameState = function (_Phaser$State) {
 
       //generate ledge and add it to ledge group
       var ledgeXPosition = 50;
-      var ledgeYPosition = _config2.default.gameHeight * (2 / 3);
+      var ledgeYPosition = _config2.default.gameHeight / 2;
       for (var i = 0; i <= 5; i++) {
         this.ledge = new _staticAsset2.default({
           game: this,
@@ -4357,7 +4357,11 @@ var GameState = function (_Phaser$State) {
         this.ledges.add(this.ledge);
         console.log('ledge', i, ' ', this.ledge.x, ', ', this.ledge.y);
         ledgeXPosition = ledgeXPosition + 150;
-        ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-150, 150);
+        if (ledgeYPosition < _config2.default.gameHeight - 150 && ledgeYPosition > 150) {
+          ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-150, 150);
+        } else {
+          ledgeYPosition = _config2.default.gameHeight / 2 + (0, _getRandomInt2.default)(-150, 150);
+        }
       }
 
       //create player

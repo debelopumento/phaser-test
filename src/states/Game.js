@@ -22,7 +22,7 @@ export default class GameState extends Phaser.State {
 
     //generate ledge and add it to ledge group
     let ledgeXPosition = 50;
-    let ledgeYPosition = config.gameHeight * (2 / 3);
+    let ledgeYPosition = config.gameHeight / 2;
     for (let i = 0; i <= 5; i++) {
       this.ledge = new StaticAsset({
         game: this,
@@ -38,7 +38,11 @@ export default class GameState extends Phaser.State {
       this.ledges.add(this.ledge);
       console.log('ledge', i, ' ', this.ledge.x, ', ', this.ledge.y);
       ledgeXPosition = ledgeXPosition + 150;
-      ledgeYPosition = ledgeYPosition + getRandomInt(-150, 150);
+      if (ledgeYPosition < config.gameHeight - 150 && ledgeYPosition > 150) {
+        ledgeYPosition = ledgeYPosition + getRandomInt(-150, 150);
+      } else {
+        ledgeYPosition = config.gameHeight / 2 + getRandomInt(-150, 150);
+      }
     }
 
     //create player
