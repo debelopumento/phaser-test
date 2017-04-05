@@ -8,7 +8,7 @@ export default class Player extends Phaser.Sprite {
         game.physics.arcade.enable(this);
         this.body.gravity.y = 980;
         this.body.collideWorldBounds = false;
-        this.body.bounce.y = 0.2;
+        this.body.bounce.y = 0.1;
 
         game.input.onUp.add(() => {
             this.body.velocity.y = -400;

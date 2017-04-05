@@ -144,12 +144,12 @@
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 315);
+/******/ 	return __webpack_require__(__webpack_require__.s = 317);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 118:
+/***/ 120:
 /* unknown exports provided */
 /* all exports used */
 /*!******************************!*\
@@ -349,12 +349,12 @@ process.umask = function() { return 0; };
   \**************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["Phaser"] = __webpack_require__(/*! -!./phaser-split.js */ 311);
+/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["Phaser"] = __webpack_require__(/*! -!./phaser-split.js */ 313);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../webpack/buildin/global.js */ 49)))
 
 /***/ }),
 
-/***/ 310:
+/***/ 312:
 /* unknown exports provided */
 /* all exports used */
 /*!****************************************!*\
@@ -14003,7 +14003,7 @@ World.prototype.raycast = function(result, ray){
 
 /***/ }),
 
-/***/ 311:
+/***/ 313:
 /* unknown exports provided */
 /* all exports used */
 /*!**************************************************!*\
@@ -97555,11 +97555,11 @@ PIXI.TextureSilentFail = true;
 * "What matters in this life is not what we do but what we do for others, the legacy we leave and the imprint we make." - Eric Meyer
 */
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../process/browser.js */ 118)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../process/browser.js */ 120)))
 
 /***/ }),
 
-/***/ 312:
+/***/ 314:
 /* unknown exports provided */
 /* all exports used */
 /*!******************************************!*\
@@ -105077,7 +105077,7 @@ PIXI.TextureUvs = function()
 
 /***/ }),
 
-/***/ 315:
+/***/ 317:
 /* unknown exports provided */
 /* all exports used */
 /*!******************************************!*\
@@ -105085,10 +105085,10 @@ PIXI.TextureUvs = function()
   \******************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! pixi */87);
-__webpack_require__(/*! p2 */88);
+__webpack_require__(/*! pixi */88);
+__webpack_require__(/*! p2 */89);
 __webpack_require__(/*! phaser */28);
-module.exports = __webpack_require__(/*! webfontloader */89);
+module.exports = __webpack_require__(/*! webfontloader */90);
 
 
 /***/ }),
@@ -105126,7 +105126,7 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 87:
+/***/ 88:
 /* unknown exports provided */
 /* all exports used */
 /*!******************************************!*\
@@ -105134,12 +105134,12 @@ module.exports = g;
   \******************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["PIXI"] = __webpack_require__(/*! -!./pixi.js */ 312);
+/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["PIXI"] = __webpack_require__(/*! -!./pixi.js */ 314);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../webpack/buildin/global.js */ 49)))
 
 /***/ }),
 
-/***/ 88:
+/***/ 89:
 /* unknown exports provided */
 /* all exports used */
 /*!****************************************!*\
@@ -105147,12 +105147,12 @@ module.exports = g;
   \****************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["p2"] = __webpack_require__(/*! -!./p2.js */ 310);
+/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["p2"] = __webpack_require__(/*! -!./p2.js */ 312);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../webpack/buildin/global.js */ 49)))
 
 /***/ }),
 
-/***/ 89:
+/***/ 90:
 /* unknown exports provided */
 /* all exports used */
 /*!******************************************!*\
