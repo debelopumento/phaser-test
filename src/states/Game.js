@@ -27,7 +27,7 @@ export default class extends Phaser.State {
 
     this.ledge2 = new StaticAsset({
       game: this,
-      x: 350,
+      x: 250,
       y: 200,
       asset: 'platform',
     });
@@ -39,7 +39,7 @@ export default class extends Phaser.State {
 
     this.ledge3 = new StaticAsset({
       game: this,
-      x: 650,
+      x: 500,
       y: 300,
       asset: 'platform',
     });
@@ -49,41 +49,41 @@ export default class extends Phaser.State {
     this.ledge3.enableBody = true;
     this.ledge3.body.immovable = true;
 
-    this.ledge3 = new StaticAsset({
+    this.ledge4 = new StaticAsset({
       game: this,
-      x: 850,
+      x: 750,
       y: 300,
       asset: 'platform',
     });
-    this.add.existing(this.ledge3);
-    this.ledge3.scale.setTo(0.5, 0.9);
-    this.physics.arcade.enable(this.ledge3);
-    this.ledge3.enableBody = true;
-    this.ledge3.body.immovable = true;
+    this.add.existing(this.ledge4);
+    this.ledge4.scale.setTo(0.5, 0.9);
+    this.physics.arcade.enable(this.ledge4);
+    this.ledge4.enableBody = true;
+    this.ledge4.body.immovable = true;
 
     //create player
     this.player = new Player({
       game: this,
-      x: 100,
+      x: 50,
       y: 150,
       asset: 'dude',
     });
     this.add.existing(this.player);
-    this.game.physics.arcade.enable(this.player);
+    this.physics.arcade.enable(this.player);
     this.player.body.bounce.y = 0.2;
-    this.player.body.gravity.y = 300;
+    this.player.body.gravity.y = 400;
     this.player.body.collideWorldBounds = true;
 
-    this.cursors = this.input.keyboard.createCursorKeys();
+    //this.cursors = this.input.keyboard.createCursorKeys();
   }
 
   update() {
     //setInterval(this.generateLedge, 1000);
     //console.log(this.game.physics.arcade.collide);
     this.physics.arcade.collide(this.player, this.ledge);
-    //this.physics.arcade.collide(this.player, this.ledge2);
+    this.physics.arcade.collide(this.player, this.ledge2);
     this.physics.arcade.collide(this.player, this.ledge3);
-    //this.physics.arcade.collide(this.player, this.ledge4);
+    this.physics.arcade.collide(this.player, this.ledge4);
 
     //if (this.cursors.space.isDown) {
     //  this.player.body.position.y += 100;

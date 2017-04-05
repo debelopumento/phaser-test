@@ -8,7 +8,7 @@ export default class extends Phaser.Sprite {
 
     update() {
         //this.angle += 1;
-        this.position.x -= 2;
+        this.position.x -= 2.5;
 
         //generate a random integer between two values
         function getRandomInt(min, max) {
