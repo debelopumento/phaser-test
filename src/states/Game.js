@@ -74,14 +74,20 @@ export default class extends Phaser.State {
     this.player.body.gravity.y = 300;
     this.player.body.collideWorldBounds = true;
 
-    //const cursors = this.game.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.createCursorKeys();
   }
 
   update() {
     //setInterval(this.generateLedge, 1000);
     //console.log(this.game.physics.arcade.collide);
     this.physics.arcade.collide(this.player, this.ledge);
-    this.physics.arcade.collide(this.player, this.ledge2);
+    //this.physics.arcade.collide(this.player, this.ledge2);
+    this.physics.arcade.collide(this.player, this.ledge3);
+    //this.physics.arcade.collide(this.player, this.ledge4);
+
+    //if (this.cursors.space.isDown) {
+    //  this.player.body.position.y += 100;
+    //}
   }
 
   render() {}
