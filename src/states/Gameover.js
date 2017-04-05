@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import TextButton from '../sprites/textButton';
 
-export default class OverState extends Phaser.State {
+export default class GameoverState extends Phaser.State {
   init() {}
 
   preload() {}
@@ -19,10 +19,5 @@ export default class OverState extends Phaser.State {
     this.start.onInputDown.add(() => {
       this.state.start('Game');
     });
-
-    function up() {
-      console.log(10);
-      this.state.start('Game');
-    }
   }
 }

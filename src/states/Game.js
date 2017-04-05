@@ -2,6 +2,7 @@
 import Phaser from 'phaser';
 import StaticAsset from '../sprites/staticAsset';
 import Player from '../sprites/player';
+import config from '../config';
 
 export default class GameState extends Phaser.State {
   init() {}
@@ -21,10 +22,11 @@ export default class GameState extends Phaser.State {
     //generate ledge and add it to ledge group
     this.ledge = new StaticAsset({
       game: this,
-      x: 50,
+      x: 30,
       y: 250,
       asset: 'platform',
     });
+    console.log(2, this.ledge.x);
     this.physics.arcade.enable(this.ledge);
     this.ledge.scale.setTo(1, 0.9);
     this.ledge.enableBody = true;
@@ -85,8 +87,8 @@ export default class GameState extends Phaser.State {
 
   update() {
     this.physics.arcade.collide(this.player, this.ledges);
-    if (this.player.position.y > 400) {
-      this.state.start('Over');
+    if (this.player.position.y > 600) {
+      this.state.start('Gameover');
     }
   }
 

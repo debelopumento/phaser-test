@@ -3817,9 +3817,9 @@ var _Game = __webpack_require__(/*! ./states/Game */ 125);
 
 var _Game2 = _interopRequireDefault(_Game);
 
-var _Over = __webpack_require__(/*! ./states/Over */ 126);
+var _Gameover = __webpack_require__(/*! ./states/Gameover */ 317);
 
-var _Over2 = _interopRequireDefault(_Over);
+var _Gameover2 = _interopRequireDefault(_Gameover);
 
 var _config = __webpack_require__(/*! ./config */ 121);
 
@@ -3839,16 +3839,12 @@ var Game = function (_Phaser$Game) {
     function Game() {
         _classCallCheck(this, Game);
 
-        var docElement = document.documentElement;
-        var width = docElement.clientWidth > _config2.default.gameWidth ? _config2.default.gameWidth : docElement.clientWidth;
-        var height = docElement.clientHeight > _config2.default.gameHeight ? _config2.default.gameHeight : docElement.clientHeight;
-
-        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, width, height, _phaser2.default.CANVAS, 'content', null));
+        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, _config2.default.gameWidth, _config2.default.gameHeight, _phaser2.default.CANVAS, 'content', null));
 
         _this.state.add('Boot', _Boot2.default, false);
         _this.state.add('Splash', _Splash2.default, false);
         _this.state.add('Game', _Game2.default, false);
-        _this.state.add('Over', _Over2.default, false);
+        _this.state.add('Gameover', _Gameover2.default, false);
         _this.state.start('Boot');
         return _this;
     }
@@ -3913,9 +3909,15 @@ define(String.prototype, "padRight", "".padEnd);
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+var maxWidth = 760;
+var maxHeight = 400;
+var docElement = document.documentElement;
+var width = docElement.clientWidth > maxWidth ? maxWidth : docElement.clientWidth;
+var height = docElement.clientHeight > maxHeight ? maxHeight : docElement.clientHeight;
+
 exports.default = {
-    gameWidth: 760,
-    gameHeight: 400,
+    gameWidth: width,
+    gameHeight: height,
     localStorageName: 'phaseres6webpack'
 };
 
@@ -4040,6 +4042,10 @@ var _phaser = __webpack_require__(/*! phaser */ 28);
 
 var _phaser2 = _interopRequireDefault(_phaser);
 
+var _getRandomInt = __webpack_require__(/*! ../functions/getRandomInt */ 318);
+
+var _getRandomInt2 = _interopRequireDefault(_getRandomInt);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4072,16 +4078,18 @@ var StaticAsset = function (_Phaser$Sprite) {
             this.position.x -= 2.5;
 
             //generate a random integer between two values
+            /*
             function getRandomInt(min, max) {
                 min = Math.ceil(min);
                 max = Math.floor(max);
                 return Math.floor(Math.random() * (max = min)) + min;
             }
+            */
 
             if (this.position.x < -300) {
                 //this.kill();
                 this.position.x = 800;
-                this.position.y = getRandomInt(150, 250);
+                this.position.y = (0, _getRandomInt2.default)(150, 250);
             }
         }
     }]);
@@ -4206,6 +4214,10 @@ var _player = __webpack_require__(/*! ../sprites/player */ 122);
 
 var _player2 = _interopRequireDefault(_player);
 
+var _config = __webpack_require__(/*! ../config */ 121);
+
+var _config2 = _interopRequireDefault(_config);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4246,10 +4258,11 @@ var GameState = function (_Phaser$State) {
       //generate ledge and add it to ledge group
       this.ledge = new _staticAsset2.default({
         game: this,
-        x: 50,
+        x: 30,
         y: 250,
         asset: 'platform'
       });
+      console.log(2, this.ledge.x);
       this.physics.arcade.enable(this.ledge);
       this.ledge.scale.setTo(1, 0.9);
       this.ledge.enableBody = true;
@@ -4311,8 +4324,8 @@ var GameState = function (_Phaser$State) {
     key: 'update',
     value: function update() {
       this.physics.arcade.collide(this.player, this.ledges);
-      if (this.player.position.y > 400) {
-        this.state.start('Over');
+      if (this.player.position.y > 600) {
+        this.state.start('Gameover');
       }
     }
   }, {
@@ -4326,85 +4339,7 @@ var GameState = function (_Phaser$State) {
 exports.default = GameState;
 
 /***/ }),
-/* 126 */
-/* unknown exports provided */
-/* all exports used */
-/*!****************************!*\
-  !*** ./src/states/Over.js ***!
-  \****************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _phaser = __webpack_require__(/*! phaser */ 28);
-
-var _phaser2 = _interopRequireDefault(_phaser);
-
-var _textButton = __webpack_require__(/*! ../sprites/textButton */ 316);
-
-var _textButton2 = _interopRequireDefault(_textButton);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var OverState = function (_Phaser$State) {
-  _inherits(OverState, _Phaser$State);
-
-  function OverState() {
-    _classCallCheck(this, OverState);
-
-    return _possibleConstructorReturn(this, (OverState.__proto__ || Object.getPrototypeOf(OverState)).apply(this, arguments));
-  }
-
-  _createClass(OverState, [{
-    key: 'init',
-    value: function init() {}
-  }, {
-    key: 'preload',
-    value: function preload() {}
-  }, {
-    key: 'create',
-    value: function create() {
-      var _this2 = this;
-
-      this.start = new _textButton2.default({
-        game: this.game,
-        x: this.game.world.centerX,
-        y: this.game.world.centerY,
-        asset: 'button'
-      });
-
-      this.add.existing(this.start);
-
-      this.start.onInputDown.add(function () {
-        _this2.state.start('Game');
-      });
-
-      function up() {
-        console.log(10);
-        this.state.start('Game');
-      }
-    }
-  }]);
-
-  return OverState;
-}(_phaser2.default.State);
-
-exports.default = OverState;
-
-/***/ }),
+/* 126 */,
 /* 127 */
 /* unknown exports provided */
 /* all exports used */
@@ -10307,6 +10242,102 @@ var TextButton = function (_Phaser$Button) {
 }(Phaser.Button);
 
 exports.default = TextButton;
+
+/***/ }),
+/* 317 */
+/* unknown exports provided */
+/* all exports used */
+/*!********************************!*\
+  !*** ./src/states/Gameover.js ***!
+  \********************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _phaser = __webpack_require__(/*! phaser */ 28);
+
+var _phaser2 = _interopRequireDefault(_phaser);
+
+var _textButton = __webpack_require__(/*! ../sprites/textButton */ 316);
+
+var _textButton2 = _interopRequireDefault(_textButton);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var GameoverState = function (_Phaser$State) {
+  _inherits(GameoverState, _Phaser$State);
+
+  function GameoverState() {
+    _classCallCheck(this, GameoverState);
+
+    return _possibleConstructorReturn(this, (GameoverState.__proto__ || Object.getPrototypeOf(GameoverState)).apply(this, arguments));
+  }
+
+  _createClass(GameoverState, [{
+    key: 'init',
+    value: function init() {}
+  }, {
+    key: 'preload',
+    value: function preload() {}
+  }, {
+    key: 'create',
+    value: function create() {
+      var _this2 = this;
+
+      this.start = new _textButton2.default({
+        game: this.game,
+        x: this.game.world.centerX,
+        y: this.game.world.centerY,
+        asset: 'button'
+      });
+
+      this.add.existing(this.start);
+
+      this.start.onInputDown.add(function () {
+        _this2.state.start('Game');
+      });
+    }
+  }]);
+
+  return GameoverState;
+}(_phaser2.default.State);
+
+exports.default = GameoverState;
+
+/***/ }),
+/* 318 */
+/* unknown exports provided */
+/* all exports used */
+/*!***************************************!*\
+  !*** ./src/functions/getRandomInt.js ***!
+  \***************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = getRandomInt;
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max = min)) + min;
+}
 
 /***/ })
 ],[314]);

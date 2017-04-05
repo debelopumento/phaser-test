@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import getRandomInt from '../functions/getRandomInt';
 
 export default class StaticAsset extends Phaser.Sprite {
     constructor({ game, x, y, asset }) {
@@ -11,11 +12,13 @@ export default class StaticAsset extends Phaser.Sprite {
         this.position.x -= 2.5;
 
         //generate a random integer between two values
+        /*
         function getRandomInt(min, max) {
             min = Math.ceil(min);
             max = Math.floor(max);
             return Math.floor(Math.random() * (max = min)) + min;
         }
+        */
 
         if (this.position.x < -300) {
             //this.kill();
