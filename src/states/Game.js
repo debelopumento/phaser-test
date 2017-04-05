@@ -1,6 +1,7 @@
 /* globals __DEV__ */
 import Phaser from 'phaser';
-import Mushroom from '../sprites/Mushroom';
+import StaticAsset from '../sprites/staticAsset';
+import Player from '../sprites/player';
 
 export default class extends Phaser.State {
   init() {}
@@ -12,64 +13,75 @@ export default class extends Phaser.State {
 
     this.add.sprite(0, 0, 'star');
 
-    let platforms = this.add.group();
-    platforms.enableBody = true;
-    const ground = platforms.create(0, this.world.height - 64, 'platform');
-    ground.scale.setTo(2, 2);
-    ground.body.imovable = true;
-    let ledge = platforms.create(100, 200, 'platform');
-    ledge.scale.setTo(0.4, 0.7);
-    ledge.body.immovable = true;
-
-    ledge = platforms.create(350, 100, 'platform');
-    ledge.scale.setTo(0.5, 0.9);
-    ledge.body.immovable = true;
-
-    //create mushroom
-    this.mushroom = new Mushroom({
+    this.ledge = new StaticAsset({
       game: this,
-      x: this.world.centerX,
-      y: this.world.centerY,
-      asset: 'mushroom',
+      x: 50,
+      y: 250,
+      asset: 'platform',
     });
-    this.add.existing(this.mushroom);
-    this.physics.arcade.enable(this.mushroom);
-    this.mushroom.body.bounce.y = 0.2;
-    this.mushroom.body.gravity.y = 300;
-    this.mushroom.body.collideWorldBounds = true;
+    this.add.existing(this.ledge);
+    this.ledge.scale.setTo(0.5, 0.9);
+    this.physics.arcade.enable(this.ledge);
+    this.ledge.enableBody = true;
+    this.ledge.body.immovable = true;
 
-    this.shroom = new Mushroom({
+    this.ledge2 = new StaticAsset({
       game: this,
-      x: this.world.centerX,
-      y: 0,
-      asset: 'mushroom',
+      x: 350,
+      y: 200,
+      asset: 'platform',
     });
-    this.add.existing(this.shroom);
-    this.physics.arcade.enable(this.shroom);
-    this.shroom.body.bounce.y = 0.2;
-    this.shroom.body.gravity.y = 300;
-    this.shroom.body.collideWorldBounds = true;
+    this.add.existing(this.ledge2);
+    this.ledge2.scale.setTo(0.5, 0.9);
+    this.physics.arcade.enable(this.ledge2);
+    this.ledge2.enableBody = true;
+    this.ledge2.body.immovable = true;
+
+    this.ledge3 = new StaticAsset({
+      game: this,
+      x: 650,
+      y: 300,
+      asset: 'platform',
+    });
+    this.add.existing(this.ledge3);
+    this.ledge3.scale.setTo(0.5, 0.9);
+    this.physics.arcade.enable(this.ledge3);
+    this.ledge3.enableBody = true;
+    this.ledge3.body.immovable = true;
+
+    this.ledge3 = new StaticAsset({
+      game: this,
+      x: 850,
+      y: 300,
+      asset: 'platform',
+    });
+    this.add.existing(this.ledge3);
+    this.ledge3.scale.setTo(0.5, 0.9);
+    this.physics.arcade.enable(this.ledge3);
+    this.ledge3.enableBody = true;
+    this.ledge3.body.immovable = true;
 
     //create player
-    this.player = this.game.add.sprite(
-      this.world.centerX,
-      this.game.world.height - 150,
-      'dude'
-    );
+    this.player = new Player({
+      game: this,
+      x: 100,
+      y: 150,
+      asset: 'dude',
+    });
+    this.add.existing(this.player);
     this.game.physics.arcade.enable(this.player);
     this.player.body.bounce.y = 0.2;
     this.player.body.gravity.y = 300;
     this.player.body.collideWorldBounds = true;
-    this.player.animations.add('left', [0, 1, 2, 3], 10, true);
-    this.player.animations.add('right', [5, 6, 7, 8], 10, true);
 
-    const cursors = this.game.input.keyboard.createCursorKeys();
+    //const cursors = this.game.input.keyboard.createCursorKeys();
   }
 
   update() {
+    //setInterval(this.generateLedge, 1000);
     //console.log(this.game.physics.arcade.collide);
-    this.game.physics.arcade.collide(this.mushroom, this.shroom);
-    this.game.physics.arcade.collide(this.player, this.mushroom);
+    this.physics.arcade.collide(this.player, this.ledge);
+    this.physics.arcade.collide(this.player, this.ledge2);
   }
 
   render() {}
