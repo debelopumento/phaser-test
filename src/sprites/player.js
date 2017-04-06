@@ -10,6 +10,9 @@ export default class Player extends Phaser.Sprite {
         this.body.collideWorldBounds = false;
         this.body.bounce.y = 0.1;
 
+        this.animations.add('run', [5, 6, 7, 8], 10, true);
+        this.animations.play('run');
+
         game.input.onUp.add(() => {
             this.body.velocity.y = -400;
         });
@@ -25,15 +28,14 @@ export default class Player extends Phaser.Sprite {
                 if (transcript === 'jump') {
                     console.log(1, transcript);
                 }
-                console.log(100, this);
                 this.body.velocity.y = -400;
                 speechRecognizer.stop();
             };
-            speechRecognizer.onspeechend = function() {
+            speechRecognizer.onspeechend = () => {
                 console.log('say some more');
                 startSpeechRecognition();
             };
-            speechRecognizer.onerror = function(event) {
+            speechRecognizer.onerror = event => {
                 console.log(400, 'error!!');
                 startSpeechRecognition();
             };
@@ -48,8 +50,5 @@ export default class Player extends Phaser.Sprite {
         }
     }
 
-    update() {
-        //this.angle += 1;
-        //this.position.x += 1;
-    }
+    update() {}
 }

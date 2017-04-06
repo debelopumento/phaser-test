@@ -1597,7 +1597,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var maxWidth = 760;
-var maxHeight = 400;
+var maxHeight = 414;
 var docElement = document.documentElement;
 var width = docElement.clientWidth > maxWidth ? maxWidth : docElement.clientWidth;
 var height = docElement.clientHeight > maxHeight ? maxHeight : docElement.clientHeight;
@@ -4001,6 +4001,9 @@ var Player = function (_Phaser$Sprite) {
         _this.body.collideWorldBounds = false;
         _this.body.bounce.y = 0.1;
 
+        _this.animations.add('run', [5, 6, 7, 8], 10, true);
+        _this.animations.play('run');
+
         game.input.onUp.add(function () {
             _this.body.velocity.y = -400;
         });
@@ -4016,7 +4019,6 @@ var Player = function (_Phaser$Sprite) {
                 if (transcript === 'jump') {
                     console.log(1, transcript);
                 }
-                console.log(100, _this);
                 _this.body.velocity.y = -400;
                 speechRecognizer.stop();
             };
@@ -4040,10 +4042,7 @@ var Player = function (_Phaser$Sprite) {
 
     _createClass(Player, [{
         key: 'update',
-        value: function update() {
-            //this.angle += 1;
-            //this.position.x += 1;
-        }
+        value: function update() {}
     }]);
 
     return Player;
@@ -4103,23 +4102,18 @@ var StaticAsset = function (_Phaser$Sprite) {
         var _this = _possibleConstructorReturn(this, (StaticAsset.__proto__ || Object.getPrototypeOf(StaticAsset)).call(this, game, x, y, asset));
 
         _this.anchor.setTo(0, 0);
+        _this.enableBody = true;
+        _this.game.physics.arcade.enable(_this);
+        _this.body.immovable = true;
         return _this;
     }
 
     _createClass(StaticAsset, [{
         key: 'update',
         value: function update() {
-            //this.angle += 1;
-            this.position.x -= 2.5;
-
-            if (this.position.x < -200) {
-                //this.kill();
-                this.position.x = _config2.default.gameWidth + 100;
-                if (this.position.y < _config2.default.gameHeight - 200) {
-                    this.position.y = this.position.y + (0, _getRandomInt2.default)(-150, 150);
-                } else {
-                    this.position.y = _config2.default.gameHeight / 2 + (0, _getRandomInt2.default)(-50, 50);
-                }
+            this.position.x -= 2;
+            if (this.position.x < -300) {
+                this.kill();
             }
         }
     }]);
@@ -4320,6 +4314,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* globals __DEV__ */
 
 
+var HEIGHT = _config2.default.gameHeight;
+var WIDTH = _config2.default.gameWidth;
+
 var GameState = function (_Phaser$State) {
   _inherits(GameState, _Phaser$State);
 
@@ -4343,42 +4340,64 @@ var GameState = function (_Phaser$State) {
       //initial physics in world
       this.physics.startSystem(_phaser2.default.Physics.ARCADE);
 
-      this.add.sprite(0, 0, 'star');
+      //this.add.sprite(0, 0, 'star');
 
       //create ledge group
       this.ledges = this.add.group();
       this.physics.arcade.enable(this.ledges);
       this.ledges.enableBody = true;
-
-      var generateLedges = function generateLedges() {
-        var ledgeXPosition = 50;
-        var ledgeYPosition = _config2.default.gameHeight / 2;
-        for (var i = 0; i <= 6; i++) {
-          _this2.ledge = new _staticAsset2.default({
-            game: _this2,
-            x: ledgeXPosition,
-            y: ledgeYPosition,
-            asset: 'platform'
-          });
-          _this2.add.existing(_this2.ledge);
-          _this2.ledge.scale.setTo(0.5, 0.9);
-          _this2.physics.arcade.enable(_this2.ledge);
-          _this2.ledge.enableBody = true;
-          _this2.ledge.body.checkCollision.down = false;
-          _this2.ledge.body.immovable = true;
-          _this2.ledges.add(_this2.ledge);
-          console.log('ledge', i, ' ', _this2.ledge.x, ', ', _this2.ledge.y);
-          ledgeXPosition = ledgeXPosition + 150;
-          if (ledgeYPosition < _config2.default.gameHeight - 150 && ledgeYPosition > 150) {
-            ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-150, 150);
-          } else {
-            ledgeYPosition = _config2.default.gameHeight / 2 + (0, _getRandomInt2.default)(-150, 150);
-          }
-        }
-      };
-      generateLedges();
+      //initialize properties for generating ledges
+      var ledgeXPosition = 50;
+      var ledgeYPosition = _config2.default.gameHeight / 2;
+      var ledgeIndex = 0;
+      var neighbourLedgeHeightDifference = 50;
+      var array = [-80, -60, 60, 80];
 
       //generate ledge and add it to ledge group
+      var generateLedges = function generateLedges() {
+        _this2.ledge = new _staticAsset2.default({
+          game: _this2,
+          x: ledgeXPosition,
+          y: ledgeYPosition,
+          asset: 'platform'
+        });
+        _this2.add.existing(_this2.ledge);
+        _this2.ledge.body.checkCollision.down = false;
+        _this2.ledge.body.checkCollision.left = false;
+
+        _this2.ledges.add(_this2.ledge);
+        console.log('ledge', ledgeIndex, ' ', _this2.ledge.x, ', ', _this2.ledge.y);
+        ledgeIndex++;
+        //get position for the next ledge to be generated.
+        //if positionY is too high then go lower.
+        //if positionY is too low then go higher.
+
+        if (ledgeIndex <= 3) {
+          ledgeXPosition = ledgeXPosition + 230;
+          _this2.ledge.scale.setTo(0.6, 0.9);
+        } else {
+          ledgeXPosition = WIDTH + 150;
+          _this2.ledge.scale.setTo(0.5, 0.9);
+        }
+
+        //ledgeXPosition = WIDTH + 150;
+
+        if (ledgeYPosition < HEIGHT - 100 && ledgeYPosition > 100) {
+          ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-neighbourLedgeHeightDifference, neighbourLedgeHeightDifference);
+        } else if (ledgeYPosition > HEIGHT - 100) {
+          ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-neighbourLedgeHeightDifference, 0);
+        } else {
+          ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(0, neighbourLedgeHeightDifference);
+        }
+      };
+
+      for (var i = 0; i <= 4; i++) {
+        generateLedges();
+      }
+
+      setInterval(function () {
+        generateLedges();
+      }, 2200);
 
       //create player
       this.player = new _player2.default({
@@ -4388,16 +4407,13 @@ var GameState = function (_Phaser$State) {
         asset: 'dude'
       });
       this.add.existing(this.player);
-      this.player.animations.add('run', [5, 6, 7, 8], 10, true);
-      this.player.animations.play('run');
     }
   }, {
     key: 'update',
     value: function update() {
       this.physics.arcade.collide(this.player, this.ledges);
-
       //game over if player falls out of bottom of screen
-      if (this.player.position.y > _config2.default.gameHeight + 250) {
+      if (this.player.position.y > HEIGHT + 250) {
         this.state.start('Gameover');
       }
     }

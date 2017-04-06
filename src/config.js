@@ -1,5 +1,5 @@
 const maxWidth = 760;
-const maxHeight = 400;
+const maxHeight = 414;
 const docElement = document.documentElement;
 const width = docElement.clientWidth > maxWidth
     ? maxWidth
