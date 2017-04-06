@@ -75,8 +75,8 @@ export default class GameState extends Phaser.State {
       generateLedges();
     }
 
+    //generate following ledges every 2.2 second
     this.game.time.events.loop(Phaser.Timer.SECOND * 2.2, () => {
-      console.log('timer test');
       generateLedges();
     });
 
@@ -88,6 +88,18 @@ export default class GameState extends Phaser.State {
       asset: 'dude',
     });
     this.add.existing(this.player);
+
+    //create timer
+
+    this.score = this.game.add.text(WIDTH / 2, 30, 'score: 0', {
+      font: '32px',
+      fill: 'black',
+    });
+    let timer = 0;
+    this.game.time.events.loop(Phaser.Timer.SECOND * 1, () => {
+      timer += 100;
+      this.score.text = 'score: ' + timer;
+    });
   }
 
   update() {
@@ -96,8 +108,6 @@ export default class GameState extends Phaser.State {
     if (this.player.position.y > HEIGHT + 250) {
       this.state.start('Gameover');
     }
-    this.elapsedTime = this.time.now;
-    //console.log(16, this.elapsedTime);
   }
 
   render() {}

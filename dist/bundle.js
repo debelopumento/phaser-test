@@ -4394,8 +4394,8 @@ var GameState = function (_Phaser$State) {
         generateLedges();
       }
 
+      //generate following ledges every 2.2 second
       this.game.time.events.loop(_phaser2.default.Timer.SECOND * 2.2, function () {
-        console.log('timer test');
         generateLedges();
       });
 
@@ -4407,6 +4407,18 @@ var GameState = function (_Phaser$State) {
         asset: 'dude'
       });
       this.add.existing(this.player);
+
+      //create timer
+
+      this.score = this.game.add.text(WIDTH / 2, 30, 'score: 0', {
+        font: '32px',
+        fill: 'black'
+      });
+      var timer = 0;
+      this.game.time.events.loop(_phaser2.default.Timer.SECOND * 1, function () {
+        timer += 100;
+        _this2.score.text = 'score: ' + timer;
+      });
     }
   }, {
     key: 'update',
@@ -4416,8 +4428,6 @@ var GameState = function (_Phaser$State) {
       if (this.player.position.y > HEIGHT + 250) {
         this.state.start('Gameover');
       }
-      this.elapsedTime = this.time.now;
-      //console.log(16, this.elapsedTime);
     }
   }, {
     key: 'render',
