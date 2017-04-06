@@ -26,7 +26,6 @@ export default class GameState extends Phaser.State {
     let ledgeYPosition = config.gameHeight / 2;
     let ledgeIndex = 0;
     let neighbourLedgeHeightDifference = 50;
-    let array = [-80, -60, 60, 80];
 
     //generate ledge and add it to ledge group
     const generateLedges = () => {
@@ -39,17 +38,15 @@ export default class GameState extends Phaser.State {
       this.add.existing(this.ledge);
       this.ledge.body.checkCollision.down = false;
       this.ledge.body.checkCollision.left = false;
-
       this.ledges.add(this.ledge);
       console.log('ledge', ledgeIndex, ' ', this.ledge.x, ', ', this.ledge.y);
       ledgeIndex++;
       //get position for the next ledge to be generated.
       //if positionY is too high then go lower.
       //if positionY is too low then go higher.
-
       if (ledgeIndex <= 3) {
-        ledgeXPosition = ledgeXPosition + 230;
-        this.ledge.scale.setTo(0.6, 0.9);
+        ledgeXPosition = ledgeXPosition + 280;
+        this.ledge.scale.setTo(0.65, 0.9);
       } else {
         ledgeXPosition = WIDTH + 150;
         this.ledge.scale.setTo(0.5, 0.9);
@@ -61,17 +58,20 @@ export default class GameState extends Phaser.State {
             -neighbourLedgeHeightDifference,
             neighbourLedgeHeightDifference
           );
+        console.log(4);
       } else if (ledgeYPosition > HEIGHT - 100) {
         ledgeYPosition = ledgeYPosition +
           getRandomInt(-neighbourLedgeHeightDifference, 0);
+        console.log(5);
       } else {
         ledgeYPosition = ledgeYPosition +
           getRandomInt(0, neighbourLedgeHeightDifference);
+        console.log(6);
       }
     };
 
     //generate initial ledges
-    for (let i = 0; i <= 4; i++) {
+    for (let i = 0; i <= 3; i++) {
       generateLedges();
     }
 

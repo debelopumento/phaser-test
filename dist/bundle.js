@@ -4208,6 +4208,10 @@ var _webfontloader = __webpack_require__(/*! webfontloader */ 90);
 
 var _webfontloader2 = _interopRequireDefault(_webfontloader);
 
+var _textButton = __webpack_require__(/*! ../sprites/textButton */ 125);
+
+var _textButton2 = _interopRequireDefault(_textButton);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4351,7 +4355,6 @@ var GameState = function (_Phaser$State) {
       var ledgeYPosition = _config2.default.gameHeight / 2;
       var ledgeIndex = 0;
       var neighbourLedgeHeightDifference = 50;
-      var array = [-80, -60, 60, 80];
 
       //generate ledge and add it to ledge group
       var generateLedges = function generateLedges() {
@@ -4364,17 +4367,15 @@ var GameState = function (_Phaser$State) {
         _this2.add.existing(_this2.ledge);
         _this2.ledge.body.checkCollision.down = false;
         _this2.ledge.body.checkCollision.left = false;
-
         _this2.ledges.add(_this2.ledge);
         console.log('ledge', ledgeIndex, ' ', _this2.ledge.x, ', ', _this2.ledge.y);
         ledgeIndex++;
         //get position for the next ledge to be generated.
         //if positionY is too high then go lower.
         //if positionY is too low then go higher.
-
         if (ledgeIndex <= 3) {
-          ledgeXPosition = ledgeXPosition + 230;
-          _this2.ledge.scale.setTo(0.6, 0.9);
+          ledgeXPosition = ledgeXPosition + 280;
+          _this2.ledge.scale.setTo(0.65, 0.9);
         } else {
           ledgeXPosition = WIDTH + 150;
           _this2.ledge.scale.setTo(0.5, 0.9);
@@ -4382,15 +4383,18 @@ var GameState = function (_Phaser$State) {
 
         if (ledgeYPosition < HEIGHT - 100 && ledgeYPosition > 100) {
           ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-neighbourLedgeHeightDifference, neighbourLedgeHeightDifference);
+          console.log(4);
         } else if (ledgeYPosition > HEIGHT - 100) {
           ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-neighbourLedgeHeightDifference, 0);
+          console.log(5);
         } else {
           ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(0, neighbourLedgeHeightDifference);
+          console.log(6);
         }
       };
 
       //generate initial ledges
-      for (var i = 0; i <= 4; i++) {
+      for (var i = 0; i <= 3; i++) {
         generateLedges();
       }
 
@@ -4537,6 +4541,10 @@ var _phaser2 = _interopRequireDefault(_phaser);
 
 var _utils = __webpack_require__(/*! ../utils */ 130);
 
+var _textButton = __webpack_require__(/*! ../sprites/textButton */ 125);
+
+var _textButton2 = _interopRequireDefault(_textButton);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4560,11 +4568,23 @@ var SplashState = function (_Phaser$State) {
   }, {
     key: 'preload',
     value: function preload() {
-      this.loaderBg = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'loaderBg');
-      this.loaderBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'loaderBar');
-      (0, _utils.centerGameObjects)([this.loaderBg, this.loaderBar]);
+      /*
+      this.loaderBg = this.add.sprite(
+        this.game.world.centerX,
+        this.game.world.centerY,
+        'loaderBg'
+      );
+      
+      this.loaderBar = this.add.sprite(
+        this.game.world.centerX,
+        this.game.world.centerY,
+        'loaderBar'
+      );
+      
+      centerGameObjects([this.loaderBg, this.loaderBar]);
+      */
 
-      this.load.setPreloadSprite(this.loaderBar);
+      //this.load.setPreloadSprite(this.loaderBar);
       this.load.image('sky', 'assets/images/sky.png');
       this.load.image('star', 'assets/images/star.png');
       this.load.spritesheet('dude', 'assets/images/dude.png', 32, 48);
@@ -4575,7 +4595,25 @@ var SplashState = function (_Phaser$State) {
   }, {
     key: 'create',
     value: function create() {
-      this.state.start('Game');
+      var _this2 = this;
+
+      //this.state.start('Game');
+      this.start = new _textButton2.default({
+        game: this.game,
+        x: this.game.world.centerX,
+        y: this.game.world.centerY,
+        label: 'play',
+        asset: 'button',
+        style: {
+          font: '64px',
+          fill: 'white'
+        }
+      });
+      this.start.scale.setTo(0.7, 0.7);
+      this.add.existing(this.start);
+      this.start.onInputDown.add(function () {
+        _this2.state.start('Game');
+      });
     }
   }]);
 

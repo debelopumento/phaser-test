@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import WebFont from 'webfontloader';
+import TextButton from '../sprites/textButton';
 
 export default class BootState extends Phaser.State {
   init() {
@@ -7,7 +8,6 @@ export default class BootState extends Phaser.State {
     this.fontsReady = false;
     this.fontsLoaded = this.fontsLoaded.bind(this);
   }
-
   preload() {
     WebFont.load({
       google: {
