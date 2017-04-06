@@ -4380,8 +4380,6 @@ var GameState = function (_Phaser$State) {
           _this2.ledge.scale.setTo(0.5, 0.9);
         }
 
-        //ledgeXPosition = WIDTH + 150;
-
         if (ledgeYPosition < HEIGHT - 100 && ledgeYPosition > 100) {
           ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-neighbourLedgeHeightDifference, neighbourLedgeHeightDifference);
         } else if (ledgeYPosition > HEIGHT - 100) {
@@ -4391,13 +4389,15 @@ var GameState = function (_Phaser$State) {
         }
       };
 
+      //generate initial ledges
       for (var i = 0; i <= 4; i++) {
         generateLedges();
       }
 
-      setInterval(function () {
+      this.game.time.events.loop(_phaser2.default.Timer.SECOND * 2.2, function () {
+        console.log('timer test');
         generateLedges();
-      }, 2200);
+      });
 
       //create player
       this.player = new _player2.default({
@@ -4416,6 +4416,8 @@ var GameState = function (_Phaser$State) {
       if (this.player.position.y > HEIGHT + 250) {
         this.state.start('Gameover');
       }
+      this.elapsedTime = this.time.now;
+      //console.log(16, this.elapsedTime);
     }
   }, {
     key: 'render',

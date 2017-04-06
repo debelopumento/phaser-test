@@ -55,8 +55,6 @@ export default class GameState extends Phaser.State {
         this.ledge.scale.setTo(0.5, 0.9);
       }
 
-      //ledgeXPosition = WIDTH + 150;
-
       if (ledgeYPosition < HEIGHT - 100 && ledgeYPosition > 100) {
         ledgeYPosition = ledgeYPosition +
           getRandomInt(
@@ -72,16 +70,15 @@ export default class GameState extends Phaser.State {
       }
     };
 
+    //generate initial ledges
     for (let i = 0; i <= 4; i++) {
       generateLedges();
     }
 
-    setInterval(
-      function() {
-        generateLedges();
-      },
-      2200
-    );
+    this.game.time.events.loop(Phaser.Timer.SECOND * 2.2, () => {
+      console.log('timer test');
+      generateLedges();
+    });
 
     //create player
     this.player = new Player({
@@ -99,6 +96,8 @@ export default class GameState extends Phaser.State {
     if (this.player.position.y > HEIGHT + 250) {
       this.state.start('Gameover');
     }
+    this.elapsedTime = this.time.now;
+    //console.log(16, this.elapsedTime);
   }
 
   render() {}
