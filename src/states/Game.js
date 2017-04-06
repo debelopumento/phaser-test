@@ -20,30 +20,35 @@ export default class GameState extends Phaser.State {
     this.physics.arcade.enable(this.ledges);
     this.ledges.enableBody = true;
 
-    //generate ledge and add it to ledge group
-    let ledgeXPosition = 50;
-    let ledgeYPosition = config.gameHeight / 2;
-    for (let i = 0; i <= 5; i++) {
-      this.ledge = new StaticAsset({
-        game: this,
-        x: ledgeXPosition,
-        y: ledgeYPosition,
-        asset: 'platform',
-      });
-      this.add.existing(this.ledge);
-      this.ledge.scale.setTo(0.7, 0.9);
-      this.physics.arcade.enable(this.ledge);
-      this.ledge.enableBody = true;
-      this.ledge.body.immovable = true;
-      this.ledges.add(this.ledge);
-      console.log('ledge', i, ' ', this.ledge.x, ', ', this.ledge.y);
-      ledgeXPosition = ledgeXPosition + 150;
-      if (ledgeYPosition < config.gameHeight - 150 && ledgeYPosition > 150) {
-        ledgeYPosition = ledgeYPosition + getRandomInt(-150, 150);
-      } else {
-        ledgeYPosition = config.gameHeight / 2 + getRandomInt(-150, 150);
+    const generateLedges = () => {
+      let ledgeXPosition = 50;
+      let ledgeYPosition = config.gameHeight / 2;
+      for (let i = 0; i <= 6; i++) {
+        this.ledge = new StaticAsset({
+          game: this,
+          x: ledgeXPosition,
+          y: ledgeYPosition,
+          asset: 'platform',
+        });
+        this.add.existing(this.ledge);
+        this.ledge.scale.setTo(0.5, 0.9);
+        this.physics.arcade.enable(this.ledge);
+        this.ledge.enableBody = true;
+        this.ledge.body.checkCollision.down = false;
+        this.ledge.body.immovable = true;
+        this.ledges.add(this.ledge);
+        console.log('ledge', i, ' ', this.ledge.x, ', ', this.ledge.y);
+        ledgeXPosition = ledgeXPosition + 150;
+        if (ledgeYPosition < config.gameHeight - 150 && ledgeYPosition > 150) {
+          ledgeYPosition = ledgeYPosition + getRandomInt(-150, 150);
+        } else {
+          ledgeYPosition = config.gameHeight / 2 + getRandomInt(-150, 150);
+        }
       }
-    }
+    };
+    generateLedges();
+
+    //generate ledge and add it to ledge group
 
     //create player
     this.player = new Player({

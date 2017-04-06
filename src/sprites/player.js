@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-
+import config from '../config';
 export default class Player extends Phaser.Sprite {
     constructor({ game, x, y, asset }) {
         super(game, x, y, asset);
@@ -16,16 +16,17 @@ export default class Player extends Phaser.Sprite {
 
         const SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 
-        function startSpeechRecognition() {
+        const startSpeechRecognition = () => {
             const speechRecognizer = new SpeechRecognition();
             speechRecognizer.start();
             console.log('i am ready. say something.');
-            speechRecognizer.onresult = function(event) {
+            speechRecognizer.onresult = event => {
                 const transcript = event.results[0][0].transcript;
                 if (transcript === 'jump') {
                     console.log(1, transcript);
                 }
-                //this.position.y -= 100;
+                console.log(100, this);
+                this.body.velocity.y = -400;
                 speechRecognizer.stop();
             };
             speechRecognizer.onspeechend = function() {
@@ -36,7 +37,7 @@ export default class Player extends Phaser.Sprite {
                 console.log(400, 'error!!');
                 startSpeechRecognition();
             };
-        }
+        };
 
         if ('webkitSpeechRecognition' in window) {
             startSpeechRecognition();
