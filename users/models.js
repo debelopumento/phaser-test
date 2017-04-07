@@ -9,19 +9,23 @@ const UserSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
-  facebookId: String,
+  facebookId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   highestScore: Number,
 });
 
 UserSchema.methods.apiRepr = function() {
   return {
     id: this._id,
-    facebookId: this.facebookId,
+    facebookId: this.facebookId || '',
     highestScore: this.highestScore || '',
     screenName: this.screenName || '',
   };
 };
 
-const User = mongoose.model('User', UserSchema, 'usercollection');
+const User = mongoose.model('User', UserSchema, 'userscollection');
 
 module.exports = { User };

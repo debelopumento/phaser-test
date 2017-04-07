@@ -20,6 +20,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('common'));
+app.use('/users/', usersRouter);
+
 //app.use(express.static('build'));
 
 app.get('/', (req, res) => {
