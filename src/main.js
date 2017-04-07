@@ -8,7 +8,7 @@ import GameState from './states/Game';
 import GameoverState from './states/Gameover';
 import config from './config';
 
-class Game extends Phaser.Game {
+export default class Game extends Phaser.Game {
     constructor() {
         super(
             config.gameWidth,
@@ -22,8 +22,9 @@ class Game extends Phaser.Game {
         this.state.add('Splash', SplashState, false);
         this.state.add('Game', GameState, false);
         this.state.add('Gameover', GameoverState, false);
+
         this.state.start('Boot');
     }
 }
 
-window.game = new Game();
+//window.game = new Game();
