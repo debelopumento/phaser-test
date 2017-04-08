@@ -1,15 +1,16 @@
 import Game from './main';
 
-//window.game = new Game();
+const SERVER = 'http://localhost:8080/';
+
 const startGame = () => {
+    $('#signinScreen').css('display', 'none');
     const game = new Game();
 };
 
 const playerSignin = facebookId => {
-    console.log(17);
     //this ajax call checks if this is a first time player
     $.ajax({
-        url: 'http://localhost:8080/users/facebookId/' + facebookId,
+        url: SERVER + 'users/facebookId/' + facebookId,
         type: 'GET',
         success: data => {
             console.log(18);
@@ -27,7 +28,7 @@ const playerSignin = facebookId => {
                     };
                     console.log(30, newPlayer);
                     $.ajax({
-                        url: 'http://localhost:8080/users/',
+                        url: SERVER + 'users/',
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
                         data: JSON.stringify(newPlayer),
@@ -53,8 +54,12 @@ const playerSignin = facebookId => {
 
 $(function() {
     const logInButton = '<div><fb:login-button autologoutlink="true" data-size="xlarge" id="fbloginbutton" scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button></div>';
-    startGame();
+    const playAsAGuest = '<div><button type="submit" id="playasguest">Play as a Guest</button></div>';
     $('#signinScreen').html(logInButton);
+    $('#signinScreen').append(playAsAGuest);
+    $('#playasguest').click(() => {
+        startGame();
+    });
     $(function() {
         // This is called with the results from from FB.getLoginStatus().
 
