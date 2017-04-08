@@ -22,7 +22,9 @@ app.use(cors());
 app.use(morgan('common'));
 app.use('/users/', usersRouter);
 
-//app.use(express.static('build'));
+//app.use(express.static('dist/bundle.js'));
+app.use('/dist', express.static('dist'));
+app.use('/assets', express.static('assets'));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');

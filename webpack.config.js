@@ -39,6 +39,13 @@ module.exports = {
       },
     }),
   ],
+  /*
+  devServer: process.env.NODE_ENV === 'development'
+    ? {
+        proxy: { '/api*': { target: 'http://localhost:8080/', secure: false } },
+      }
+    : false,
+    */
   module: {
     rules: [
       {

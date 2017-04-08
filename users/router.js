@@ -13,6 +13,7 @@ router.post('/', (req, res) => {
     res.status(422).json({ message: 'Missing field: screenName' });
   }
   let { screenName, facebookId } = req.body;
+  console.log(31, req.body);
   screenName = screenName.trim();
   if (screenName === '') {
     res.status(422).json({ message: 'Incorrect field length: screenName' });
@@ -32,9 +33,9 @@ router.post('/', (req, res) => {
         facebookId: facebookId,
         highestScore: 0,
       };
-      User.create(newUser);
-      console.log(16, newUser);
-      res.json({ message: 'new user is created' });
+      User.create(newUser).then(user => {
+        res.json(user.apiRepr());
+      });
     })
     .catch(err => {
       res.json({ message: 'Internal server error' });
