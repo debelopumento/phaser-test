@@ -10,13 +10,7 @@ import config from './config';
 
 export default class Game extends Phaser.Game {
     constructor() {
-        super(
-            config.gameWidth,
-            config.gameHeight,
-            Phaser.CANVAS,
-            'content',
-            null
-        );
+        super(config.gameWidth, config.gameHeight, Phaser.CANVAS, 'game', null);
 
         this.state.add('Boot', BootState, false);
         this.state.add('Splash', SplashState, false);

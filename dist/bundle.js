@@ -3919,6 +3919,17 @@ var SERVER = 'http://localhost:8080/';
 
 var startGame = function startGame() {
     $('#signinScreen').css('display', 'none');
+    $.ajax({
+        url: SERVER + 'highestScore',
+        type: 'GET',
+        success: function success(data) {
+            var gameHighestScore = data.result[0].highestScore;
+            $('body').data('gameHighestScore', gameHighestScore);
+        },
+        error: function error(e) {
+            console.log(e);
+        }
+    });
     var game = new _main2.default();
 };
 
@@ -3928,7 +3939,6 @@ var playerSignin = function playerSignin(facebookId) {
         url: SERVER + 'users/facebookId/' + facebookId,
         type: 'GET',
         success: function success(data) {
-            console.log(18);
             if (data.length === 0) {
                 console.log(19, data, 'first time player');
                 var register = '';
@@ -3941,14 +3951,13 @@ var playerSignin = function playerSignin(facebookId) {
                         facebookId: facebookId,
                         screenName: $('#inputScreenName').val()
                     };
-                    console.log(30, newPlayer);
                     $.ajax({
                         url: SERVER + 'users/',
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
                         data: JSON.stringify(newPlayer),
-                        success: function success(data) {
-                            console.log(22, data);
+                        success: function success(player) {
+                            $('body').data('playerData', player);
                             startGame();
                         },
                         error: function error(e) {
@@ -3958,6 +3967,7 @@ var playerSignin = function playerSignin(facebookId) {
                 });
             } else {
                 console.log(20, data);
+                $('body').data('playerData', data[0]);
                 startGame();
             }
         },
@@ -3973,6 +3983,11 @@ $(function () {
     $('#signinScreen').html(logInButton);
     $('#signinScreen').append(playAsAGuest);
     $('#playasguest').click(function () {
+        var guestPlayer = {
+            highestScore: 0,
+            screenName: 'Guest'
+        };
+        $('body').data('playerData', guestPlayer);
         startGame();
     });
     $(function () {
@@ -4110,7 +4125,7 @@ var Game = function (_Phaser$Game) {
     function Game() {
         _classCallCheck(this, Game);
 
-        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, _config2.default.gameWidth, _config2.default.gameHeight, _phaser2.default.CANVAS, 'content', null));
+        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, _config2.default.gameWidth, _config2.default.gameHeight, _phaser2.default.CANVAS, 'game', null));
 
         _this.state.add('Boot', _Boot2.default, false);
         _this.state.add('Splash', _Splash2.default, false);
@@ -4287,13 +4302,15 @@ var StaticAsset = function (_Phaser$Sprite) {
         _this.enableBody = true;
         _this.game.physics.arcade.enable(_this);
         _this.body.immovable = true;
+        _this.speed = 2;
+        //this.speedFactor = 1;
         return _this;
     }
 
     _createClass(StaticAsset, [{
         key: 'update',
         value: function update() {
-            this.position.x -= 2;
+            this.position.x -= this.speed;
             if (this.position.x < -300) {
                 this.kill();
             }
@@ -4443,6 +4460,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var HEIGHT = _config2.default.gameHeight;
 var WIDTH = _config2.default.gameWidth;
+var gameData = $('body').data();
 
 var GameState = function (_Phaser$State) {
   _inherits(GameState, _Phaser$State);
@@ -4464,6 +4482,8 @@ var GameState = function (_Phaser$State) {
     value: function create() {
       var _this2 = this;
 
+      this.speedFactor = 1;
+      console.log(51, gameData);
       //initial physics in world
       this.physics.startSystem(_phaser2.default.Physics.ARCADE);
 
@@ -4490,14 +4510,20 @@ var GameState = function (_Phaser$State) {
         _this2.add.existing(_this2.ledge);
         _this2.ledge.body.checkCollision.down = false;
         _this2.ledge.body.checkCollision.left = false;
+        _this2.ledge.speed = 2 * _this2.speedFactor;
         _this2.ledges.add(_this2.ledge);
+        console.log('ledges: ', _this2.ledges);
+        _this2.game.time.events.loop(_phaser2.default.Timer.SECOND * 1, function () {
+          //this.ledge.velocity.x -= 0.1;
+        });
+
         console.log('ledge', ledgeIndex, ' ', _this2.ledge.x, ', ', _this2.ledge.y);
         ledgeIndex++;
         //get position for the next ledge to be generated.
         //if positionY is too high then go lower.
         //if positionY is too low then go higher.
         if (ledgeIndex <= 3) {
-          ledgeXPosition = ledgeXPosition + 280;
+          ledgeXPosition = ledgeXPosition + 295;
           _this2.ledge.scale.setTo(0.65, 0.9);
         } else {
           ledgeXPosition = WIDTH + 150;
@@ -4506,13 +4532,10 @@ var GameState = function (_Phaser$State) {
 
         if (ledgeYPosition < HEIGHT - 100 && ledgeYPosition > 100) {
           ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-neighbourLedgeHeightDifference, neighbourLedgeHeightDifference);
-          console.log(4);
         } else if (ledgeYPosition > HEIGHT - 100) {
           ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-neighbourLedgeHeightDifference, 0);
-          console.log(5);
         } else {
           ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(0, neighbourLedgeHeightDifference);
-          console.log(6);
         }
       };
 
@@ -4522,7 +4545,7 @@ var GameState = function (_Phaser$State) {
       }
 
       //generate following ledges every 2.2 second
-      this.game.time.events.loop(_phaser2.default.Timer.SECOND * 2.2, function () {
+      this.game.time.events.loop(_phaser2.default.Timer.SECOND * 2.2 / this.speedFactor, function () {
         generateLedges();
       });
 
@@ -4545,12 +4568,14 @@ var GameState = function (_Phaser$State) {
       this.game.time.events.loop(_phaser2.default.Timer.SECOND * 1, function () {
         timer += 100;
         _this2.score.text = 'score: ' + timer;
+        //this.speedFactor = this.speedFactor * 1.08;
       });
     }
   }, {
     key: 'update',
     value: function update() {
       this.physics.arcade.collide(this.player, this.ledges);
+      //this.ledges.position.x -= 2;
       //game over if player falls out of bottom of screen
       if (this.player.position.y > HEIGHT + 250) {
         this.state.start('Gameover');

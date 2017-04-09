@@ -9,10 +9,12 @@ export default class StaticAsset extends Phaser.Sprite {
         this.enableBody = true;
         this.game.physics.arcade.enable(this);
         this.body.immovable = true;
+        this.speed = 2;
+        //this.speedFactor = 1;
     }
 
     update() {
-        this.position.x -= 2;
+        this.position.x -= this.speed;
         if (this.position.x < -300) {
             this.kill();
         }

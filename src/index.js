@@ -4,6 +4,17 @@ const SERVER = 'http://localhost:8080/';
 
 const startGame = () => {
     $('#signinScreen').css('display', 'none');
+    $.ajax({
+        url: SERVER + 'highestScore',
+        type: 'GET',
+        success: data => {
+            const gameHighestScore = data.result[0].highestScore;
+            $('body').data('gameHighestScore', gameHighestScore);
+        },
+        error: e => {
+            console.log(e);
+        },
+    });
     const game = new Game();
 };
 
@@ -13,7 +24,6 @@ const playerSignin = facebookId => {
         url: SERVER + 'users/facebookId/' + facebookId,
         type: 'GET',
         success: data => {
-            console.log(18);
             if (data.length === 0) {
                 console.log(19, data, 'first time player');
                 let register = '';
@@ -26,14 +36,13 @@ const playerSignin = facebookId => {
                         facebookId: facebookId,
                         screenName: $('#inputScreenName').val(),
                     };
-                    console.log(30, newPlayer);
                     $.ajax({
                         url: SERVER + 'users/',
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
                         data: JSON.stringify(newPlayer),
-                        success: data => {
-                            console.log(22, data);
+                        success: player => {
+                            $('body').data('playerData', player);
                             startGame();
                         },
                         error: e => {
@@ -43,6 +52,7 @@ const playerSignin = facebookId => {
                 });
             } else {
                 console.log(20, data);
+                $('body').data('playerData', data[0]);
                 startGame();
             }
         },
@@ -58,6 +68,11 @@ $(function() {
     $('#signinScreen').html(logInButton);
     $('#signinScreen').append(playAsAGuest);
     $('#playasguest').click(() => {
+        const guestPlayer = {
+            highestScore: 0,
+            screenName: 'Guest',
+        };
+        $('body').data('playerData', guestPlayer);
         startGame();
     });
     $(function() {

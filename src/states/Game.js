@@ -7,11 +7,15 @@ import getRandomInt from '../functions/getRandomInt';
 
 const HEIGHT = config.gameHeight;
 const WIDTH = config.gameWidth;
+const gameData = $('body').data();
+
 export default class GameState extends Phaser.State {
   init() {}
   preload() {}
 
   create() {
+    this.speedFactor = 1;
+    console.log(51, gameData);
     //initial physics in world
     this.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -38,14 +42,20 @@ export default class GameState extends Phaser.State {
       this.add.existing(this.ledge);
       this.ledge.body.checkCollision.down = false;
       this.ledge.body.checkCollision.left = false;
+      this.ledge.speed = 2 * this.speedFactor;
       this.ledges.add(this.ledge);
+      console.log('ledges: ', this.ledges);
+      this.game.time.events.loop(Phaser.Timer.SECOND * 1, () => {
+        //this.ledge.velocity.x -= 0.1;
+      });
+
       console.log('ledge', ledgeIndex, ' ', this.ledge.x, ', ', this.ledge.y);
       ledgeIndex++;
       //get position for the next ledge to be generated.
       //if positionY is too high then go lower.
       //if positionY is too low then go higher.
       if (ledgeIndex <= 3) {
-        ledgeXPosition = ledgeXPosition + 280;
+        ledgeXPosition = ledgeXPosition + 295;
         this.ledge.scale.setTo(0.65, 0.9);
       } else {
         ledgeXPosition = WIDTH + 150;
@@ -58,15 +68,12 @@ export default class GameState extends Phaser.State {
             -neighbourLedgeHeightDifference,
             neighbourLedgeHeightDifference
           );
-        console.log(4);
       } else if (ledgeYPosition > HEIGHT - 100) {
         ledgeYPosition = ledgeYPosition +
           getRandomInt(-neighbourLedgeHeightDifference, 0);
-        console.log(5);
       } else {
         ledgeYPosition = ledgeYPosition +
           getRandomInt(0, neighbourLedgeHeightDifference);
-        console.log(6);
       }
     };
 
@@ -76,9 +83,12 @@ export default class GameState extends Phaser.State {
     }
 
     //generate following ledges every 2.2 second
-    this.game.time.events.loop(Phaser.Timer.SECOND * 2.2, () => {
-      generateLedges();
-    });
+    this.game.time.events.loop(
+      Phaser.Timer.SECOND * 2.2 / this.speedFactor,
+      () => {
+        generateLedges();
+      }
+    );
 
     //create player
     this.player = new Player({
@@ -99,11 +109,13 @@ export default class GameState extends Phaser.State {
     this.game.time.events.loop(Phaser.Timer.SECOND * 1, () => {
       timer += 100;
       this.score.text = 'score: ' + timer;
+      //this.speedFactor = this.speedFactor * 1.08;
     });
   }
 
   update() {
     this.physics.arcade.collide(this.player, this.ledges);
+    //this.ledges.position.x -= 2;
     //game over if player falls out of bottom of screen
     if (this.player.position.y > HEIGHT + 250) {
       this.state.start('Gameover');
