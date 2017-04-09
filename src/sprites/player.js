@@ -13,7 +13,9 @@ export default class Player extends Phaser.Sprite {
         this.animations.add('run', [5, 6, 7, 8], 10, true);
         this.animations.play('run');
 
+        this.speed = 1;
         game.input.onUp.add(() => {
+            //this.body.velocity.y = -400 / Math.sqrt(this.speed);
             this.body.velocity.y = -400;
         });
 
@@ -22,7 +24,7 @@ export default class Player extends Phaser.Sprite {
         const startSpeechRecognition = () => {
             const speechRecognizer = new SpeechRecognition();
             speechRecognizer.start();
-            console.log('i am ready. say something.');
+            //console.log('i am ready. say something.');
             speechRecognizer.onresult = event => {
                 const transcript = event.results[0][0].transcript;
                 if (transcript === 'jump') {
@@ -32,11 +34,11 @@ export default class Player extends Phaser.Sprite {
                 speechRecognizer.stop();
             };
             speechRecognizer.onspeechend = () => {
-                console.log('say some more');
+                //console.log('say some more');
                 startSpeechRecognition();
             };
             speechRecognizer.onerror = event => {
-                console.log(400, 'error!!');
+                //console.log(400, 'error!!');
                 startSpeechRecognition();
             };
         };
@@ -50,5 +52,7 @@ export default class Player extends Phaser.Sprite {
         }
     }
 
-    update() {}
+    update() {
+        this.speed = $('body').data('speed');
+    }
 }

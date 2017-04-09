@@ -25,7 +25,6 @@ const playerSignin = facebookId => {
         type: 'GET',
         success: data => {
             if (data.length === 0) {
-                console.log(19, data, 'first time player');
                 let register = '';
                 register += '<p>Please enter a screen name</p>';
                 register += '<input id="inputScreenName" type="text" />';
@@ -51,7 +50,6 @@ const playerSignin = facebookId => {
                     });
                 });
             } else {
-                console.log(20, data);
                 $('body').data('playerData', data[0]);
                 startGame();
             }
@@ -93,7 +91,6 @@ $(function() {
                     var signedInUserFacebookId = '';
                     FB.api('/me', response => {
                         signedInUserFacebookId = response.id;
-                        console.log(15, signedInUserFacebookId);
                         playerSignin(signedInUserFacebookId);
                     });
                 }

@@ -3940,7 +3940,6 @@ var playerSignin = function playerSignin(facebookId) {
         type: 'GET',
         success: function success(data) {
             if (data.length === 0) {
-                console.log(19, data, 'first time player');
                 var register = '';
                 register += '<p>Please enter a screen name</p>';
                 register += '<input id="inputScreenName" type="text" />';
@@ -3966,7 +3965,6 @@ var playerSignin = function playerSignin(facebookId) {
                     });
                 });
             } else {
-                console.log(20, data);
                 $('body').data('playerData', data[0]);
                 startGame();
             }
@@ -4007,7 +4005,6 @@ $(function () {
                     var signedInUserFacebookId = '';
                     FB.api('/me', function (response) {
                         signedInUserFacebookId = response.id;
-                        console.log(15, signedInUserFacebookId);
                         playerSignin(signedInUserFacebookId);
                     });
                 }
@@ -4201,7 +4198,9 @@ var Player = function (_Phaser$Sprite) {
         _this.animations.add('run', [5, 6, 7, 8], 10, true);
         _this.animations.play('run');
 
+        _this.speed = 1;
         game.input.onUp.add(function () {
+            //this.body.velocity.y = -400 / Math.sqrt(this.speed);
             _this.body.velocity.y = -400;
         });
 
@@ -4210,7 +4209,7 @@ var Player = function (_Phaser$Sprite) {
         var startSpeechRecognition = function startSpeechRecognition() {
             var speechRecognizer = new SpeechRecognition();
             speechRecognizer.start();
-            console.log('i am ready. say something.');
+            //console.log('i am ready. say something.');
             speechRecognizer.onresult = function (event) {
                 var transcript = event.results[0][0].transcript;
                 if (transcript === 'jump') {
@@ -4220,11 +4219,11 @@ var Player = function (_Phaser$Sprite) {
                 speechRecognizer.stop();
             };
             speechRecognizer.onspeechend = function () {
-                console.log('say some more');
+                //console.log('say some more');
                 startSpeechRecognition();
             };
             speechRecognizer.onerror = function (event) {
-                console.log(400, 'error!!');
+                //console.log(400, 'error!!');
                 startSpeechRecognition();
             };
         };
@@ -4239,7 +4238,9 @@ var Player = function (_Phaser$Sprite) {
 
     _createClass(Player, [{
         key: 'update',
-        value: function update() {}
+        value: function update() {
+            this.speed = $('body').data('speed');
+        }
     }]);
 
     return Player;
@@ -4285,6 +4286,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var gameData = $('body').data();
+
 var StaticAsset = function (_Phaser$Sprite) {
     _inherits(StaticAsset, _Phaser$Sprite);
 
@@ -4302,15 +4305,15 @@ var StaticAsset = function (_Phaser$Sprite) {
         _this.enableBody = true;
         _this.game.physics.arcade.enable(_this);
         _this.body.immovable = true;
-        _this.speed = 2;
-        //this.speedFactor = 1;
+        _this.speed = 1;
         return _this;
     }
 
     _createClass(StaticAsset, [{
         key: 'update',
         value: function update() {
-            this.position.x -= this.speed;
+            this.speed = $('body').data('speed');
+            this.position.x -= 2 + (this.speed - 1) / 5;
             if (this.position.x < -300) {
                 this.kill();
             }
@@ -4461,6 +4464,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var HEIGHT = _config2.default.gameHeight;
 var WIDTH = _config2.default.gameWidth;
 var gameData = $('body').data();
+console.log(19, gameData);
+/*
+const playerHighestScore = gameData.playerData.highestScore !== null
+  ? gameData.playerData.highestScore
+  : 0;
+
+*/
 
 var GameState = function (_Phaser$State) {
   _inherits(GameState, _Phaser$State);
@@ -4482,7 +4492,7 @@ var GameState = function (_Phaser$State) {
     value: function create() {
       var _this2 = this;
 
-      this.speedFactor = 1;
+      this.speed = 1;
       console.log(51, gameData);
       //initial physics in world
       this.physics.startSystem(_phaser2.default.Physics.ARCADE);
@@ -4510,12 +4520,8 @@ var GameState = function (_Phaser$State) {
         _this2.add.existing(_this2.ledge);
         _this2.ledge.body.checkCollision.down = false;
         _this2.ledge.body.checkCollision.left = false;
-        _this2.ledge.speed = 2 * _this2.speedFactor;
+        _this2.ledge.speed = 2 * _this2.speed;
         _this2.ledges.add(_this2.ledge);
-        console.log('ledges: ', _this2.ledges);
-        _this2.game.time.events.loop(_phaser2.default.Timer.SECOND * 1, function () {
-          //this.ledge.velocity.x -= 0.1;
-        });
 
         console.log('ledge', ledgeIndex, ' ', _this2.ledge.x, ', ', _this2.ledge.y);
         ledgeIndex++;
@@ -4544,8 +4550,12 @@ var GameState = function (_Phaser$State) {
         generateLedges();
       }
 
-      //generate following ledges every 2.2 second
-      this.game.time.events.loop(_phaser2.default.Timer.SECOND * 2.2 / this.speedFactor, function () {
+      //set the rate to generate ledges
+      //and generate ledges
+      this.abc = 1;
+      var ledgeGenerationRate = 1;
+      this.game.time.events.loop(_phaser2.default.Timer.SECOND * (2.8 - this.abc), function () {
+        console.log(9, _this2.abc);
         generateLedges();
       });
 
@@ -4565,17 +4575,21 @@ var GameState = function (_Phaser$State) {
         fill: 'black'
       });
       var timer = 0;
+
       this.game.time.events.loop(_phaser2.default.Timer.SECOND * 1, function () {
         timer += 100;
         _this2.score.text = 'score: ' + timer;
-        //this.speedFactor = this.speedFactor * 1.08;
+        _this2.speed = _this2.speed * 1.03;
+        ledgeGenerationRate = ledgeGenerationRate * 2;
+        $('body').data('speed', _this2.speed);
+        console.log(20, $('body').data());
       });
     }
   }, {
     key: 'update',
     value: function update() {
       this.physics.arcade.collide(this.player, this.ledges);
-      //this.ledges.position.x -= 2;
+      this.abc += 0.00013;
       //game over if player falls out of bottom of screen
       if (this.player.position.y > HEIGHT + 250) {
         this.state.start('Gameover');

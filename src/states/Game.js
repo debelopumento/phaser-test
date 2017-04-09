@@ -8,13 +8,19 @@ import getRandomInt from '../functions/getRandomInt';
 const HEIGHT = config.gameHeight;
 const WIDTH = config.gameWidth;
 const gameData = $('body').data();
+console.log(19, gameData);
+/*
+const playerHighestScore = gameData.playerData.highestScore !== null
+  ? gameData.playerData.highestScore
+  : 0;
 
+*/
 export default class GameState extends Phaser.State {
   init() {}
   preload() {}
 
   create() {
-    this.speedFactor = 1;
+    this.speed = 1;
     console.log(51, gameData);
     //initial physics in world
     this.physics.startSystem(Phaser.Physics.ARCADE);
@@ -42,12 +48,8 @@ export default class GameState extends Phaser.State {
       this.add.existing(this.ledge);
       this.ledge.body.checkCollision.down = false;
       this.ledge.body.checkCollision.left = false;
-      this.ledge.speed = 2 * this.speedFactor;
+      this.ledge.speed = 2 * this.speed;
       this.ledges.add(this.ledge);
-      console.log('ledges: ', this.ledges);
-      this.game.time.events.loop(Phaser.Timer.SECOND * 1, () => {
-        //this.ledge.velocity.x -= 0.1;
-      });
 
       console.log('ledge', ledgeIndex, ' ', this.ledge.x, ', ', this.ledge.y);
       ledgeIndex++;
@@ -82,13 +84,14 @@ export default class GameState extends Phaser.State {
       generateLedges();
     }
 
-    //generate following ledges every 2.2 second
-    this.game.time.events.loop(
-      Phaser.Timer.SECOND * 2.2 / this.speedFactor,
-      () => {
-        generateLedges();
-      }
-    );
+    //set the rate to generate ledges
+    //and generate ledges
+    this.abc = 1;
+    let ledgeGenerationRate = 1;
+    this.game.time.events.loop(Phaser.Timer.SECOND * (2.8 - this.abc), () => {
+      console.log(9, this.abc);
+      generateLedges();
+    });
 
     //create player
     this.player = new Player({
@@ -106,16 +109,20 @@ export default class GameState extends Phaser.State {
       fill: 'black',
     });
     let timer = 0;
+
     this.game.time.events.loop(Phaser.Timer.SECOND * 1, () => {
       timer += 100;
       this.score.text = 'score: ' + timer;
-      //this.speedFactor = this.speedFactor * 1.08;
+      this.speed = this.speed * 1.03;
+      ledgeGenerationRate = ledgeGenerationRate * 2;
+      $('body').data('speed', this.speed);
+      console.log(20, $('body').data());
     });
   }
 
   update() {
     this.physics.arcade.collide(this.player, this.ledges);
-    //this.ledges.position.x -= 2;
+    this.abc += 0.00013;
     //game over if player falls out of bottom of screen
     if (this.player.position.y > HEIGHT + 250) {
       this.state.start('Gameover');
