@@ -1,15 +1,37 @@
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import Game from './main';
+import state from './states/state';
+console.log('hello, react!');
+class App extends Component {
+    componentWillMount() {
+        const game = new Game();
+    }
+    render() {
+        return (
+            <h1>
+                Hello, react!
+            </h1>
+        );
+    }
+}
+
+ReactDOM.render(<App />, document.getElementById('reactRoot'));
+
+/*
+import Game from './main';
+import state from './states/state';
 
 const SERVER = 'http://localhost:8080/';
 
 const startGame = () => {
-    $('#signinScreen').css('display', 'none');
+    //$('#signinScreen').css('display', 'none');
     $.ajax({
         url: SERVER + 'highestScore',
         type: 'GET',
         success: data => {
-            const gameHighestScore = data.result[0].highestScore;
-            $('body').data('gameHighestScore', gameHighestScore);
+            state.gameHighestScore = data.result[0].highestScore;
+            //$('body').data('gameHighestScore', gameHighestScore);
             const game = new Game();
         },
         error: e => {
@@ -41,7 +63,7 @@ const playerSignin = facebookId => {
                         contentType: 'application/json; charset=utf-8',
                         data: JSON.stringify(newPlayer),
                         success: player => {
-                            $('body').data('playerData', player);
+                            state.playerData = player;
                             console.log(2);
                             startGame();
                         },
@@ -108,3 +130,4 @@ $(function() {
         })(document, 'script', 'facebook-jssdk');
     });
 });
+*/

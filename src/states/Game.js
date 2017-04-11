@@ -80,13 +80,6 @@ export default class GameState extends Phaser.State {
   preload() {}
 
   create() {
-    const gameData = $('body').data();
-    //console.log(12, JSON.stringify(gameData));
-    //console.log(12.5, gameData);
-    //const gameHighestScore = gameData.gameHighestScore;
-    //console.log(13, gameHighestScore);
-    //this.add.sprite(0, 0, 'star');
-
     //create ledge group
     this.ledges = this.add.group();
     this.physics.arcade.enable(this.ledges);
@@ -140,6 +133,14 @@ export default class GameState extends Phaser.State {
 
     //game over if player falls out of bottom of screen
     if (this.player.position.y > HEIGHT + 250) {
+      //check score
+      if (this.timer > state.gameHighestScore) {
+        const SERVER = 'http://localhost:8080/';
+        $.ajax({
+          url: SERVER + 'highestScore',
+        });
+      }
+      //go to game over stage
       this.state.start('Gameover');
     }
   }

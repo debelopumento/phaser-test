@@ -1,5 +1,5 @@
 export default {
     gameHighestScore: 1,
-    personalHighestScore: 10,
+    playerData: {},
     speed: 1,
 };

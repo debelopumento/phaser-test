@@ -1,6 +1,10 @@
 var path = require('path');
 var webpack = require('webpack');
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
+var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 
 // Phaser webpack config
 var phaserModule = path.join(__dirname, '/node_modules/phaser-ce/');
@@ -12,12 +16,14 @@ var definePlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
 });
 
+var APP_DIR = path.resolve(__dirname, 'src/index.js');
+
 module.exports = {
   entry: {
-    app: ['babel-polyfill', path.resolve(__dirname, 'src/index.js')],
+    app: ['babel-polyfill', APP_DIR],
     vendor: ['pixi', 'p2', 'phaser', 'webfontloader', 'react', 'react-dom'],
   },
-  devtool: 'cheap-source-map',
+  devtool: 'cheap-module-source-map',
   output: {
     pathinfo: true,
     path: path.resolve(__dirname, 'dist'),
@@ -31,6 +37,10 @@ module.exports = {
       name: 'vendor' /* chunkName= */,
       filename: 'vendor.bundle.js' /* filename= */,
     }),
+    new webpack.DefinePlugin(env.stringified),
+    new webpack.HotModuleReplacementPlugin(),
+    new CaseSensitivePathsPlugin(),
+
     new BrowserSyncPlugin({
       host: process.env.IP || 'localhost',
       port: process.env.PORT || 3000,
@@ -41,6 +51,13 @@ module.exports = {
   ],
 
   module: {
+    loaders: [
+      {
+        test: /\.jsx?/,
+        include: APP_DIR,
+        loader: 'babel',
+      },
+    ],
     rules: [
       {
         test: /\.js$/,
@@ -59,6 +76,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      'react-native': 'react-native-web',
       phaser: phaser,
       pixi: pixi,
       p2: p2,
