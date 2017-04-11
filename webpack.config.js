@@ -15,7 +15,7 @@ var definePlugin = new webpack.DefinePlugin({
 module.exports = {
   entry: {
     app: ['babel-polyfill', path.resolve(__dirname, 'src/index.js')],
-    vendor: ['pixi', 'p2', 'phaser', 'webfontloader'],
+    vendor: ['pixi', 'p2', 'phaser', 'webfontloader', 'react', 'react-dom'],
   },
   devtool: 'cheap-source-map',
   output: {
@@ -39,13 +39,7 @@ module.exports = {
       },
     }),
   ],
-  /*
-  devServer: process.env.NODE_ENV === 'development'
-    ? {
-        proxy: { '/api*': { target: 'http://localhost:8080/', secure: false } },
-      }
-    : false,
-    */
+
   module: {
     rules: [
       {

@@ -6,22 +6,6 @@ export default class SplashState extends Phaser.State {
   init() {}
 
   preload() {
-    /*
-    this.loaderBg = this.add.sprite(
-      this.game.world.centerX,
-      this.game.world.centerY,
-      'loaderBg'
-    );
-    
-    this.loaderBar = this.add.sprite(
-      this.game.world.centerX,
-      this.game.world.centerY,
-      'loaderBar'
-    );
-    
-    centerGameObjects([this.loaderBg, this.loaderBar]);
-    */
-
     //this.load.setPreloadSprite(this.loaderBar);
     this.load.image('sky', 'assets/images/sky.png');
     this.load.image('star', 'assets/images/star.png');
@@ -32,7 +16,6 @@ export default class SplashState extends Phaser.State {
   }
 
   create() {
-    //this.state.start('Game');
     this.start = new TextButton({
       game: this.game,
       x: this.game.world.centerX,
@@ -47,7 +30,8 @@ export default class SplashState extends Phaser.State {
     this.start.scale.setTo(0.7, 0.7);
     this.add.existing(this.start);
     this.start.onInputDown.add(() => {
-      this.state.start('Game');
+      //this.state.start('Game');
     });
+    this.state.start('Game');
   }
 }

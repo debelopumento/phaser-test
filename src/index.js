@@ -10,12 +10,12 @@ const startGame = () => {
         success: data => {
             const gameHighestScore = data.result[0].highestScore;
             $('body').data('gameHighestScore', gameHighestScore);
+            const game = new Game();
         },
         error: e => {
             console.log(e);
         },
     });
-    const game = new Game();
 };
 
 const playerSignin = facebookId => {
@@ -42,6 +42,7 @@ const playerSignin = facebookId => {
                         data: JSON.stringify(newPlayer),
                         success: player => {
                             $('body').data('playerData', player);
+                            console.log(2);
                             startGame();
                         },
                         error: e => {
@@ -88,9 +89,8 @@ $(function() {
             FB.getLoginStatus(response => {
                 //statusChangeCallback(response);
                 if (response.status === 'connected') {
-                    var signedInUserFacebookId = '';
                     FB.api('/me', response => {
-                        signedInUserFacebookId = response.id;
+                        const signedInUserFacebookId = response.id;
                         playerSignin(signedInUserFacebookId);
                     });
                 }

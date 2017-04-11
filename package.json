@@ -28,6 +28,8 @@
     "express": "^4.15.2",
     "mongoose": "^4.9.3",
     "phaser-ce": "^2.7.3",
+    "react": "^15.5.3",
+    "react-dom": "^15.5.3",
     "webfontloader": "^1.6.27"
   }
 }
