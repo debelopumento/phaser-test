@@ -1,15 +1,24 @@
 import axios from 'axios';
+import store from '../store';
 
 const SERVER = 'http://localhost:8080/';
 
+export const updateFacebookId = facebookId => ({
+    type: 'UPDATE_FACEBOOKID',
+    payload: facebookId,
+});
+
 export const newPlayerRegistration = newPlayer => {
     return dispatch => {
+        newPlayer.highestScore = 0;
+        console.log(5, newPlayer);
         axios
             .post('http://localhost:8080/users/', newPlayer)
-            .then(player => {
+            .then(data => {
+                console.log(4, data.data.screenName);
                 dispatch({
-                    type: 'NEW_PLAYER_REGISTRATION',
-                    payload: player,
+                    type: 'UPDATE_SCREENNAME',
+                    payload: data.data.screenName,
                 });
             })
             .catch(e => {
@@ -34,4 +43,3 @@ export const getGameHighestScore = () => {
             });
     };
 };
-
