@@ -8,14 +8,13 @@ export const updateFacebookId = facebookId => ({
     payload: facebookId,
 });
 
-export const newPlayerRegistration = newPlayer => {
-    return dispatch => {
+export const newPlayerRegistration = newPlayer =>
+    dispatch => {
         newPlayer.highestScore = 0;
-        console.log(5, newPlayer);
+        console.log(100);
         axios
             .post('http://localhost:8080/users/', newPlayer)
             .then(data => {
-                console.log(4, data.data.screenName);
                 dispatch({
                     type: 'UPDATE_SCREENNAME',
                     payload: data.data.screenName,
@@ -25,21 +24,19 @@ export const newPlayerRegistration = newPlayer => {
                 console.log(e);
             });
     };
-};
 
-export const getGameHighestScore = () => {
+export const getGameHighestScore = () =>
     dispatch => {
         axios
             .get('http://localhost:8080/highestScore/')
             .then(data => {
-                const gameHighestScore = data.result[0].highestScore;
+                const gameHighestScore = data.data.result[0].highestScore;
                 dispatch({
                     type: 'UPDATE_GAME_HIGHEST_SCORE',
-                    playload: gameHighestScore,
+                    payload: gameHighestScore,
                 });
             })
             .catch(e => {
                 console.log(e);
             });
     };
-};

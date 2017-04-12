@@ -55,6 +55,6 @@ export default class Player extends Phaser.Sprite {
     }
 
     update() {
-        this.speed = $('body').data('speed');
+        this.speed = state.speed;
     }
 }

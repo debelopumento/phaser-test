@@ -11,11 +11,19 @@ import { connect } from 'react-redux';
 import * as actions from './actions/actionIndex';
 import Registration from './registration';
 import axios from 'axios';
+import $ from 'jquery';
 
 const SERVER = 'http://localhost:8080/';
 
+/*
 const startGame = () => {
     $('#signinScreen').css('display', 'none');
+    console.log(15);
+
+    store.dispatch(actions.newPlayerRegistration());
+
+    const game = new Game();
+    
     $.ajax({
         url: SERVER + 'highestScore',
         type: 'GET',
@@ -28,7 +36,9 @@ const startGame = () => {
             console.log(e);
         },
     });
+    
 };
+*/
 
 const { object, func } = PropTypes;
 
@@ -66,8 +76,16 @@ export default class App extends PureComponent {
             highestScore: 0,
             screenName: 'Guest',
         };
-        startGame();
+        this.startGame();
     }
+
+    startGame() {
+        $('#signinScreen').css('display', 'none');
+        store.dispatch(actions.getGameHighestScore());
+
+        const game = new Game();
+    }
+
     componentWillMount() {
         // This is called with the results from from FB.getLoginStatus().
         window.fbAsyncInit = () => {
@@ -95,7 +113,14 @@ export default class App extends PureComponent {
                                     //show registration input box
                                     this.setState({ showRegistration: true });
                                 } else {
-                                    startGame();
+                                    const playerScreenName = data.data[
+                                        0
+                                    ].screenName;
+                                    store.dispatch({
+                                        type: 'UPDATE_SCREENNAME',
+                                        payload: playerScreenName,
+                                    });
+                                    this.startGame();
                                 }
                             })
                             .catch(e => {

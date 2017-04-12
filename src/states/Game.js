@@ -134,12 +134,7 @@ export default class GameState extends Phaser.State {
     //game over if player falls out of bottom of screen
     if (this.player.position.y > HEIGHT + 250) {
       //check score
-      if (this.timer > state.gameHighestScore) {
-        const SERVER = 'http://localhost:8080/';
-        $.ajax({
-          url: SERVER + 'highestScore',
-        });
-      }
+
       //go to game over stage
       this.state.start('Gameover');
     }
