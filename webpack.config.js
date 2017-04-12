@@ -2,9 +2,6 @@ var path = require('path');
 var webpack = require('webpack');
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
-var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 
 // Phaser webpack config
 var phaserModule = path.join(__dirname, '/node_modules/phaser-ce/');
@@ -37,9 +34,7 @@ module.exports = {
       name: 'vendor' /* chunkName= */,
       filename: 'vendor.bundle.js' /* filename= */,
     }),
-    new webpack.DefinePlugin(env.stringified),
     new webpack.HotModuleReplacementPlugin(),
-    new CaseSensitivePathsPlugin(),
 
     new BrowserSyncPlugin({
       host: process.env.IP || 'localhost',

@@ -11,10 +11,12 @@ var definePlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'false')),
 });
 
+var APP_DIR = path.resolve(__dirname, 'src/index.js');
+
 module.exports = {
   entry: {
-    app: ['babel-polyfill', path.resolve(__dirname, 'src/index.js')],
-    vendor: ['pixi', 'p2', 'phaser', 'webfontloader'],
+    app: ['babel-polyfill', APP_DIR],
+    vendor: ['pixi', 'p2', 'phaser', 'webfontloader', 'react', 'react-dom'],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -37,6 +39,13 @@ module.exports = {
     }),
   ],
   module: {
+    loaders: [
+      {
+        test: /\.jsx?/,
+        include: APP_DIR,
+        loader: 'babel',
+      },
+    ],
     rules: [
       {
         test: /\.js$/,
@@ -55,6 +64,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      'react-native': 'react-native-web',
       phaser: phaser,
       pixi: pixi,
       p2: p2,

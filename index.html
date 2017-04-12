@@ -100,8 +100,18 @@
     });
   }
 </script>
-    <div id="signinScreen"></div>
-    <div id="reactRoot"></div>
+    <div id="signinScreen">
+      <fb:login-button
+            autologoutlink="true"
+            data-size="xlarge"
+            id="fbloginbutton"
+            scope="public_profile,email"
+            onlogin="checkLoginState();"
+        />
+    </div>
+    <div id="reactRoot">
+      
+    </div>
     <div id="game"></div>    
     <script src="dist/vendor.bundle.js"></script>
     <script src="dist/bundle.js"></script>
