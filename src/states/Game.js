@@ -11,13 +11,6 @@ import * as actions from '../actions/actionIndex';
 const HEIGHT = config.gameHeight;
 const WIDTH = config.gameWidth;
 
-/*
-const playerHighestScore = gameData.gameHighestScore !== null
-  ? gameData.gamHighestScore
-  : 0;
-*/
-//console.log(40, gameData.gameHighestScore);
-
 export default class GameState extends Phaser.State {
   init() {
     this.speed = state.speed;
@@ -131,16 +124,20 @@ export default class GameState extends Phaser.State {
 
     //game over if player falls out of bottom of screen
     if (this.player.position.y > HEIGHT + 250) {
-      //check score and update record
-      const gameHighestScore = store.getState().gameHighestScore;
-      const playerHighestScore = store.getState().playerHighestScore;
+      const guest = store.getState().screenName === 'Guest' ? true : false;
+      console.log(0, guest);
+      if (!guest) {
+        //check score and update record
+        const gameHighestScore = store.getState().gameHighestScore;
+        const playerHighestScore = store.getState().playerHighestScore;
 
-      if (this.timer > playerHighestScore) {
-        alert('Personal Highest Score!');
-        store.dispatch(actions.updatePersonalHighestScore(this.timer));
-        if (this.timer > gameHighestScore) {
-          alert('Game Highest Score!');
-          store.dispatch(actions.checkAndUpdateGameHighestScore(this.timer));
+        if (this.timer > playerHighestScore) {
+          alert('Personal Highest Score!');
+          store.dispatch(actions.updatePersonalHighestScore(this.timer));
+          if (this.timer > gameHighestScore) {
+            alert('Game Highest Score!');
+            store.dispatch(actions.checkAndUpdateGameHighestScore(this.timer));
+          }
         }
       }
 

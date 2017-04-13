@@ -58,8 +58,6 @@ app.put('/highestScore', (req, res) => {
 
 //check and update game highest score
 app.put('/highestScore/:score', (req, res) => {
-  console.log(3, req.body);
-
   HighestScore.find()
     .exec()
     .then(data => {

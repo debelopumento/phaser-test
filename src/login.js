@@ -17,7 +17,7 @@ const SERVER = 'http://localhost:8080/';
 
 const { object, func } = PropTypes;
 
-export default class App extends PureComponent {
+export default class Login extends PureComponent {
     /*
     static PropTypes = {
         gameHighestScore: object,
@@ -47,10 +47,11 @@ export default class App extends PureComponent {
 
     playAsAGuest(event) {
         event.preventDefault();
-        const guestPlayer = {
-            highestScore: 0,
-            screenName: 'Guest',
-        };
+
+        store.dispatch({
+            type: 'UPDATE_SCREENNAME',
+            payload: 'Guest',
+        });
         this.startGame();
     }
 

@@ -5937,16 +5937,16 @@ var _store = __webpack_require__(/*! ./store */ 69);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _app = __webpack_require__(/*! ./app */ 248);
+var _login = __webpack_require__(/*! ./login */ 581);
 
-var _app2 = _interopRequireDefault(_app);
+var _login2 = _interopRequireDefault(_login);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _reactDom2.default.render(_react2.default.createElement(
     _reactRedux.Provider,
     { store: _store2.default },
-    _react2.default.createElement(_app2.default, null)
+    _react2.default.createElement(_login2.default, null)
 ), document.getElementById('reactRoot'));
 
 /***/ }),
@@ -6910,214 +6910,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 248 */
-/* unknown exports provided */
-/* all exports used */
-/*!********************!*\
-  !*** ./src/app.js ***!
-  \********************/
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(/*! react */ 60);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _propTypes = __webpack_require__(/*! prop-types */ 130);
-
-var _reactDom = __webpack_require__(/*! react-dom */ 98);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-var _reactRedux = __webpack_require__(/*! react-redux */ 218);
-
-var _store = __webpack_require__(/*! ./store */ 69);
-
-var _store2 = _interopRequireDefault(_store);
-
-var _game_init = __webpack_require__(/*! ./game_init */ 580);
-
-var _game_init2 = _interopRequireDefault(_game_init);
-
-var _state = __webpack_require__(/*! ./states/state */ 79);
-
-var _state2 = _interopRequireDefault(_state);
-
-var _actionIndex = __webpack_require__(/*! ./actions/actionIndex */ 100);
-
-var actions = _interopRequireWildcard(_actionIndex);
-
-var _registration = __webpack_require__(/*! ./registration */ 251);
-
-var _registration2 = _interopRequireDefault(_registration);
-
-var _axios = __webpack_require__(/*! axios */ 153);
-
-var _axios2 = _interopRequireDefault(_axios);
-
-var _jquery = __webpack_require__(/*! jquery */ 457);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*global fb*/
-
-var SERVER = 'http://localhost:8080/';
-
-var object = _propTypes.PropTypes.object,
-    func = _propTypes.PropTypes.func;
-
-var App = function (_PureComponent) {
-    _inherits(App, _PureComponent);
-
-    /*
-    static PropTypes = {
-        gameHighestScore: object,
-        getGameHighestScore: func,
-        newPlayerRegistration: func,
-    };
-     static defaultProps = {
-        gameHighestScore: 0,
-        playerData: {},
-    };
-    
-    state = {
-        playerData: {},
-    };
-    */
-
-    function App() {
-        _classCallCheck(this, App);
-
-        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
-
-        _this.state = {
-            showRegistration: false
-        };
-
-        _this.playAsAGuest = _this.playAsAGuest.bind(_this);
-        return _this;
-    }
-
-    _createClass(App, [{
-        key: 'playAsAGuest',
-        value: function playAsAGuest(event) {
-            event.preventDefault();
-            var guestPlayer = {
-                highestScore: 0,
-                screenName: 'Guest'
-            };
-            this.startGame();
-        }
-    }, {
-        key: 'startGame',
-        value: function startGame() {
-            (0, _jquery2.default)('#signinScreen').css('display', 'none');
-            _store2.default.dispatch(actions.getGameHighestScore());
-            var game = new _game_init2.default();
-        }
-    }, {
-        key: 'componentWillMount',
-        value: function componentWillMount() {
-            var _this2 = this;
-
-            // This is called with the results from from FB.getLoginStatus().
-            window.fbAsyncInit = function () {
-                FB.init({
-                    appId: '113731382506643',
-                    cookie: true, // enable cookies to allow the server to access
-                    // the session
-                    xfbml: true, // parse social plugins on this page
-                    version: 'v2.8' });
-
-                FB.getLoginStatus(function (response) {
-                    if (response.status === 'connected') {
-                        FB.api('/me', function (response) {
-                            var facebookId = response.id;
-                            _store2.default.dispatch(actions.updateFacebookId(facebookId));
-
-                            _axios2.default.get('http://localhost:8080/users/facebookId/' + facebookId).then(function (data) {
-                                if (data.data.length === 0) {
-                                    //show registration input box
-                                    _this2.setState({ showRegistration: true });
-                                } else {
-                                    var playerScreenName = data.data[0].screenName;
-                                    var playerHighestScore = data.data[0].highestScore;
-                                    var _id = data.data[0].id;
-                                    _store2.default.dispatch(actions.updatePlayerId(_id));
-                                    _store2.default.dispatch({
-                                        type: 'UPDATE_SCREENNAME',
-                                        payload: playerScreenName
-                                    });
-                                    _store2.default.dispatch({
-                                        type: 'UPDATE_PLAYER_HIGHEST_SCORE',
-                                        payload: playerHighestScore
-                                    });
-                                    _this2.startGame();
-                                }
-                            }).catch(function (e) {
-                                console.log(e);
-                            });
-                        });
-                    }
-                });
-            };
-
-            // Load the SDK asynchronously
-            (function (d, s, id) {
-                var js,
-                    fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s);
-                js.id = id;
-                js.src = '//connect.facebook.net/en_US/sdk.js';
-                fjs.parentNode.insertBefore(js, fjs);
-            })(document, 'script', 'facebook-jssdk');
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return _react2.default.createElement(
-                'div',
-                null,
-                this.state.showRegistration ? _react2.default.createElement(_registration2.default, null) : null,
-                _react2.default.createElement('input', {
-                    type: 'submit',
-                    value: 'play as a Guest',
-                    onClick: this.playAsAGuest
-                })
-            );
-        }
-    }]);
-
-    return App;
-}(_react.PureComponent);
-/*
-export default connect(storeState => ({
-    gameHighestScore: storeState.gameHighestScore,
-    playerData: storeState.playerData,
-}));
-*/
-
-
-exports.default = App;
-
-/***/ }),
+/* 248 */,
 /* 249 */,
 /* 250 */
 /* unknown exports provided */
@@ -7661,13 +7454,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var HEIGHT = _config2.default.gameHeight;
 var WIDTH = _config2.default.gameWidth;
 
-/*
-const playerHighestScore = gameData.gameHighestScore !== null
-  ? gameData.gamHighestScore
-  : 0;
-*/
-//console.log(40, gameData.gameHighestScore);
-
 var GameState = function (_Phaser$State) {
   _inherits(GameState, _Phaser$State);
 
@@ -7783,16 +7569,20 @@ var GameState = function (_Phaser$State) {
 
       //game over if player falls out of bottom of screen
       if (this.player.position.y > HEIGHT + 250) {
-        //check score and update record
-        var gameHighestScore = _store2.default.getState().gameHighestScore;
-        var playerHighestScore = _store2.default.getState().playerHighestScore;
+        var guest = _store2.default.getState().screenName === 'Guest' ? true : false;
+        console.log(0, guest);
+        if (!guest) {
+          //check score and update record
+          var gameHighestScore = _store2.default.getState().gameHighestScore;
+          var playerHighestScore = _store2.default.getState().playerHighestScore;
 
-        if (this.timer > playerHighestScore) {
-          alert('Personal Highest Score!');
-          _store2.default.dispatch(actions.updatePersonalHighestScore(this.timer));
-          if (this.timer > gameHighestScore) {
-            alert('Game Highest Score!');
-            _store2.default.dispatch(actions.checkAndUpdateGameHighestScore(this.timer));
+          if (this.timer > playerHighestScore) {
+            alert('Personal Highest Score!');
+            _store2.default.dispatch(actions.updatePersonalHighestScore(this.timer));
+            if (this.timer > gameHighestScore) {
+              alert('Game Highest Score!');
+              _store2.default.dispatch(actions.checkAndUpdateGameHighestScore(this.timer));
+            }
           }
         }
 
@@ -26781,6 +26571,215 @@ var Game = function (_Phaser$Game) {
 
 
 exports.default = Game;
+
+/***/ }),
+/* 581 */
+/* unknown exports provided */
+/* all exports used */
+/*!**********************!*\
+  !*** ./src/login.js ***!
+  \**********************/
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ 60);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(/*! prop-types */ 130);
+
+var _reactDom = __webpack_require__(/*! react-dom */ 98);
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ 218);
+
+var _store = __webpack_require__(/*! ./store */ 69);
+
+var _store2 = _interopRequireDefault(_store);
+
+var _game_init = __webpack_require__(/*! ./game_init */ 580);
+
+var _game_init2 = _interopRequireDefault(_game_init);
+
+var _state = __webpack_require__(/*! ./states/state */ 79);
+
+var _state2 = _interopRequireDefault(_state);
+
+var _actionIndex = __webpack_require__(/*! ./actions/actionIndex */ 100);
+
+var actions = _interopRequireWildcard(_actionIndex);
+
+var _registration = __webpack_require__(/*! ./registration */ 251);
+
+var _registration2 = _interopRequireDefault(_registration);
+
+var _axios = __webpack_require__(/*! axios */ 153);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _jquery = __webpack_require__(/*! jquery */ 457);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*global fb*/
+
+var SERVER = 'http://localhost:8080/';
+
+var object = _propTypes.PropTypes.object,
+    func = _propTypes.PropTypes.func;
+
+var Login = function (_PureComponent) {
+    _inherits(Login, _PureComponent);
+
+    /*
+    static PropTypes = {
+        gameHighestScore: object,
+        getGameHighestScore: func,
+        newPlayerRegistration: func,
+    };
+     static defaultProps = {
+        gameHighestScore: 0,
+        playerData: {},
+    };
+    
+    state = {
+        playerData: {},
+    };
+    */
+
+    function Login() {
+        _classCallCheck(this, Login);
+
+        var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this));
+
+        _this.state = {
+            showRegistration: false
+        };
+
+        _this.playAsAGuest = _this.playAsAGuest.bind(_this);
+        return _this;
+    }
+
+    _createClass(Login, [{
+        key: 'playAsAGuest',
+        value: function playAsAGuest(event) {
+            event.preventDefault();
+
+            _store2.default.dispatch({
+                type: 'UPDATE_SCREENNAME',
+                payload: 'Guest'
+            });
+            this.startGame();
+        }
+    }, {
+        key: 'startGame',
+        value: function startGame() {
+            (0, _jquery2.default)('#signinScreen').css('display', 'none');
+            _store2.default.dispatch(actions.getGameHighestScore());
+            var game = new _game_init2.default();
+        }
+    }, {
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            var _this2 = this;
+
+            // This is called with the results from from FB.getLoginStatus().
+            window.fbAsyncInit = function () {
+                FB.init({
+                    appId: '113731382506643',
+                    cookie: true, // enable cookies to allow the server to access
+                    // the session
+                    xfbml: true, // parse social plugins on this page
+                    version: 'v2.8' });
+
+                FB.getLoginStatus(function (response) {
+                    if (response.status === 'connected') {
+                        FB.api('/me', function (response) {
+                            var facebookId = response.id;
+                            _store2.default.dispatch(actions.updateFacebookId(facebookId));
+
+                            _axios2.default.get('http://localhost:8080/users/facebookId/' + facebookId).then(function (data) {
+                                if (data.data.length === 0) {
+                                    //show registration input box
+                                    _this2.setState({ showRegistration: true });
+                                } else {
+                                    var playerScreenName = data.data[0].screenName;
+                                    var playerHighestScore = data.data[0].highestScore;
+                                    var _id = data.data[0].id;
+                                    _store2.default.dispatch(actions.updatePlayerId(_id));
+                                    _store2.default.dispatch({
+                                        type: 'UPDATE_SCREENNAME',
+                                        payload: playerScreenName
+                                    });
+                                    _store2.default.dispatch({
+                                        type: 'UPDATE_PLAYER_HIGHEST_SCORE',
+                                        payload: playerHighestScore
+                                    });
+                                    _this2.startGame();
+                                }
+                            }).catch(function (e) {
+                                console.log(e);
+                            });
+                        });
+                    }
+                });
+            };
+
+            // Load the SDK asynchronously
+            (function (d, s, id) {
+                var js,
+                    fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = '//connect.facebook.net/en_US/sdk.js';
+                fjs.parentNode.insertBefore(js, fjs);
+            })(document, 'script', 'facebook-jssdk');
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                'div',
+                null,
+                this.state.showRegistration ? _react2.default.createElement(_registration2.default, null) : null,
+                _react2.default.createElement('input', {
+                    type: 'submit',
+                    value: 'play as a Guest',
+                    onClick: this.playAsAGuest
+                })
+            );
+        }
+    }]);
+
+    return Login;
+}(_react.PureComponent);
+/*
+export default connect(storeState => ({
+    gameHighestScore: storeState.gameHighestScore,
+    playerData: storeState.playerData,
+}));
+*/
+
+
+exports.default = Login;
 
 /***/ })
 ],[578]);
