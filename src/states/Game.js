@@ -131,18 +131,16 @@ export default class GameState extends Phaser.State {
 
     //game over if player falls out of bottom of screen
     if (this.player.position.y > HEIGHT + 250) {
-      //check score
+      //check score and update record
       const gameHighestScore = store.getState().gameHighestScore;
       const playerHighestScore = store.getState().playerHighestScore;
+
       if (this.timer > playerHighestScore) {
-        store.dispatch(actions.updatePersonalHighestScore(this.timer));
-
-        const playerId = store.getState()._id;
-        console.log(22, playerId);
         alert('Personal Highest Score!');
-
-        if (this.time > gameHighestScore) {
+        store.dispatch(actions.updatePersonalHighestScore(this.timer));
+        if (this.timer > gameHighestScore) {
           alert('Game Highest Score!');
+          store.dispatch(actions.checkAndUpdateGameHighestScore(this.timer));
         }
       }
 

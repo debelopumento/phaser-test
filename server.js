@@ -48,8 +48,38 @@ app.put('/highestScore', (req, res) => {
   HighestScore.findByIdAndUpdate('58e70d40734d1d4af38c960d', req.body)
     .exec()
     .then(data => {
-      console.log(15, data);
       res.json(data);
+    })
+    .catch(err => {
+      console.log(16, err);
+      res.status(500).json({ message: 'Interval server error' });
+    });
+});
+
+//check and update game highest score
+app.put('/highestScore/:score', (req, res) => {
+  console.log(3, req.body);
+
+  HighestScore.find()
+    .exec()
+    .then(data => {
+      const oldScore = data[0].highestScore;
+      console.log(1, oldScore, 2, req.params.score);
+      const reqBody = req.body;
+      reqBody.highestScore = req.params.score;
+      if (req.params.score > oldScore) {
+        HighestScore.findByIdAndUpdate('58e70d40734d1d4af38c960d', reqBody)
+          .exec()
+          .then(data => {
+            res.json(200);
+          })
+          .catch(err => {
+            console.log(16, err);
+            res.status(500).json({ message: 'Interval server error' });
+          });
+      } else {
+        res.json(400);
+      }
     })
     .catch(err => {
       console.log(16, err);

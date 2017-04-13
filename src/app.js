@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './store';
-import Game from './game_main';
+import Game from './game_init';
 import state from './states/state';
 import { connect } from 'react-redux';
 import * as actions from './actions/actionIndex';

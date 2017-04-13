@@ -52,7 +52,6 @@ export const newPlayerRegistration = newPlayer =>
 
 export const getGameHighestScore = () =>
     dispatch => {
-        console.log(200);
         axios
             .get('http://localhost:8080/highestScore/')
             .then(data => {
@@ -60,6 +59,29 @@ export const getGameHighestScore = () =>
                 dispatch({
                     type: 'UPDATE_GAME_HIGHEST_SCORE',
                     payload: gameHighestScore,
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
+
+export const checkAndUpdateGameHighestScore = score =>
+    dispatch => {
+        const reqBody = {
+            highestScore: score,
+            facebookId: store.getState().facebookId,
+            screenName: store.getState().screenName,
+        };
+        console.log(200, reqBody);
+        const url = 'http://localhost:8080/highestScore/' + score;
+        axios
+            .put(url, reqBody)
+            .then(data => {
+                console.log(90, data);
+                dispatch({
+                    type: 'UPDATE_GAME_HIGHEST_SCORE',
+                    payload: reqBody.highestScore,
                 });
             })
             .catch(e => {

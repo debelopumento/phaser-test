@@ -2490,7 +2490,7 @@ module.exports = defaults;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.getGameHighestScore = exports.newPlayerRegistration = exports.updateFacebookId = exports.updatePlayerId = exports.updatePersonalHighestScore = undefined;
+exports.checkAndUpdateGameHighestScore = exports.getGameHighestScore = exports.newPlayerRegistration = exports.updateFacebookId = exports.updatePlayerId = exports.updatePersonalHighestScore = undefined;
 
 var _axios = __webpack_require__(/*! axios */ 153);
 
@@ -2549,12 +2549,32 @@ var newPlayerRegistration = exports.newPlayerRegistration = function newPlayerRe
 
 var getGameHighestScore = exports.getGameHighestScore = function getGameHighestScore() {
     return function (dispatch) {
-        console.log(200);
         _axios2.default.get('http://localhost:8080/highestScore/').then(function (data) {
             var gameHighestScore = data.data.result[0].highestScore;
             dispatch({
                 type: 'UPDATE_GAME_HIGHEST_SCORE',
                 payload: gameHighestScore
+            });
+        }).catch(function (e) {
+            console.log(e);
+        });
+    };
+};
+
+var checkAndUpdateGameHighestScore = exports.checkAndUpdateGameHighestScore = function checkAndUpdateGameHighestScore(score) {
+    return function (dispatch) {
+        var reqBody = {
+            highestScore: score,
+            facebookId: _store2.default.getState().facebookId,
+            screenName: _store2.default.getState().screenName
+        };
+        console.log(200, reqBody);
+        var url = 'http://localhost:8080/highestScore/' + score;
+        _axios2.default.put(url, reqBody).then(function (data) {
+            console.log(90, data);
+            dispatch({
+                type: 'UPDATE_GAME_HIGHEST_SCORE',
+                payload: reqBody.highestScore
             });
         }).catch(function (e) {
             console.log(e);
@@ -6923,9 +6943,9 @@ var _store = __webpack_require__(/*! ./store */ 69);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _game_main = __webpack_require__(/*! ./game_main */ 249);
+var _game_init = __webpack_require__(/*! ./game_init */ 580);
 
-var _game_main2 = _interopRequireDefault(_game_main);
+var _game_init2 = _interopRequireDefault(_game_init);
 
 var _state = __webpack_require__(/*! ./states/state */ 79);
 
@@ -7009,7 +7029,7 @@ var App = function (_PureComponent) {
         value: function startGame() {
             (0, _jquery2.default)('#signinScreen').css('display', 'none');
             _store2.default.dispatch(actions.getGameHighestScore());
-            var game = new _game_main2.default();
+            var game = new _game_init2.default();
         }
     }, {
         key: 'componentWillMount',
@@ -7098,83 +7118,7 @@ export default connect(storeState => ({
 exports.default = App;
 
 /***/ }),
-/* 249 */
-/* unknown exports provided */
-/* all exports used */
-/*!**************************!*\
-  !*** ./src/game_main.js ***!
-  \**************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-__webpack_require__(/*! pixi */ 150);
-
-__webpack_require__(/*! p2 */ 151);
-
-var _phaser = __webpack_require__(/*! phaser */ 42);
-
-var _phaser2 = _interopRequireDefault(_phaser);
-
-var _Boot = __webpack_require__(/*! ./states/Boot */ 254);
-
-var _Boot2 = _interopRequireDefault(_Boot);
-
-var _Splash = __webpack_require__(/*! ./states/Splash */ 257);
-
-var _Splash2 = _interopRequireDefault(_Splash);
-
-var _Game = __webpack_require__(/*! ./states/Game */ 255);
-
-var _Game2 = _interopRequireDefault(_Game);
-
-var _Gameover = __webpack_require__(/*! ./states/Gameover */ 256);
-
-var _Gameover2 = _interopRequireDefault(_Gameover);
-
-var _config = __webpack_require__(/*! ./config */ 78);
-
-var _config2 = _interopRequireDefault(_config);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Game = function (_Phaser$Game) {
-    _inherits(Game, _Phaser$Game);
-
-    function Game() {
-        _classCallCheck(this, Game);
-
-        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, _config2.default.gameWidth, _config2.default.gameHeight, _phaser2.default.CANVAS, 'game', null));
-
-        _this.state.add('Boot', _Boot2.default, false);
-        _this.state.add('Splash', _Splash2.default, false);
-        _this.state.add('Game', _Game2.default, false);
-        _this.state.add('Gameover', _Gameover2.default, false);
-
-        _this.state.start('Boot');
-        return _this;
-    }
-
-    return Game;
-}(_phaser2.default.Game);
-
-//window.game = new Game();
-
-
-exports.default = Game;
-
-/***/ }),
+/* 249 */,
 /* 250 */
 /* unknown exports provided */
 /* all exports used */
@@ -7839,18 +7783,16 @@ var GameState = function (_Phaser$State) {
 
       //game over if player falls out of bottom of screen
       if (this.player.position.y > HEIGHT + 250) {
-        //check score
+        //check score and update record
         var gameHighestScore = _store2.default.getState().gameHighestScore;
         var playerHighestScore = _store2.default.getState().playerHighestScore;
+
         if (this.timer > playerHighestScore) {
-          _store2.default.dispatch(actions.updatePersonalHighestScore(this.timer));
-
-          var playerId = _store2.default.getState()._id;
-          console.log(22, playerId);
           alert('Personal Highest Score!');
-
-          if (this.time > gameHighestScore) {
+          _store2.default.dispatch(actions.updatePersonalHighestScore(this.timer));
+          if (this.timer > gameHighestScore) {
             alert('Game Highest Score!');
+            _store2.default.dispatch(actions.checkAndUpdateGameHighestScore(this.timer));
           }
         }
 
@@ -26761,6 +26703,84 @@ module.exports = function(module) {
 __webpack_require__(/*! babel-polyfill */230);
 module.exports = __webpack_require__(/*! /Users/Thinkful/Desktop/phaser-test/src/index.js */229);
 
+
+/***/ }),
+/* 579 */,
+/* 580 */
+/* unknown exports provided */
+/* all exports used */
+/*!**************************!*\
+  !*** ./src/game_init.js ***!
+  \**************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+__webpack_require__(/*! pixi */ 150);
+
+__webpack_require__(/*! p2 */ 151);
+
+var _phaser = __webpack_require__(/*! phaser */ 42);
+
+var _phaser2 = _interopRequireDefault(_phaser);
+
+var _Boot = __webpack_require__(/*! ./states/Boot */ 254);
+
+var _Boot2 = _interopRequireDefault(_Boot);
+
+var _Splash = __webpack_require__(/*! ./states/Splash */ 257);
+
+var _Splash2 = _interopRequireDefault(_Splash);
+
+var _Game = __webpack_require__(/*! ./states/Game */ 255);
+
+var _Game2 = _interopRequireDefault(_Game);
+
+var _Gameover = __webpack_require__(/*! ./states/Gameover */ 256);
+
+var _Gameover2 = _interopRequireDefault(_Gameover);
+
+var _config = __webpack_require__(/*! ./config */ 78);
+
+var _config2 = _interopRequireDefault(_config);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Game = function (_Phaser$Game) {
+    _inherits(Game, _Phaser$Game);
+
+    function Game() {
+        _classCallCheck(this, Game);
+
+        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, _config2.default.gameWidth, _config2.default.gameHeight, _phaser2.default.CANVAS, 'game', null));
+
+        _this.state.add('Boot', _Boot2.default, false);
+        _this.state.add('Splash', _Splash2.default, false);
+        _this.state.add('Game', _Game2.default, false);
+        _this.state.add('Gameover', _Gameover2.default, false);
+
+        _this.state.start('Boot');
+        return _this;
+    }
+
+    return Game;
+}(_phaser2.default.Game);
+
+//window.game = new Game();
+
+
+exports.default = Game;
 
 /***/ })
 ],[578]);
