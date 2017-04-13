@@ -34,10 +34,22 @@ app.get('/highestScore', (req, res) => {
   HighestScore.find()
     .exec()
     .then(highestScore => {
-      console.log(15);
       res.json({
         result: highestScore.map(highestScore => highestScore.apiRepr()),
       });
+    })
+    .catch(err => {
+      console.log(16, err);
+      res.status(500).json({ message: 'Interval server error' });
+    });
+});
+
+app.put('/highestScore', (req, res) => {
+  HighestScore.findByIdAndUpdate('58e70d40734d1d4af38c960d', req.body)
+    .exec()
+    .then(data => {
+      console.log(15, data);
+      res.json(data);
     })
     .catch(err => {
       console.log(16, err);
