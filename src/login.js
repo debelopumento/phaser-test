@@ -40,6 +40,7 @@ export default class Login extends PureComponent {
 
         this.state = {
             showRegistration: false,
+            showPlayAsAGuestButton: true,
         };
 
         this.playAsAGuest = this.playAsAGuest.bind(this);
@@ -57,6 +58,7 @@ export default class Login extends PureComponent {
 
     startGame() {
         $('#signinScreen').css('display', 'none');
+        this.setState({ showPlayAsAGuestButton: false });
         store.dispatch(actions.getGameHighestScore());
         const game = new Game();
     }
@@ -130,11 +132,13 @@ export default class Login extends PureComponent {
         return (
             <div>
                 {this.state.showRegistration ? <Registration /> : null}
-                <input
-                    type="submit"
-                    value="play as a Guest"
-                    onClick={this.playAsAGuest}
-                />
+                {this.state.showPlayAsAGuestButton
+                    ? <input
+                          type="submit"
+                          value="Play as a Guest"
+                          onClick={this.playAsAGuest}
+                      />
+                    : null}
             </div>
         );
     }

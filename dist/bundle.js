@@ -26675,7 +26675,8 @@ var Login = function (_PureComponent) {
         var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this));
 
         _this.state = {
-            showRegistration: false
+            showRegistration: false,
+            showPlayAsAGuestButton: true
         };
 
         _this.playAsAGuest = _this.playAsAGuest.bind(_this);
@@ -26697,6 +26698,7 @@ var Login = function (_PureComponent) {
         key: 'startGame',
         value: function startGame() {
             (0, _jquery2.default)('#signinScreen').css('display', 'none');
+            this.setState({ showPlayAsAGuestButton: false });
             _store2.default.dispatch(actions.getGameHighestScore());
             var game = new _game_init2.default();
         }
@@ -26765,11 +26767,11 @@ var Login = function (_PureComponent) {
                 'div',
                 null,
                 this.state.showRegistration ? _react2.default.createElement(_registration2.default, null) : null,
-                _react2.default.createElement('input', {
+                this.state.showPlayAsAGuestButton ? _react2.default.createElement('input', {
                     type: 'submit',
-                    value: 'play as a Guest',
+                    value: 'Play as a Guest',
                     onClick: this.playAsAGuest
-                })
+                }) : null
             );
         }
     }]);
