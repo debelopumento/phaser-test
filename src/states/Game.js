@@ -34,6 +34,12 @@ export default class GameState extends Phaser.State {
         ', ',
         JSON.stringify(ledgeYPosition)
       );
+
+      //temperary fix for bug that sometimes y-position of ledge is null
+      if (ledgeYPosition === null) {
+        ledgeYPosition = HEIGHT / 2;
+      }
+
       this.ledge = new StaticAsset({
         game: this,
         x: ledgeXPosition,
@@ -89,7 +95,7 @@ export default class GameState extends Phaser.State {
     //and generate ledges
     this.ledgeGenerationRate = 1;
     this.game.time.events.loop(
-      Phaser.Timer.SECOND * (2.5 - this.ledgeGenerationRate),
+      Phaser.Timer.SECOND * (4 - this.ledgeGenerationRate),
       () => {
         state.speed = Number((state.speed * 1.01).toFixed(3));
         this.generateLedges();
@@ -125,7 +131,6 @@ export default class GameState extends Phaser.State {
     //game over if player falls out of bottom of screen
     if (this.player.position.y > HEIGHT + 250) {
       const guest = store.getState().screenName === 'Guest' ? true : false;
-      console.log(0, guest);
       if (!guest) {
         //check score and update record
         const gameHighestScore = store.getState().gameHighestScore;

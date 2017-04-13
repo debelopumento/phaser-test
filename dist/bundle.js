@@ -7482,6 +7482,12 @@ var GameState = function (_Phaser$State) {
       //generate ledge and add it to ledge group
       this.generateLedges = function () {
         console.log('ledge', ledgeIndex, ' ', ledgeXPosition, ', ', JSON.stringify(ledgeYPosition));
+
+        //temperary fix for bug that sometimes y-position of ledge is null
+        if (ledgeYPosition === null) {
+          ledgeYPosition = HEIGHT / 2;
+        }
+
         _this2.ledge = new _staticAsset2.default({
           game: _this2,
           x: ledgeXPosition,
@@ -7535,7 +7541,7 @@ var GameState = function (_Phaser$State) {
       //set the rate to generate ledges
       //and generate ledges
       this.ledgeGenerationRate = 1;
-      this.game.time.events.loop(_phaser2.default.Timer.SECOND * (2.5 - this.ledgeGenerationRate), function () {
+      this.game.time.events.loop(_phaser2.default.Timer.SECOND * (4 - this.ledgeGenerationRate), function () {
         _state2.default.speed = Number((_state2.default.speed * 1.01).toFixed(3));
         _this3.generateLedges();
       });
@@ -7570,7 +7576,6 @@ var GameState = function (_Phaser$State) {
       //game over if player falls out of bottom of screen
       if (this.player.position.y > HEIGHT + 250) {
         var guest = _store2.default.getState().screenName === 'Guest' ? true : false;
-        console.log(0, guest);
         if (!guest) {
           //check score and update record
           var gameHighestScore = _store2.default.getState().gameHighestScore;
