@@ -93,6 +93,8 @@ export default class App extends PureComponent {
                                     const playerHighestScore = data.data[
                                         0
                                     ].highestScore;
+                                    const _id = data.data[0].id;
+                                    store.dispatch(actions.updatePlayerId(_id));
                                     store.dispatch({
                                         type: 'UPDATE_SCREENNAME',
                                         payload: playerScreenName,

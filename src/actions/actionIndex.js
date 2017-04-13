@@ -3,6 +3,32 @@ import store from '../store';
 
 const SERVER = 'http://localhost:8080/';
 
+export const updatePersonalHighestScore = score =>
+    dispatch => {
+        const _id = store.getState()._id;
+        const url = SERVER +
+            'users/updateUserHighestScore/' +
+            _id +
+            '/' +
+            score;
+        axios
+            .put(url)
+            .then(() => {
+                dispatch({
+                    type: 'UPDATE_PLAYER_HIGHEST_SCORE',
+                    payload: score,
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
+
+export const updatePlayerId = id => ({
+    type: 'UPDATE_PLAYER_ID',
+    payload: id,
+});
+
 export const updateFacebookId = facebookId => ({
     type: 'UPDATE_FACEBOOKID',
     payload: facebookId,
@@ -11,9 +37,8 @@ export const updateFacebookId = facebookId => ({
 export const newPlayerRegistration = newPlayer =>
     dispatch => {
         newPlayer.highestScore = 0;
-        console.log(100);
         axios
-            .post('http://localhost:8080/users/', newPlayer)
+            .post(SERVER + 'users/', newPlayer)
             .then(data => {
                 dispatch({
                     type: 'UPDATE_SCREENNAME',
@@ -27,6 +52,7 @@ export const newPlayerRegistration = newPlayer =>
 
 export const getGameHighestScore = () =>
     dispatch => {
+        console.log(200);
         axios
             .get('http://localhost:8080/highestScore/')
             .then(data => {

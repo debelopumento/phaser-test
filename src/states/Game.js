@@ -6,6 +6,7 @@ import config from '../config';
 import getRandomInt from '../functions/getRandomInt';
 import state from './state';
 import store from '../store';
+import * as actions from '../actions/actionIndex';
 
 const HEIGHT = config.gameHeight;
 const WIDTH = config.gameWidth;
@@ -134,7 +135,12 @@ export default class GameState extends Phaser.State {
       const gameHighestScore = store.getState().gameHighestScore;
       const playerHighestScore = store.getState().playerHighestScore;
       if (this.timer > playerHighestScore) {
+        store.dispatch(actions.updatePersonalHighestScore(this.timer));
+
+        const playerId = store.getState()._id;
+        console.log(22, playerId);
         alert('Personal Highest Score!');
+
         if (this.time > gameHighestScore) {
           alert('Game Highest Score!');
         }
