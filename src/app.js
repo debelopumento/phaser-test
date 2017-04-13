@@ -15,31 +15,6 @@ import $ from 'jquery';
 
 const SERVER = 'http://localhost:8080/';
 
-/*
-const startGame = () => {
-    $('#signinScreen').css('display', 'none');
-    console.log(15);
-
-    store.dispatch(actions.newPlayerRegistration());
-
-    const game = new Game();
-    
-    $.ajax({
-        url: SERVER + 'highestScore',
-        type: 'GET',
-        success: data => {
-            state.gameHighestScore = data.result[0].highestScore;
-            //$('body').data('gameHighestScore', gameHighestScore);
-            const game = new Game();
-        },
-        error: e => {
-            console.log(e);
-        },
-    });
-    
-};
-*/
-
 const { object, func } = PropTypes;
 
 export default class App extends PureComponent {
@@ -82,7 +57,6 @@ export default class App extends PureComponent {
     startGame() {
         $('#signinScreen').css('display', 'none');
         store.dispatch(actions.getGameHighestScore());
-
         const game = new Game();
     }
 
@@ -116,9 +90,16 @@ export default class App extends PureComponent {
                                     const playerScreenName = data.data[
                                         0
                                     ].screenName;
+                                    const playerHighestScore = data.data[
+                                        0
+                                    ].highestScore;
                                     store.dispatch({
                                         type: 'UPDATE_SCREENNAME',
                                         payload: playerScreenName,
+                                    });
+                                    store.dispatch({
+                                        type: 'UPDATE_PLAYER_HIGHEST_SCORE',
+                                        payload: playerHighestScore,
                                     });
                                     this.startGame();
                                 }

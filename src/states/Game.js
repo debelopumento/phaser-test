@@ -5,6 +5,7 @@ import Player from '../sprites/player';
 import config from '../config';
 import getRandomInt from '../functions/getRandomInt';
 import state from './state';
+import store from '../store';
 
 const HEIGHT = config.gameHeight;
 const WIDTH = config.gameWidth;
@@ -120,10 +121,6 @@ export default class GameState extends Phaser.State {
     this.game.time.events.loop(Phaser.Timer.SECOND * 1, () => {
       this.timer += 100;
       this.score.text = 'score: ' + this.timer;
-      //this.stateb = state.b;
-      //console.log(300, this.stateb);
-      //$('body').data('speed', this.speed);
-      //console.log(20, $('body').data());
     });
   }
 
@@ -134,6 +131,14 @@ export default class GameState extends Phaser.State {
     //game over if player falls out of bottom of screen
     if (this.player.position.y > HEIGHT + 250) {
       //check score
+      const gameHighestScore = store.getState().gameHighestScore;
+      const playerHighestScore = store.getState().playerHighestScore;
+      if (this.timer > playerHighestScore) {
+        alert('Personal Highest Score!');
+        if (this.time > gameHighestScore) {
+          alert('Game Highest Score!');
+        }
+      }
 
       //go to game over stage
       this.state.start('Gameover');
