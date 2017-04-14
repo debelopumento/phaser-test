@@ -3,7 +3,8 @@ import Phaser from 'phaser';
 import ForegroundAsset from '../sprites/foregroundAsset';
 import BackdropAsset from '../sprites/backdropAsset';
 import BackgroundAsset from '../sprites/backgroundAsset';
-
+import MidgroundAsset from '../sprites/midgroundAsset';
+import CloseupAsset from '../sprites/closeupAsset';
 import Player from '../sprites/player';
 import config from '../config';
 import getRandomInt from '../functions/getRandomInt';
@@ -23,7 +24,7 @@ export default class GameState extends Phaser.State {
     let ledgeYPosition = HEIGHT / 2;
     let ledgeIndex = 0;
     let neighbourLedgeHeightDifference = 50;
-    const ledgeTypes = ['platform', 'platform-b'];
+    const ledgeTypes = ['ledge-1', 'ledge-2', 'ledge-3', 'ledge-4'];
 
     //add sky
     this.sky = new BackdropAsset({
@@ -70,6 +71,36 @@ export default class GameState extends Phaser.State {
       asset: 'bg-5',
     });
     this.add.existing(this.bg);
+
+    //generate midground
+    this.mg = new MidgroundAsset({
+      game: this,
+      x: 0,
+      y: 50,
+      asset: 'mg-1',
+    });
+    this.add.existing(this.mg);
+    this.mg = new MidgroundAsset({
+      game: this,
+      x: 800,
+      y: 50,
+      asset: 'mg-2',
+    });
+    this.add.existing(this.mg);
+    this.mg = new MidgroundAsset({
+      game: this,
+      x: 1200,
+      y: 50,
+      asset: 'mg-3',
+    });
+    this.mg = new MidgroundAsset({
+      game: this,
+      x: 1600,
+      y: 50,
+      asset: 'mg-4',
+    });
+    this.add.existing(this.mg);
+    this.add.existing(this.mg);
     //generate ledge and add it to ledge group
     this.generateLedges = () => {
       console.log(
@@ -110,7 +141,7 @@ export default class GameState extends Phaser.State {
         this.ledge.scale.setTo(0.65, 0.9);
       } else {
         ledgeXPosition = WIDTH + 150;
-        this.ledge.scale.setTo(0.5, 0.9);
+        this.ledge.scale.setTo(0.5, 1.5);
       }
 
       if (ledgeYPosition < HEIGHT - 100 && ledgeYPosition > 100) {
@@ -160,6 +191,16 @@ export default class GameState extends Phaser.State {
       asset: 'dude',
     });
     this.add.existing(this.player);
+
+    //create closeup environment
+    this.closeup = new CloseupAsset({
+      game: this.game,
+      y: 300,
+      asset: 'closeup-1',
+    });
+    this.closeup.scale.setTo(2, 1.5);
+
+    this.add.existing(this.closeup);
 
     //create score
     this.score = this.game.add.text(WIDTH / 2, 30, 'score: 0', {
