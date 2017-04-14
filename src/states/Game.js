@@ -23,7 +23,7 @@ export default class GameState extends Phaser.State {
     let ledgeYPosition = HEIGHT / 2;
     let ledgeIndex = 0;
     let neighbourLedgeHeightDifference = 50;
-
+    const ledgeTypes = ['platform', 'platform-b'];
     //generate ledge and add it to ledge group
     this.generateLedges = () => {
       console.log(
@@ -40,11 +40,14 @@ export default class GameState extends Phaser.State {
         ledgeYPosition = HEIGHT / 2;
       }
 
+      const randomLedgeType = ledgeTypes[
+        Math.floor(Math.random() * ledgeTypes.length)
+      ];
       this.ledge = new StaticAsset({
         game: this,
         x: ledgeXPosition,
         y: ledgeYPosition,
-        asset: 'platform',
+        asset: randomLedgeType,
       });
       this.add.existing(this.ledge);
       this.ledge.body.checkCollision.down = false;

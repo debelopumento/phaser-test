@@ -7764,7 +7764,7 @@ var GameState = function (_Phaser$State) {
       var ledgeYPosition = HEIGHT / 2;
       var ledgeIndex = 0;
       var neighbourLedgeHeightDifference = 50;
-
+      var ledgeTypes = ['platform', 'platform-b'];
       //generate ledge and add it to ledge group
       this.generateLedges = function () {
         console.log('ledge', ledgeIndex, ' ', ledgeXPosition, ', ', JSON.stringify(ledgeYPosition));
@@ -7774,11 +7774,12 @@ var GameState = function (_Phaser$State) {
           ledgeYPosition = HEIGHT / 2;
         }
 
+        var randomLedgeType = ledgeTypes[Math.floor(Math.random() * ledgeTypes.length)];
         _this2.ledge = new _staticAsset2.default({
           game: _this2,
           x: ledgeXPosition,
           y: ledgeYPosition,
-          asset: 'platform'
+          asset: randomLedgeType
         });
         _this2.add.existing(_this2.ledge);
         _this2.ledge.body.checkCollision.down = false;
@@ -8022,6 +8023,7 @@ var SplashState = function (_Phaser$State) {
       this.load.spritesheet('dude', 'assets/images/dude.png', 32, 48);
       this.load.image('mushroom', 'assets/images/mushroom2.png');
       this.load.image('platform', 'assets/images/platform.png');
+      this.load.image('platform-b', 'assets/images/platform-b.png');
       this.load.image('button', 'assets/images/button.png', 40, 10, 3);
     }
   }, {
