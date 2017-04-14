@@ -7505,89 +7505,7 @@ var Player = function (_Phaser$Sprite) {
 exports.default = Player;
 
 /***/ }),
-/* 253 */
-/* unknown exports provided */
-/* all exports used */
-/*!************************************!*\
-  !*** ./src/sprites/staticAsset.js ***!
-  \************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _phaser = __webpack_require__(/*! phaser */ 42);
-
-var _phaser2 = _interopRequireDefault(_phaser);
-
-var _getRandomInt = __webpack_require__(/*! ../functions/getRandomInt */ 159);
-
-var _getRandomInt2 = _interopRequireDefault(_getRandomInt);
-
-var _config = __webpack_require__(/*! ../config */ 78);
-
-var _config2 = _interopRequireDefault(_config);
-
-var _state = __webpack_require__(/*! ../states/state */ 79);
-
-var _state2 = _interopRequireDefault(_state);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-//const gameData = $('body').data();
-
-var StaticAsset = function (_Phaser$Sprite) {
-    _inherits(StaticAsset, _Phaser$Sprite);
-
-    function StaticAsset(_ref) {
-        var game = _ref.game,
-            x = _ref.x,
-            y = _ref.y,
-            asset = _ref.asset;
-
-        _classCallCheck(this, StaticAsset);
-
-        var _this = _possibleConstructorReturn(this, (StaticAsset.__proto__ || Object.getPrototypeOf(StaticAsset)).call(this, game, x, y, asset));
-
-        _this.anchor.setTo(0, 0);
-        _this.enableBody = true;
-        _this.game.physics.arcade.enable(_this);
-        _this.body.immovable = true;
-        //this.speed = state.speed;
-        return _this;
-    }
-
-    _createClass(StaticAsset, [{
-        key: 'update',
-        value: function update() {
-            //this.speed = $('body').data('speed');
-            this.position.x -= 0.3 + _state2.default.speed;
-            //this.position.x -= 1.54;
-
-            if (this.position.x < -300) {
-                this.kill();
-            }
-        }
-    }]);
-
-    return StaticAsset;
-}(_phaser2.default.Sprite);
-
-exports.default = StaticAsset;
-
-/***/ }),
+/* 253 */,
 /* 254 */
 /* unknown exports provided */
 /* all exports used */
@@ -7698,9 +7616,17 @@ var _phaser = __webpack_require__(/*! phaser */ 42);
 
 var _phaser2 = _interopRequireDefault(_phaser);
 
-var _staticAsset = __webpack_require__(/*! ../sprites/staticAsset */ 253);
+var _foregroundAsset = __webpack_require__(/*! ../sprites/foregroundAsset */ 580);
 
-var _staticAsset2 = _interopRequireDefault(_staticAsset);
+var _foregroundAsset2 = _interopRequireDefault(_foregroundAsset);
+
+var _backdropAsset = __webpack_require__(/*! ../sprites/backdropAsset */ 582);
+
+var _backdropAsset2 = _interopRequireDefault(_backdropAsset);
+
+var _backgroundAsset = __webpack_require__(/*! ../sprites/backgroundAsset */ 581);
+
+var _backgroundAsset2 = _interopRequireDefault(_backgroundAsset);
 
 var _player = __webpack_require__(/*! ../sprites/player */ 252);
 
@@ -7756,15 +7682,58 @@ var GameState = function (_Phaser$State) {
 
       this.speed = _state2.default.speed;
 
-      //initial physics in world
-      this.physics.startSystem(_phaser2.default.Physics.ARCADE);
-
       //initialize properties for generating ledges
       var ledgeXPosition = 50;
       var ledgeYPosition = HEIGHT / 2;
       var ledgeIndex = 0;
       var neighbourLedgeHeightDifference = 50;
       var ledgeTypes = ['platform', 'platform-b'];
+
+      //add sky
+      this.sky = new _backdropAsset2.default({
+        game: this,
+        width: 500,
+        height: 500,
+        asset: 'sky'
+      });
+      this.add.existing(this.sky);
+
+      //add background objects
+      this.bg = new _backgroundAsset2.default({
+        game: this,
+        x: 0,
+        y: 100,
+        asset: 'bg-1'
+      });
+      this.add.existing(this.bg);
+      this.bg = new _backgroundAsset2.default({
+        game: this,
+        x: 400,
+        y: 100,
+        asset: 'bg-2'
+      });
+      this.add.existing(this.bg);
+      this.bg = new _backgroundAsset2.default({
+        game: this,
+        x: 2800,
+        y: 100,
+        asset: 'bg-3'
+      });
+      this.add.existing(this.bg);
+      this.bg = new _backgroundAsset2.default({
+        game: this,
+        x: 1200,
+        y: 100,
+        asset: 'bg-4'
+      });
+      this.add.existing(this.bg);
+      this.bg = new _backgroundAsset2.default({
+        game: this,
+        x: 1700,
+        y: 100,
+        asset: 'bg-5'
+      });
+      this.add.existing(this.bg);
       //generate ledge and add it to ledge group
       this.generateLedges = function () {
         console.log('ledge', ledgeIndex, ' ', ledgeXPosition, ', ', JSON.stringify(ledgeYPosition));
@@ -7775,7 +7744,7 @@ var GameState = function (_Phaser$State) {
         }
 
         var randomLedgeType = ledgeTypes[Math.floor(Math.random() * ledgeTypes.length)];
-        _this2.ledge = new _staticAsset2.default({
+        _this2.ledge = new _foregroundAsset2.default({
           game: _this2,
           x: ledgeXPosition,
           y: ledgeYPosition,
@@ -7784,6 +7753,7 @@ var GameState = function (_Phaser$State) {
         _this2.add.existing(_this2.ledge);
         _this2.ledge.body.checkCollision.down = false;
         _this2.ledge.body.checkCollision.left = false;
+
         _this2.ledges.add(_this2.ledge);
         ledgeIndex++;
         //get position for the next ledge to be generated.
@@ -7857,6 +7827,9 @@ var GameState = function (_Phaser$State) {
   }, {
     key: 'update',
     value: function update() {
+      //environment
+      //this.sky.position.x -= 0.000001;
+
       this.physics.arcade.collide(this.player, this.ledges);
       this.ledgeGenerationRate += 0.00213;
 
@@ -8024,6 +7997,12 @@ var SplashState = function (_Phaser$State) {
       this.load.image('mushroom', 'assets/images/mushroom2.png');
       this.load.image('platform', 'assets/images/platform.png');
       this.load.image('platform-b', 'assets/images/platform-b.png');
+      this.load.image('bg-1', 'assets/images/tobu-bg-1.png');
+      this.load.image('bg-2', 'assets/images/tobu-bg-2.png');
+      this.load.image('bg-3', 'assets/images/tobu-bg-3.png');
+      this.load.image('bg-4', 'assets/images/tobu-bg-4.png');
+      this.load.image('bg-5', 'assets/images/tobu-bg-5.png');
+
       this.load.image('button', 'assets/images/button.png', 40, 10, 3);
     }
   }, {
@@ -26786,6 +26765,232 @@ module.exports = function(module) {
 __webpack_require__(/*! babel-polyfill */230);
 module.exports = __webpack_require__(/*! /Users/Thinkful/Desktop/phaser-test/src/index.js */229);
 
+
+/***/ }),
+/* 579 */,
+/* 580 */
+/* unknown exports provided */
+/* all exports used */
+/*!****************************************!*\
+  !*** ./src/sprites/foregroundAsset.js ***!
+  \****************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _phaser = __webpack_require__(/*! phaser */ 42);
+
+var _phaser2 = _interopRequireDefault(_phaser);
+
+var _getRandomInt = __webpack_require__(/*! ../functions/getRandomInt */ 159);
+
+var _getRandomInt2 = _interopRequireDefault(_getRandomInt);
+
+var _config = __webpack_require__(/*! ../config */ 78);
+
+var _config2 = _interopRequireDefault(_config);
+
+var _state = __webpack_require__(/*! ../states/state */ 79);
+
+var _state2 = _interopRequireDefault(_state);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+//const gameData = $('body').data();
+
+var ForegroundAsset = function (_Phaser$Sprite) {
+    _inherits(ForegroundAsset, _Phaser$Sprite);
+
+    function ForegroundAsset(_ref) {
+        var game = _ref.game,
+            x = _ref.x,
+            y = _ref.y,
+            asset = _ref.asset;
+
+        _classCallCheck(this, ForegroundAsset);
+
+        var _this = _possibleConstructorReturn(this, (ForegroundAsset.__proto__ || Object.getPrototypeOf(ForegroundAsset)).call(this, game, x, y, asset));
+
+        _this.anchor.setTo(0, 0);
+        _this.enableBody = true;
+        _this.game.physics.arcade.enable(_this);
+        _this.body.immovable = true;
+        //this.speed = state.speed;
+        return _this;
+    }
+
+    _createClass(ForegroundAsset, [{
+        key: 'update',
+        value: function update() {
+            //this.speed = $('body').data('speed');
+            this.position.x -= 0.3 + _state2.default.speed;
+            //this.position.x -= 1.54;
+
+            if (this.position.x < -300) {
+                this.kill();
+            }
+        }
+    }]);
+
+    return ForegroundAsset;
+}(_phaser2.default.Sprite);
+
+exports.default = ForegroundAsset;
+
+/***/ }),
+/* 581 */
+/* unknown exports provided */
+/* all exports used */
+/*!****************************************!*\
+  !*** ./src/sprites/backgroundAsset.js ***!
+  \****************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _phaser = __webpack_require__(/*! phaser */ 42);
+
+var _phaser2 = _interopRequireDefault(_phaser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+//import getRandomInt from '../functions/getRandomInt';
+//import config from '../config';
+//import state from '../states/state';
+
+var BackgroundAsset = function (_Phaser$Sprite) {
+    _inherits(BackgroundAsset, _Phaser$Sprite);
+
+    function BackgroundAsset(_ref) {
+        var game = _ref.game,
+            x = _ref.x,
+            y = _ref.y,
+            asset = _ref.asset;
+
+        _classCallCheck(this, BackgroundAsset);
+
+        var _this = _possibleConstructorReturn(this, (BackgroundAsset.__proto__ || Object.getPrototypeOf(BackgroundAsset)).call(this, game, x, y, asset));
+
+        _this.anchor.setTo(0, 0);
+        //this.enableBody = true;
+        //this.game.physics.arcade.enable(this);
+        //this.body.immovable = true;
+        return _this;
+    }
+
+    _createClass(BackgroundAsset, [{
+        key: 'update',
+        value: function update() {
+            this.position.x -= 0.3;
+            /*
+            if (this.position.x < -300) {
+                this.kill();
+            }
+            */
+        }
+    }]);
+
+    return BackgroundAsset;
+}(_phaser2.default.Sprite);
+
+exports.default = BackgroundAsset;
+
+/***/ }),
+/* 582 */
+/* unknown exports provided */
+/* all exports used */
+/*!**************************************!*\
+  !*** ./src/sprites/backdropAsset.js ***!
+  \**************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _phaser = __webpack_require__(/*! phaser */ 42);
+
+var _phaser2 = _interopRequireDefault(_phaser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+//import getRandomInt from '../functions/getRandomInt';
+//import config from '../config';
+//import state from '../states/state';
+
+var BackdropAsset = function (_Phaser$Sprite) {
+    _inherits(BackdropAsset, _Phaser$Sprite);
+
+    function BackdropAsset(_ref) {
+        var game = _ref.game,
+            x = _ref.x,
+            y = _ref.y,
+            asset = _ref.asset;
+
+        _classCallCheck(this, BackdropAsset);
+
+        var _this = _possibleConstructorReturn(this, (BackdropAsset.__proto__ || Object.getPrototypeOf(BackdropAsset)).call(this, game, x, y, asset));
+
+        _this.anchor.setTo(0, 0);
+        //this.enableBody = true;
+        //this.game.physics.arcade.enable(this);
+        //this.body.immovable = true;
+        return _this;
+    }
+
+    _createClass(BackdropAsset, [{
+        key: 'update',
+        value: function update() {
+            //this.position.x -= 0.3;
+            /*
+            if (this.position.x < -300) {
+                this.kill();
+            }
+            */
+        }
+    }]);
+
+    return BackdropAsset;
+}(_phaser2.default.Sprite);
+
+exports.default = BackdropAsset;
 
 /***/ })
 ],[578]);

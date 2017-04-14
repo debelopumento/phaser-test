@@ -1,6 +1,9 @@
 /* globals __DEV__ */
 import Phaser from 'phaser';
-import StaticAsset from '../sprites/staticAsset';
+import ForegroundAsset from '../sprites/foregroundAsset';
+import BackdropAsset from '../sprites/backdropAsset';
+import BackgroundAsset from '../sprites/backgroundAsset';
+
 import Player from '../sprites/player';
 import config from '../config';
 import getRandomInt from '../functions/getRandomInt';
@@ -15,15 +18,58 @@ export default class GameState extends Phaser.State {
   init() {
     this.speed = state.speed;
 
-    //initial physics in world
-    this.physics.startSystem(Phaser.Physics.ARCADE);
-
     //initialize properties for generating ledges
     let ledgeXPosition = 50;
     let ledgeYPosition = HEIGHT / 2;
     let ledgeIndex = 0;
     let neighbourLedgeHeightDifference = 50;
     const ledgeTypes = ['platform', 'platform-b'];
+
+    //add sky
+    this.sky = new BackdropAsset({
+      game: this,
+      width: 500,
+      height: 500,
+      asset: 'sky',
+    });
+    this.add.existing(this.sky);
+
+    //add background objects
+    this.bg = new BackgroundAsset({
+      game: this,
+      x: 0,
+      y: 100,
+      asset: 'bg-1',
+    });
+    this.add.existing(this.bg);
+    this.bg = new BackgroundAsset({
+      game: this,
+      x: 400,
+      y: 100,
+      asset: 'bg-2',
+    });
+    this.add.existing(this.bg);
+    this.bg = new BackgroundAsset({
+      game: this,
+      x: 2800,
+      y: 100,
+      asset: 'bg-3',
+    });
+    this.add.existing(this.bg);
+    this.bg = new BackgroundAsset({
+      game: this,
+      x: 1200,
+      y: 100,
+      asset: 'bg-4',
+    });
+    this.add.existing(this.bg);
+    this.bg = new BackgroundAsset({
+      game: this,
+      x: 1700,
+      y: 100,
+      asset: 'bg-5',
+    });
+    this.add.existing(this.bg);
     //generate ledge and add it to ledge group
     this.generateLedges = () => {
       console.log(
@@ -43,7 +89,7 @@ export default class GameState extends Phaser.State {
       const randomLedgeType = ledgeTypes[
         Math.floor(Math.random() * ledgeTypes.length)
       ];
-      this.ledge = new StaticAsset({
+      this.ledge = new ForegroundAsset({
         game: this,
         x: ledgeXPosition,
         y: ledgeYPosition,
@@ -52,6 +98,7 @@ export default class GameState extends Phaser.State {
       this.add.existing(this.ledge);
       this.ledge.body.checkCollision.down = false;
       this.ledge.body.checkCollision.left = false;
+
       this.ledges.add(this.ledge);
       ledgeIndex++;
       //get position for the next ledge to be generated.
@@ -128,6 +175,9 @@ export default class GameState extends Phaser.State {
   }
 
   update() {
+    //environment
+    //this.sky.position.x -= 0.000001;
+
     this.physics.arcade.collide(this.player, this.ledges);
     this.ledgeGenerationRate += 0.00213;
 
