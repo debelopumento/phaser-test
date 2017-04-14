@@ -120,7 +120,7 @@ export default class GameState extends Phaser.State {
 
     this.game.time.events.loop(Phaser.Timer.SECOND * 1, () => {
       this.timer += 100;
-      this.score.text = 'score: ' + this.timer;
+      this.score.text = this.timer;
     });
   }
 

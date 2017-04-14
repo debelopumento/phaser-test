@@ -2485,7 +2485,7 @@ module.exports = defaults;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(process) {
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -2502,12 +2502,13 @@ var _store2 = _interopRequireDefault(_store);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var SERVER = 'http://localhost:8080/';
+//const SERVER = 'http://localhost:8080/';
+var host = process.env.NODE_ENV === 'production' ? 'https://cryptic-atoll-29351.herokuapp.com/' : 'http://localhost:8080/';
 
 var updatePersonalHighestScore = exports.updatePersonalHighestScore = function updatePersonalHighestScore(score) {
     return function (dispatch) {
         var _id = _store2.default.getState()._id;
-        var url = SERVER + 'users/updateUserHighestScore/' + _id + '/' + score;
+        var url = host + 'users/updateUserHighestScore/' + _id + '/' + score;
         _axios2.default.put(url).then(function () {
             dispatch({
                 type: 'UPDATE_PLAYER_HIGHEST_SCORE',
@@ -2536,7 +2537,7 @@ var updateFacebookId = exports.updateFacebookId = function updateFacebookId(face
 var newPlayerRegistration = exports.newPlayerRegistration = function newPlayerRegistration(newPlayer) {
     return function (dispatch) {
         newPlayer.highestScore = 0;
-        _axios2.default.post(SERVER + 'users/', newPlayer).then(function (data) {
+        _axios2.default.post(host + 'users/', newPlayer).then(function (data) {
             dispatch({
                 type: 'UPDATE_SCREENNAME',
                 payload: data.data.screenName
@@ -2549,7 +2550,7 @@ var newPlayerRegistration = exports.newPlayerRegistration = function newPlayerRe
 
 var getGameHighestScore = exports.getGameHighestScore = function getGameHighestScore() {
     return function (dispatch) {
-        _axios2.default.get('http://localhost:8080/highestScore/').then(function (data) {
+        _axios2.default.get(host + 'highestScore/').then(function (data) {
             var gameHighestScore = data.data.result[0].highestScore;
             dispatch({
                 type: 'UPDATE_GAME_HIGHEST_SCORE',
@@ -2568,10 +2569,8 @@ var checkAndUpdateGameHighestScore = exports.checkAndUpdateGameHighestScore = fu
             facebookId: _store2.default.getState().facebookId,
             screenName: _store2.default.getState().screenName
         };
-        console.log(200, reqBody);
-        var url = 'http://localhost:8080/highestScore/' + score;
+        var url = host + 'highestScore/' + score;
         _axios2.default.put(url, reqBody).then(function (data) {
-            console.log(90, data);
             dispatch({
                 type: 'UPDATE_GAME_HIGHEST_SCORE',
                 payload: reqBody.highestScore
@@ -2581,6 +2580,7 @@ var checkAndUpdateGameHighestScore = exports.checkAndUpdateGameHighestScore = fu
         });
     };
 };
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../~/process/browser.js */ 1)))
 
 /***/ }),
 /* 101 */
@@ -5937,7 +5937,7 @@ var _store = __webpack_require__(/*! ./store */ 69);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _login = __webpack_require__(/*! ./login */ 581);
+var _login = __webpack_require__(/*! ./login */ 249);
 
 var _login2 = _interopRequireDefault(_login);
 
@@ -6910,8 +6910,294 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 248 */,
-/* 249 */,
+/* 248 */
+/* unknown exports provided */
+/* all exports used */
+/*!**************************!*\
+  !*** ./src/game_init.js ***!
+  \**************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+__webpack_require__(/*! pixi */ 150);
+
+__webpack_require__(/*! p2 */ 151);
+
+var _phaser = __webpack_require__(/*! phaser */ 42);
+
+var _phaser2 = _interopRequireDefault(_phaser);
+
+var _Boot = __webpack_require__(/*! ./states/Boot */ 254);
+
+var _Boot2 = _interopRequireDefault(_Boot);
+
+var _Splash = __webpack_require__(/*! ./states/Splash */ 257);
+
+var _Splash2 = _interopRequireDefault(_Splash);
+
+var _Game = __webpack_require__(/*! ./states/Game */ 255);
+
+var _Game2 = _interopRequireDefault(_Game);
+
+var _Gameover = __webpack_require__(/*! ./states/Gameover */ 256);
+
+var _Gameover2 = _interopRequireDefault(_Gameover);
+
+var _config = __webpack_require__(/*! ./config */ 78);
+
+var _config2 = _interopRequireDefault(_config);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Game = function (_Phaser$Game) {
+    _inherits(Game, _Phaser$Game);
+
+    function Game() {
+        _classCallCheck(this, Game);
+
+        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, _config2.default.gameWidth, _config2.default.gameHeight, _phaser2.default.CANVAS, 'game', null));
+
+        _this.state.add('Boot', _Boot2.default, false);
+        _this.state.add('Splash', _Splash2.default, false);
+        _this.state.add('Game', _Game2.default, false);
+        _this.state.add('Gameover', _Gameover2.default, false);
+
+        _this.state.start('Boot');
+        return _this;
+    }
+
+    return Game;
+}(_phaser2.default.Game);
+
+//window.game = new Game();
+
+
+exports.default = Game;
+
+/***/ }),
+/* 249 */
+/* unknown exports provided */
+/* all exports used */
+/*!**********************!*\
+  !*** ./src/login.js ***!
+  \**********************/
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ 60);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(/*! prop-types */ 130);
+
+var _reactDom = __webpack_require__(/*! react-dom */ 98);
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ 218);
+
+var _store = __webpack_require__(/*! ./store */ 69);
+
+var _store2 = _interopRequireDefault(_store);
+
+var _game_init = __webpack_require__(/*! ./game_init */ 248);
+
+var _game_init2 = _interopRequireDefault(_game_init);
+
+var _state = __webpack_require__(/*! ./states/state */ 79);
+
+var _state2 = _interopRequireDefault(_state);
+
+var _actionIndex = __webpack_require__(/*! ./actions/actionIndex */ 100);
+
+var actions = _interopRequireWildcard(_actionIndex);
+
+var _registration = __webpack_require__(/*! ./registration */ 251);
+
+var _registration2 = _interopRequireDefault(_registration);
+
+var _axios = __webpack_require__(/*! axios */ 153);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _jquery = __webpack_require__(/*! jquery */ 457);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*global fb*/
+
+var SERVER = 'http://localhost:8080/';
+
+var object = _propTypes.PropTypes.object,
+    func = _propTypes.PropTypes.func;
+
+var Login = function (_PureComponent) {
+    _inherits(Login, _PureComponent);
+
+    /*
+    static PropTypes = {
+        gameHighestScore: object,
+        getGameHighestScore: func,
+        newPlayerRegistration: func,
+    };
+     static defaultProps = {
+        gameHighestScore: 0,
+        playerData: {},
+    };
+    
+    state = {
+        playerData: {},
+    };
+    */
+
+    function Login() {
+        _classCallCheck(this, Login);
+
+        var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this));
+
+        _this.state = {
+            showRegistration: false,
+            showPlayAsAGuestButton: true
+        };
+
+        _this.playAsAGuest = _this.playAsAGuest.bind(_this);
+        return _this;
+    }
+
+    _createClass(Login, [{
+        key: 'playAsAGuest',
+        value: function playAsAGuest(event) {
+            event.preventDefault();
+
+            _store2.default.dispatch({
+                type: 'UPDATE_SCREENNAME',
+                payload: 'Guest'
+            });
+            this.startGame();
+        }
+    }, {
+        key: 'startGame',
+        value: function startGame() {
+            (0, _jquery2.default)('#signinScreen').css('display', 'none');
+            this.setState({ showPlayAsAGuestButton: false });
+            _store2.default.dispatch(actions.getGameHighestScore());
+            var game = new _game_init2.default();
+        }
+    }, {
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            var _this2 = this;
+
+            // This is called with the results from from FB.getLoginStatus().
+            window.fbAsyncInit = function () {
+                FB.init({
+                    appId: '113731382506643',
+                    cookie: true, // enable cookies to allow the server to access
+                    // the session
+                    xfbml: true, // parse social plugins on this page
+                    version: 'v2.8' });
+
+                FB.getLoginStatus(function (response) {
+                    if (response.status === 'connected') {
+                        FB.api('/me', function (response) {
+                            var facebookId = response.id;
+                            _store2.default.dispatch(actions.updateFacebookId(facebookId));
+
+                            _axios2.default.get('http://localhost:8080/users/facebookId/' + facebookId).then(function (data) {
+                                if (data.data.length === 0) {
+                                    //show registration input box
+                                    _this2.setState({ showRegistration: true });
+                                } else {
+                                    var playerScreenName = data.data[0].screenName;
+                                    var playerHighestScore = data.data[0].highestScore;
+                                    var _id = data.data[0].id;
+                                    _store2.default.dispatch(actions.updatePlayerId(_id));
+                                    _store2.default.dispatch({
+                                        type: 'UPDATE_SCREENNAME',
+                                        payload: playerScreenName
+                                    });
+                                    _store2.default.dispatch({
+                                        type: 'UPDATE_PLAYER_HIGHEST_SCORE',
+                                        payload: playerHighestScore
+                                    });
+                                    _this2.startGame();
+                                }
+                            }).catch(function (e) {
+                                console.log(e);
+                            });
+                        });
+                    }
+                });
+            };
+
+            // Load the SDK asynchronously
+            (function (d, s, id) {
+                var js,
+                    fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = '//connect.facebook.net/en_US/sdk.js';
+                fjs.parentNode.insertBefore(js, fjs);
+            })(document, 'script', 'facebook-jssdk');
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                'div',
+                null,
+                this.state.showRegistration ? _react2.default.createElement(_registration2.default, null) : null,
+                this.state.showPlayAsAGuestButton ? _react2.default.createElement('input', {
+                    type: 'submit',
+                    value: 'Play as a Guest',
+                    onClick: this.playAsAGuest
+                }) : null
+            );
+        }
+    }]);
+
+    return Login;
+}(_react.PureComponent);
+/*
+export default connect(storeState => ({
+    gameHighestScore: storeState.gameHighestScore,
+    playerData: storeState.playerData,
+}));
+*/
+
+
+exports.default = Login;
+
+/***/ }),
 /* 250 */
 /* unknown exports provided */
 /* all exports used */
@@ -7564,7 +7850,7 @@ var GameState = function (_Phaser$State) {
 
       this.game.time.events.loop(_phaser2.default.Timer.SECOND * 1, function () {
         _this3.timer += 100;
-        _this3.score.text = 'score: ' + _this3.timer;
+        _this3.score.text = _this3.timer;
       });
     }
   }, {
@@ -26498,295 +26784,6 @@ module.exports = function(module) {
 __webpack_require__(/*! babel-polyfill */230);
 module.exports = __webpack_require__(/*! /Users/Thinkful/Desktop/phaser-test/src/index.js */229);
 
-
-/***/ }),
-/* 579 */,
-/* 580 */
-/* unknown exports provided */
-/* all exports used */
-/*!**************************!*\
-  !*** ./src/game_init.js ***!
-  \**************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-__webpack_require__(/*! pixi */ 150);
-
-__webpack_require__(/*! p2 */ 151);
-
-var _phaser = __webpack_require__(/*! phaser */ 42);
-
-var _phaser2 = _interopRequireDefault(_phaser);
-
-var _Boot = __webpack_require__(/*! ./states/Boot */ 254);
-
-var _Boot2 = _interopRequireDefault(_Boot);
-
-var _Splash = __webpack_require__(/*! ./states/Splash */ 257);
-
-var _Splash2 = _interopRequireDefault(_Splash);
-
-var _Game = __webpack_require__(/*! ./states/Game */ 255);
-
-var _Game2 = _interopRequireDefault(_Game);
-
-var _Gameover = __webpack_require__(/*! ./states/Gameover */ 256);
-
-var _Gameover2 = _interopRequireDefault(_Gameover);
-
-var _config = __webpack_require__(/*! ./config */ 78);
-
-var _config2 = _interopRequireDefault(_config);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Game = function (_Phaser$Game) {
-    _inherits(Game, _Phaser$Game);
-
-    function Game() {
-        _classCallCheck(this, Game);
-
-        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, _config2.default.gameWidth, _config2.default.gameHeight, _phaser2.default.CANVAS, 'game', null));
-
-        _this.state.add('Boot', _Boot2.default, false);
-        _this.state.add('Splash', _Splash2.default, false);
-        _this.state.add('Game', _Game2.default, false);
-        _this.state.add('Gameover', _Gameover2.default, false);
-
-        _this.state.start('Boot');
-        return _this;
-    }
-
-    return Game;
-}(_phaser2.default.Game);
-
-//window.game = new Game();
-
-
-exports.default = Game;
-
-/***/ }),
-/* 581 */
-/* unknown exports provided */
-/* all exports used */
-/*!**********************!*\
-  !*** ./src/login.js ***!
-  \**********************/
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(/*! react */ 60);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _propTypes = __webpack_require__(/*! prop-types */ 130);
-
-var _reactDom = __webpack_require__(/*! react-dom */ 98);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-var _reactRedux = __webpack_require__(/*! react-redux */ 218);
-
-var _store = __webpack_require__(/*! ./store */ 69);
-
-var _store2 = _interopRequireDefault(_store);
-
-var _game_init = __webpack_require__(/*! ./game_init */ 580);
-
-var _game_init2 = _interopRequireDefault(_game_init);
-
-var _state = __webpack_require__(/*! ./states/state */ 79);
-
-var _state2 = _interopRequireDefault(_state);
-
-var _actionIndex = __webpack_require__(/*! ./actions/actionIndex */ 100);
-
-var actions = _interopRequireWildcard(_actionIndex);
-
-var _registration = __webpack_require__(/*! ./registration */ 251);
-
-var _registration2 = _interopRequireDefault(_registration);
-
-var _axios = __webpack_require__(/*! axios */ 153);
-
-var _axios2 = _interopRequireDefault(_axios);
-
-var _jquery = __webpack_require__(/*! jquery */ 457);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*global fb*/
-
-var SERVER = 'http://localhost:8080/';
-
-var object = _propTypes.PropTypes.object,
-    func = _propTypes.PropTypes.func;
-
-var Login = function (_PureComponent) {
-    _inherits(Login, _PureComponent);
-
-    /*
-    static PropTypes = {
-        gameHighestScore: object,
-        getGameHighestScore: func,
-        newPlayerRegistration: func,
-    };
-     static defaultProps = {
-        gameHighestScore: 0,
-        playerData: {},
-    };
-    
-    state = {
-        playerData: {},
-    };
-    */
-
-    function Login() {
-        _classCallCheck(this, Login);
-
-        var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this));
-
-        _this.state = {
-            showRegistration: false,
-            showPlayAsAGuestButton: true
-        };
-
-        _this.playAsAGuest = _this.playAsAGuest.bind(_this);
-        return _this;
-    }
-
-    _createClass(Login, [{
-        key: 'playAsAGuest',
-        value: function playAsAGuest(event) {
-            event.preventDefault();
-
-            _store2.default.dispatch({
-                type: 'UPDATE_SCREENNAME',
-                payload: 'Guest'
-            });
-            this.startGame();
-        }
-    }, {
-        key: 'startGame',
-        value: function startGame() {
-            (0, _jquery2.default)('#signinScreen').css('display', 'none');
-            this.setState({ showPlayAsAGuestButton: false });
-            _store2.default.dispatch(actions.getGameHighestScore());
-            var game = new _game_init2.default();
-        }
-    }, {
-        key: 'componentWillMount',
-        value: function componentWillMount() {
-            var _this2 = this;
-
-            // This is called with the results from from FB.getLoginStatus().
-            window.fbAsyncInit = function () {
-                FB.init({
-                    appId: '113731382506643',
-                    cookie: true, // enable cookies to allow the server to access
-                    // the session
-                    xfbml: true, // parse social plugins on this page
-                    version: 'v2.8' });
-
-                FB.getLoginStatus(function (response) {
-                    if (response.status === 'connected') {
-                        FB.api('/me', function (response) {
-                            var facebookId = response.id;
-                            _store2.default.dispatch(actions.updateFacebookId(facebookId));
-
-                            _axios2.default.get('http://localhost:8080/users/facebookId/' + facebookId).then(function (data) {
-                                if (data.data.length === 0) {
-                                    //show registration input box
-                                    _this2.setState({ showRegistration: true });
-                                } else {
-                                    var playerScreenName = data.data[0].screenName;
-                                    var playerHighestScore = data.data[0].highestScore;
-                                    var _id = data.data[0].id;
-                                    _store2.default.dispatch(actions.updatePlayerId(_id));
-                                    _store2.default.dispatch({
-                                        type: 'UPDATE_SCREENNAME',
-                                        payload: playerScreenName
-                                    });
-                                    _store2.default.dispatch({
-                                        type: 'UPDATE_PLAYER_HIGHEST_SCORE',
-                                        payload: playerHighestScore
-                                    });
-                                    _this2.startGame();
-                                }
-                            }).catch(function (e) {
-                                console.log(e);
-                            });
-                        });
-                    }
-                });
-            };
-
-            // Load the SDK asynchronously
-            (function (d, s, id) {
-                var js,
-                    fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s);
-                js.id = id;
-                js.src = '//connect.facebook.net/en_US/sdk.js';
-                fjs.parentNode.insertBefore(js, fjs);
-            })(document, 'script', 'facebook-jssdk');
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return _react2.default.createElement(
-                'div',
-                null,
-                this.state.showRegistration ? _react2.default.createElement(_registration2.default, null) : null,
-                this.state.showPlayAsAGuestButton ? _react2.default.createElement('input', {
-                    type: 'submit',
-                    value: 'Play as a Guest',
-                    onClick: this.playAsAGuest
-                }) : null
-            );
-        }
-    }]);
-
-    return Login;
-}(_react.PureComponent);
-/*
-export default connect(storeState => ({
-    gameHighestScore: storeState.gameHighestScore,
-    playerData: storeState.playerData,
-}));
-*/
-
-
-exports.default = Login;
 
 /***/ })
 ],[578]);

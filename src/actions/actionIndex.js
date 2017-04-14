@@ -1,16 +1,15 @@
 import axios from 'axios';
 import store from '../store';
 
-const SERVER = 'http://localhost:8080/';
+//const SERVER = 'http://localhost:8080/';
+const host = process.env.NODE_ENV === 'production'
+    ? 'https://cryptic-atoll-29351.herokuapp.com/'
+    : 'http://localhost:8080/';
 
 export const updatePersonalHighestScore = score =>
     dispatch => {
         const _id = store.getState()._id;
-        const url = SERVER +
-            'users/updateUserHighestScore/' +
-            _id +
-            '/' +
-            score;
+        const url = `${host}users/updateUserHighestScore/${_id}/${score}`;
         axios
             .put(url)
             .then(() => {
@@ -38,7 +37,7 @@ export const newPlayerRegistration = newPlayer =>
     dispatch => {
         newPlayer.highestScore = 0;
         axios
-            .post(SERVER + 'users/', newPlayer)
+            .post(`${host}users/`, newPlayer)
             .then(data => {
                 dispatch({
                     type: 'UPDATE_SCREENNAME',
@@ -53,7 +52,7 @@ export const newPlayerRegistration = newPlayer =>
 export const getGameHighestScore = () =>
     dispatch => {
         axios
-            .get('http://localhost:8080/highestScore/')
+            .get(`${host}highestScore/`)
             .then(data => {
                 const gameHighestScore = data.data.result[0].highestScore;
                 dispatch({
@@ -73,12 +72,10 @@ export const checkAndUpdateGameHighestScore = score =>
             facebookId: store.getState().facebookId,
             screenName: store.getState().screenName,
         };
-        console.log(200, reqBody);
-        const url = 'http://localhost:8080/highestScore/' + score;
+        const url = `${host}highestScore/${score}`;
         axios
             .put(url, reqBody)
             .then(data => {
-                console.log(90, data);
                 dispatch({
                     type: 'UPDATE_GAME_HIGHEST_SCORE',
                     payload: reqBody.highestScore,
