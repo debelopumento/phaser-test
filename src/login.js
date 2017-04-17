@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import FacebookLoginButton from './facebookLogin';
 import store from './store';
 import Game from './game_init';
 import state from './states/state';
@@ -40,7 +41,7 @@ export default class Login extends PureComponent {
 
         this.state = {
             showRegistration: false,
-            showPlayAsAGuestButton: true,
+            showButtons: true,
         };
 
         this.playAsAGuest = this.playAsAGuest.bind(this);
@@ -57,8 +58,7 @@ export default class Login extends PureComponent {
     }
 
     startGame() {
-        $('#signinScreen').css('display', 'none');
-        this.setState({ showPlayAsAGuestButton: false });
+        this.setState({ showButtons: false });
         store.dispatch(actions.getGameHighestScore());
         const game = new Game();
     }
@@ -132,13 +132,15 @@ export default class Login extends PureComponent {
         return (
             <div>
                 {this.state.showRegistration ? <Registration /> : null}
-                {this.state.showPlayAsAGuestButton
+                {this.state.showButtons
                     ? <input
                           type="submit"
                           value="Play as a Guest"
                           onClick={this.playAsAGuest}
                       />
                     : null}
+                {this.state.showButtons ? <FacebookLoginButton /> : null}
+
             </div>
         );
     }

@@ -3,7 +3,7 @@ import store from '../store';
 
 //const SERVER = 'http://localhost:8080/';
 const host = process.env.NODE_ENV === 'production'
-    ? 'https://cryptic-atoll-29351.herokuapp.com/'
+    ? window.location.href
     : 'http://localhost:8080/';
 
 export const updatePersonalHighestScore = score =>

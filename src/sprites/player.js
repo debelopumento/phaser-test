@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import config from '../config';
 import state from '../states/state';
-//console.log(19, state);
 
 export default class Player extends Phaser.Sprite {
     constructor({ game, x, y, asset }) {
@@ -40,7 +39,6 @@ export default class Player extends Phaser.Sprite {
                 startSpeechRecognition();
             };
             speechRecognizer.onerror = event => {
-                //console.log(400, 'error!!');
                 startSpeechRecognition();
             };
         };

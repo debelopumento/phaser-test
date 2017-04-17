@@ -2,7 +2,6 @@ import Phaser from 'phaser';
 import getRandomInt from '../functions/getRandomInt';
 import config from '../config';
 import state from '../states/state';
-//const gameData = $('body').data();
 
 export default class CloseupAsset extends Phaser.Sprite {
     constructor({ game, x, y, asset }) {
