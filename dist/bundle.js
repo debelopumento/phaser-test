@@ -8056,8 +8056,30 @@ var SplashState = function (_Phaser$State) {
     key: 'preload',
     value: function preload() {
       //this.load.setPreloadSprite(this.loaderBar);
-
-      //array!!!!!
+      /*
+      const assets = [
+        'sky',
+        'dude',
+        'ledge-1',
+        'ledge-2',
+        'ledge-3',
+        'ledge-4',
+        'bg-1',
+        'bg-2',
+        'bg-3',
+        'bg-4',
+        'bg-5',
+        'mg-1',
+        'mg-2',
+        'mg-3',
+        'mg-4',
+        'closeup-1',
+      ];
+       assets.forEach(function(asset) {
+        const path = 'assets/images/' + asset + '.png';
+        game.load.image(asset, path);
+      });
+      */
 
       this.load.image('sky', 'assets/images/sky.png');
       this.load.image('star', 'assets/images/star.png');
@@ -8067,12 +8089,11 @@ var SplashState = function (_Phaser$State) {
       this.load.image('ledge-2', 'assets/images/ledge-2.png');
       this.load.image('ledge-3', 'assets/images/ledge-3.png');
       this.load.image('ledge-4', 'assets/images/ledge-4.png');
-
-      this.load.image('bg-1', 'assets/images/tobu-bg-1.png');
-      this.load.image('bg-2', 'assets/images/tobu-bg-2.png');
-      this.load.image('bg-3', 'assets/images/tobu-bg-3.png');
-      this.load.image('bg-4', 'assets/images/tobu-bg-4.png');
-      this.load.image('bg-5', 'assets/images/tobu-bg-5.png');
+      this.load.image('bg-1', 'assets/images/bg-1.png');
+      this.load.image('bg-2', 'assets/images/bg-2.png');
+      this.load.image('bg-3', 'assets/images/bg-3.png');
+      this.load.image('bg-4', 'assets/images/bg-4.png');
+      this.load.image('bg-5', 'assets/images/bg-5.png');
       this.load.image('mg-1', 'assets/images/architecture-1.png');
       this.load.image('mg-2', 'assets/images/architecture-2.png');
       this.load.image('mg-3', 'assets/images/architecture-3.png');
