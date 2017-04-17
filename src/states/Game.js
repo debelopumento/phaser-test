@@ -11,6 +11,7 @@ import getRandomInt from '../functions/getRandomInt';
 import state from './state';
 import store from '../store';
 import * as actions from '../actions/actionIndex';
+import * as gameActions from '../actions/action_game';
 
 const HEIGHT = config.gameHeight;
 const WIDTH = config.gameWidth;
@@ -36,41 +37,31 @@ export default class GameState extends Phaser.State {
     this.add.existing(this.sky);
 
     //add background objects
-    this.bg = new BackgroundAsset({
-      game: this,
-      x: 0,
-      y: 100,
-      asset: 'bg-1',
-    });
-    this.add.existing(this.bg);
-    this.bg = new BackgroundAsset({
-      game: this,
-      x: 400,
-      y: 100,
-      asset: 'bg-2',
-    });
-    this.add.existing(this.bg);
-    this.bg = new BackgroundAsset({
-      game: this,
-      x: 2800,
-      y: 100,
-      asset: 'bg-3',
-    });
-    this.add.existing(this.bg);
-    this.bg = new BackgroundAsset({
-      game: this,
-      x: 1200,
-      y: 100,
-      asset: 'bg-4',
-    });
-    this.add.existing(this.bg);
-    this.bg = new BackgroundAsset({
-      game: this,
-      x: 1700,
-      y: 100,
-      asset: 'bg-5',
-    });
-    this.add.existing(this.bg);
+    ///5 different types of bg objects
+    this.bgObjectTypes = [
+      { x: WIDTH + 100, y: 100, asset: 'bg-1' },
+      { x: WIDTH + 400, y: 200, asset: 'bg-2' },
+      { x: WIDTH + 400, y: 100, asset: 'bg-3' },
+      { x: WIDTH + 300, y: 100, asset: 'bg-4' },
+      { x: WIDTH + 200, y: 100, asset: 'bg-5' },
+    ];
+    this.bgObjects = this.add.group();
+    this.generateBgObject = bgObjectType => {
+      this.bg = new BackgroundAsset({
+        game: this,
+        x: bgObjectType.x,
+        y: bgObjectType.y,
+        z: 1,
+        asset: bgObjectType.asset,
+      });
+      this.add.existing(this.bg);
+      this.bgObjects.add(this.bg);
+      console.log('generated bg object: ', this.bg.x, this.bg.y);
+      store.dispatch(gameActions.shouldGenerateBgObject(false));
+    };
+    ///generate 2 initial bg mountians
+    this.generateBgObject({ x: 200, y: 100, asset: 'bg-1' });
+    this.generateBgObject({ x: 600, y: 200, asset: 'bg-2' });
 
     //generate midground
     this.mg = new MidgroundAsset({
@@ -101,6 +92,7 @@ export default class GameState extends Phaser.State {
     });
     this.add.existing(this.mg);
     this.add.existing(this.mg);
+
     //generate ledge and add it to ledge group
     this.generateLedges = () => {
       console.log(
@@ -217,10 +209,16 @@ export default class GameState extends Phaser.State {
 
   update() {
     //environment
-    //this.sky.position.x -= 0.000001;
-
     this.physics.arcade.collide(this.player, this.ledges);
     this.ledgeGenerationRate += 0.00213;
+
+    //when store returns true for shouldGenerateBgObject, get a random bg objectd type and call the function for generating it
+    if (store.getState().shouldGenerateBgObject === true) {
+      this.randomBgObjectType = this.bgObjectTypes[
+        Math.floor(Math.random() * this.bgObjectTypes.length)
+      ];
+      this.generateBgObject(this.randomBgObjectType);
+    }
 
     //game over if player falls out of bottom of screen
     if (this.player.position.y > HEIGHT + 250) {
@@ -245,5 +243,12 @@ export default class GameState extends Phaser.State {
     }
   }
 
-  render() {}
+  render() {
+    this.game.debug.text('player z-depth: ' + this.player.z, 10, 20);
+    this.game.debug.text('bg z-depth: ' + this.bg.z, 10, 40);
+    this.game.debug.text('ledges z-depth: ' + this.ledges.z, 10, 60);
+    this.game.debug.text('backdrop z-depth: ' + this.sky.z, 10, 80);
+    this.game.debug.text('closeup z-depth: ' + this.closeup.z, 10, 100);
+    this.game.debug.text('bg objects: ' + this.bgObjects.z, 10, 120);
+  }
 }
