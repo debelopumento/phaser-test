@@ -12,9 +12,6 @@ import { connect } from 'react-redux';
 import * as actions from './actions/actionIndex';
 import Registration from './registration';
 import axios from 'axios';
-import $ from 'jquery';
-
-const SERVER = 'http://localhost:8080/';
 
 const { object, func } = PropTypes;
 
@@ -98,14 +95,16 @@ export default class Login extends PureComponent {
                                     ].highestScore;
                                     const _id = data.data[0].id;
                                     store.dispatch(actions.updatePlayerId(_id));
-                                    store.dispatch({
-                                        type: 'UPDATE_SCREENNAME',
-                                        payload: playerScreenName,
-                                    });
-                                    store.dispatch({
-                                        type: 'UPDATE_PLAYER_HIGHEST_SCORE',
-                                        payload: playerHighestScore,
-                                    });
+                                    store.dispatch(
+                                        actions.updateScreenName(
+                                            playerScreenName
+                                        )
+                                    );
+                                    store.dispatch(
+                                        actions.loadPersonalHighestScore(
+                                            playerHighestScore
+                                        )
+                                    );
                                     this.startGame();
                                 }
                             })

@@ -1,10 +1,19 @@
 import axios from 'axios';
 import store from '../store';
 
-//const SERVER = 'http://localhost:8080/';
 const host = process.env.NODE_ENV === 'production'
     ? window.location.href
     : 'http://localhost:8080/';
+
+export const loadPersonalHighestScore = score => ({
+    type: 'UPDATE_PLAYER_HIGHEST_SCORE',
+    payload: score,
+});
+
+export const updateScreenName = screenName => ({
+    type: 'UPDATE_SCREENNAME',
+    payload: screenName,
+});
 
 export const updatePersonalHighestScore = score =>
     dispatch => {
