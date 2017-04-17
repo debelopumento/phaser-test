@@ -1,23 +1,20 @@
 import Phaser from 'phaser';
-//import getRandomInt from '../functions/getRandomInt';
-//import config from '../config';
-//import state from '../states/state';
+import store from '../store';
+import * as gameActions from '../actions/action_game';
 
 export default class MidgroundAsset extends Phaser.Sprite {
     constructor({ game, x, y, asset }) {
         super(game, x, y, asset);
+        this.spriteWidth = this.width;
         this.anchor.setTo(0, 0);
-        //this.enableBody = true;
-        //this.game.physics.arcade.enable(this);
-        //this.body.immovable = true;
     }
 
     update() {
         this.position.x -= 0.6;
-        /*
-        if (this.position.x < -300) {
-            this.kill();
+
+        if (this.position.x < -this.spriteWidth) {
+            store.dispatch(gameActions.shouldGenerateMgObject(true));
+            this.destroy();
         }
-        */
     }
 }

@@ -5,6 +5,7 @@ export const shouldGenerateBgObject = payload => ({
     payload: payload,
 });
 
-export const testAction = () => {
-    console.log('test');
-};
+export const shouldGenerateMgObject = payload => ({
+    type: 'SHOULD_GENERATE_MG_OBJECT',
+    payload: payload,
+});

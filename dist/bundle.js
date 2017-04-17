@@ -7303,13 +7303,28 @@ var shouldGenerateBgObjectReducer = function shouldGenerateBgObjectReducer() {
     }
 };
 
+var shouldGenerateMgObjectReducer = function shouldGenerateMgObjectReducer() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    var action = arguments[1];
+
+    switch (action.type) {
+        case 'SHOULD_GENERATE_MG_OBJECT':
+            {
+                return action.payload;
+            }
+        default:
+            return state;
+    }
+};
+
 var allReducers = (0, _redux.combineReducers)({
     gameHighestScore: gameHighestScoreReducer,
     facebookId: facebookIdReducer,
     screenName: screenNameReducer,
     playerHighestScore: playerHighestScoreReducer,
     _id: _idReducer,
-    shouldGenerateBgObject: shouldGenerateBgObjectReducer
+    shouldGenerateBgObject: shouldGenerateBgObjectReducer,
+    shouldGenerateMgObject: shouldGenerateMgObjectReducer
 });
 
 exports.default = allReducers;
@@ -7736,12 +7751,10 @@ var GameState = function (_Phaser$State) {
           game: _this2,
           x: bgObjectType.x,
           y: bgObjectType.y,
-          z: 1,
           asset: bgObjectType.asset
         });
         _this2.add.existing(_this2.bg);
         _this2.bgObjects.add(_this2.bg);
-        console.log('generated bg object: ', _this2.bg.x, _this2.bg.y);
         _store2.default.dispatch(gameActions.shouldGenerateBgObject(false));
       };
       ///generate 2 initial bg mountians
@@ -7749,43 +7762,26 @@ var GameState = function (_Phaser$State) {
       this.generateBgObject({ x: 600, y: 200, asset: 'bg-2' });
 
       //generate midground
-      this.mg = new _midgroundAsset2.default({
-        game: this,
-        x: 0,
-        y: 50,
-        asset: 'mg-1'
-      });
-      this.add.existing(this.mg);
-      this.mg = new _midgroundAsset2.default({
-        game: this,
-        x: 800,
-        y: 50,
-        asset: 'mg-2'
-      });
-      this.add.existing(this.mg);
-      this.mg = new _midgroundAsset2.default({
-        game: this,
-        x: 1200,
-        y: 50,
-        asset: 'mg-3'
-      });
-      this.mg = new _midgroundAsset2.default({
-        game: this,
-        x: 1600,
-        y: 50,
-        asset: 'mg-4'
-      });
-      this.add.existing(this.mg);
-      this.add.existing(this.mg);
+      this.mgObjectTypes = [{ x: WIDTH + 200, y: 50, asset: 'mg-1' }, { x: WIDTH + 200, y: 50, asset: 'mg-2' }, { x: WIDTH + 200, y: 50, asset: 'mg-3' }, { x: WIDTH + 200, y: 50, asset: 'mg-4' }];
+      this.mgObjects = this.add.group();
+      this.generateMgObject = function (mgObjectType) {
+        _this2.mg = new _midgroundAsset2.default({
+          game: _this2,
+          x: mgObjectType.x,
+          y: mgObjectType.y,
+          asset: mgObjectType.asset
+        });
+        _this2.add.existing(_this2.mg);
+        _this2.mgObjects.add(_this2.mg);
+        console.log('generated mg object: ', _this2.mg.x, _this2.mg.y);
+        _store2.default.dispatch(gameActions.shouldGenerateMgObject(false));
+      };
+      this.generateMgObject({ x: 0, y: 50, asset: 'mg-1' });
+      this.generateMgObject({ x: 800, y: 50, asset: 'mg-2' });
 
       //generate ledge and add it to ledge group
       this.generateLedges = function () {
         console.log('ledge', ledgeIndex, ' ', ledgeXPosition, ', ', JSON.stringify(ledgeYPosition));
-
-        //temperary fix for bug that sometimes y-position of ledge is null
-        if (ledgeYPosition === null) {
-          ledgeYPosition = HEIGHT / 2;
-        }
 
         var randomLedgeType = ledgeTypes[Math.floor(Math.random() * ledgeTypes.length)];
         _this2.ledge = new _foregroundAsset2.default({
@@ -7821,9 +7817,6 @@ var GameState = function (_Phaser$State) {
         }
       };
     }
-  }, {
-    key: 'preload',
-    value: function preload() {}
   }, {
     key: 'create',
     value: function create() {
@@ -7889,6 +7882,10 @@ var GameState = function (_Phaser$State) {
       if (_store2.default.getState().shouldGenerateBgObject === true) {
         this.randomBgObjectType = this.bgObjectTypes[Math.floor(Math.random() * this.bgObjectTypes.length)];
         this.generateBgObject(this.randomBgObjectType);
+      }
+      if (_store2.default.getState().shouldGenerateMgObject === true) {
+        this.randomMgObjectType = this.mgObjectTypes[Math.floor(Math.random() * this.mgObjectTypes.length)];
+        this.generateMgObject(this.randomMgObjectType);
       }
 
       //game over if player falls out of bottom of screen
@@ -16711,7 +16708,7 @@ var _store2 = _interopRequireDefault(_store);
 
 var _action_game = __webpack_require__(/*! ../actions/action_game */ 587);
 
-var actions = _interopRequireWildcard(_action_game);
+var gameActions = _interopRequireWildcard(_action_game);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -16723,10 +16720,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-//import * as actions from '../actions/actionIndex';
-
-//import config from '../config';
-//import state from '../states/state';
 var BackgroundAsset = function (_Phaser$Sprite) {
     _inherits(BackgroundAsset, _Phaser$Sprite);
 
@@ -16738,17 +16731,10 @@ var BackgroundAsset = function (_Phaser$Sprite) {
 
         _classCallCheck(this, BackgroundAsset);
 
-        //this.anchor.setTo(0, 0);
         var _this = _possibleConstructorReturn(this, (BackgroundAsset.__proto__ || Object.getPrototypeOf(BackgroundAsset)).call(this, game, x, y, asset));
 
         _this.spriteWidth = _this.width;
-        //this.anchor.setTo(this.spriteWidth, 0);
         _this.anchor.setTo(0, 0);
-
-        console.log(12, 'anchors: ', _this.anchor);
-        //this.enableBody = true;
-        //this.game.physics.arcade.enable(this);
-        //this.body.immovable = true;
         return _this;
     }
 
@@ -16756,9 +16742,8 @@ var BackgroundAsset = function (_Phaser$Sprite) {
         key: 'update',
         value: function update() {
             this.position.x -= 0.5;
-            //this.position.z = 1;
             if (this.position.x < -this.spriteWidth) {
-                _store2.default.dispatch(actions.shouldGenerateBgObject(true));
+                _store2.default.dispatch(gameActions.shouldGenerateBgObject(true));
                 this.destroy();
             }
         }
@@ -16862,6 +16847,16 @@ var _phaser = __webpack_require__(/*! phaser */ 42);
 
 var _phaser2 = _interopRequireDefault(_phaser);
 
+var _store = __webpack_require__(/*! ../store */ 69);
+
+var _store2 = _interopRequireDefault(_store);
+
+var _action_game = __webpack_require__(/*! ../actions/action_game */ 587);
+
+var gameActions = _interopRequireWildcard(_action_game);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -16869,10 +16864,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-//import getRandomInt from '../functions/getRandomInt';
-//import config from '../config';
-//import state from '../states/state';
 
 var MidgroundAsset = function (_Phaser$Sprite) {
     _inherits(MidgroundAsset, _Phaser$Sprite);
@@ -16887,10 +16878,8 @@ var MidgroundAsset = function (_Phaser$Sprite) {
 
         var _this = _possibleConstructorReturn(this, (MidgroundAsset.__proto__ || Object.getPrototypeOf(MidgroundAsset)).call(this, game, x, y, asset));
 
+        _this.spriteWidth = _this.width;
         _this.anchor.setTo(0, 0);
-        //this.enableBody = true;
-        //this.game.physics.arcade.enable(this);
-        //this.body.immovable = true;
         return _this;
     }
 
@@ -16898,11 +16887,11 @@ var MidgroundAsset = function (_Phaser$Sprite) {
         key: 'update',
         value: function update() {
             this.position.x -= 0.6;
-            /*
-            if (this.position.x < -300) {
-                this.kill();
+
+            if (this.position.x < -this.spriteWidth) {
+                _store2.default.dispatch(gameActions.shouldGenerateMgObject(true));
+                this.destroy();
             }
-            */
         }
     }]);
 
@@ -17066,7 +17055,7 @@ exports.default = FacebookLoginButton;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.testAction = exports.shouldGenerateBgObject = undefined;
+exports.shouldGenerateMgObject = exports.shouldGenerateBgObject = undefined;
 
 var _store = __webpack_require__(/*! ../store */ 69);
 
@@ -17081,8 +17070,11 @@ var shouldGenerateBgObject = exports.shouldGenerateBgObject = function shouldGen
     };
 };
 
-var testAction = exports.testAction = function testAction() {
-    console.log('test');
+var shouldGenerateMgObject = exports.shouldGenerateMgObject = function shouldGenerateMgObject(payload) {
+    return {
+        type: 'SHOULD_GENERATE_MG_OBJECT',
+        payload: payload
+    };
 };
 
 /***/ })

@@ -59,6 +59,16 @@ const shouldGenerateBgObjectReducer = (state = false, action) => {
     }
 };
 
+const shouldGenerateMgObjectReducer = (state = false, action) => {
+    switch (action.type) {
+        case 'SHOULD_GENERATE_MG_OBJECT': {
+            return action.payload;
+        }
+        default:
+            return state;
+    }
+};
+
 const allReducers = combineReducers({
     gameHighestScore: gameHighestScoreReducer,
     facebookId: facebookIdReducer,
@@ -66,6 +76,7 @@ const allReducers = combineReducers({
     playerHighestScore: playerHighestScoreReducer,
     _id: _idReducer,
     shouldGenerateBgObject: shouldGenerateBgObjectReducer,
+    shouldGenerateMgObject: shouldGenerateMgObjectReducer,
 });
 
 export default allReducers;

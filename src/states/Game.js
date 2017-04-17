@@ -51,12 +51,10 @@ export default class GameState extends Phaser.State {
         game: this,
         x: bgObjectType.x,
         y: bgObjectType.y,
-        z: 1,
         asset: bgObjectType.asset,
       });
       this.add.existing(this.bg);
       this.bgObjects.add(this.bg);
-      console.log('generated bg object: ', this.bg.x, this.bg.y);
       store.dispatch(gameActions.shouldGenerateBgObject(false));
     };
     ///generate 2 initial bg mountians
@@ -64,34 +62,27 @@ export default class GameState extends Phaser.State {
     this.generateBgObject({ x: 600, y: 200, asset: 'bg-2' });
 
     //generate midground
-    this.mg = new MidgroundAsset({
-      game: this,
-      x: 0,
-      y: 50,
-      asset: 'mg-1',
-    });
-    this.add.existing(this.mg);
-    this.mg = new MidgroundAsset({
-      game: this,
-      x: 800,
-      y: 50,
-      asset: 'mg-2',
-    });
-    this.add.existing(this.mg);
-    this.mg = new MidgroundAsset({
-      game: this,
-      x: 1200,
-      y: 50,
-      asset: 'mg-3',
-    });
-    this.mg = new MidgroundAsset({
-      game: this,
-      x: 1600,
-      y: 50,
-      asset: 'mg-4',
-    });
-    this.add.existing(this.mg);
-    this.add.existing(this.mg);
+    this.mgObjectTypes = [
+      { x: WIDTH + 200, y: 50, asset: 'mg-1' },
+      { x: WIDTH + 200, y: 50, asset: 'mg-2' },
+      { x: WIDTH + 200, y: 50, asset: 'mg-3' },
+      { x: WIDTH + 200, y: 50, asset: 'mg-4' },
+    ];
+    this.mgObjects = this.add.group();
+    this.generateMgObject = mgObjectType => {
+      this.mg = new MidgroundAsset({
+        game: this,
+        x: mgObjectType.x,
+        y: mgObjectType.y,
+        asset: mgObjectType.asset,
+      });
+      this.add.existing(this.mg);
+      this.mgObjects.add(this.mg);
+      console.log('generated mg object: ', this.mg.x, this.mg.y);
+      store.dispatch(gameActions.shouldGenerateMgObject(false));
+    };
+    this.generateMgObject({ x: 0, y: 50, asset: 'mg-1' });
+    this.generateMgObject({ x: 800, y: 50, asset: 'mg-2' });
 
     //generate ledge and add it to ledge group
     this.generateLedges = () => {
@@ -103,11 +94,6 @@ export default class GameState extends Phaser.State {
         ', ',
         JSON.stringify(ledgeYPosition)
       );
-
-      //temperary fix for bug that sometimes y-position of ledge is null
-      if (ledgeYPosition === null) {
-        ledgeYPosition = HEIGHT / 2;
-      }
 
       const randomLedgeType = ledgeTypes[
         Math.floor(Math.random() * ledgeTypes.length)
@@ -151,7 +137,6 @@ export default class GameState extends Phaser.State {
       }
     };
   }
-  preload() {}
 
   create() {
     //create ledge group
@@ -218,6 +203,12 @@ export default class GameState extends Phaser.State {
         Math.floor(Math.random() * this.bgObjectTypes.length)
       ];
       this.generateBgObject(this.randomBgObjectType);
+    }
+    if (store.getState().shouldGenerateMgObject === true) {
+      this.randomMgObjectType = this.mgObjectTypes[
+        Math.floor(Math.random() * this.mgObjectTypes.length)
+      ];
+      this.generateMgObject(this.randomMgObjectType);
     }
 
     //game over if player falls out of bottom of screen
