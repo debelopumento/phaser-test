@@ -8,7 +8,6 @@ import CloseupAsset from '../sprites/closeupAsset';
 import Player from '../sprites/player';
 import config from '../config';
 import getRandomInt from '../functions/getRandomInt';
-import state from './state';
 import store from '../store';
 import * as actions from '../actions/actionIndex';
 import * as gameActions from '../actions/action_game';
@@ -153,7 +152,9 @@ export default class GameState extends Phaser.State {
     this.game.time.events.loop(
       Phaser.Timer.SECOND * (4 - this.ledgeGenerationRate),
       () => {
-        state.speed = Number((state.speed * 1.01).toFixed(3));
+        //state.speed = Number((state.speed * 1.01).toFixed(3));
+        this.speed = Number((this.speed * 1.01).toFixed(3));
+        store.dispatch(gameActions.updateSpeed(this.speed));
         this.generateLedges();
       }
     );

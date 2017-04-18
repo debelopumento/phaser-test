@@ -9,3 +9,8 @@ export const shouldGenerateMgObject = payload => ({
     type: 'SHOULD_GENERATE_MG_OBJECT',
     payload: payload,
 });
+
+export const updateSpeed = payload => ({
+    type: 'UPDATE_SPEED',
+    payload: payload,
+});

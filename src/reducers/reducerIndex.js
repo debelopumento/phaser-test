@@ -79,6 +79,16 @@ const showRegistrationReducer = (state = false, action) => {
     }
 };
 
+const speedReducer = (state = 1, action) => {
+    switch (action.type) {
+        case 'UPDATE_SPEED': {
+            return action.payload;
+        }
+        default:
+            return state;
+    }
+};
+
 const allReducers = combineReducers({
     gameHighestScore: gameHighestScoreReducer,
     facebookId: facebookIdReducer,
@@ -88,6 +98,7 @@ const allReducers = combineReducers({
     shouldGenerateBgObject: shouldGenerateBgObjectReducer,
     shouldGenerateMgObject: shouldGenerateMgObjectReducer,
     showRegistration: showRegistrationReducer,
+    speed: speedReducer,
 });
 
 export default allReducers;

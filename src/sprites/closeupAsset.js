@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import getRandomInt from '../functions/getRandomInt';
 import config from '../config';
-import state from '../states/state';
+import store from '../store';
 
 export default class CloseupAsset extends Phaser.Sprite {
     constructor({ game, x, y, asset }) {
@@ -10,7 +10,7 @@ export default class CloseupAsset extends Phaser.Sprite {
     }
 
     update() {
-        this.position.x -= 2 + state.speed;
+        this.position.x -= 2 + store.getState().speed;
 
         if (this.position.x < -1500) {
             this.position.x = 800;

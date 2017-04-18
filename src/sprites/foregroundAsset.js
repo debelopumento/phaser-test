@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import getRandomInt from '../functions/getRandomInt';
 import config from '../config';
-import state from '../states/state';
+import store from '../store';
 
 export default class ForegroundAsset extends Phaser.Sprite {
     constructor({ game, x, y, asset }) {
@@ -13,7 +13,8 @@ export default class ForegroundAsset extends Phaser.Sprite {
     }
 
     update() {
-        this.position.x -= 0.3 + state.speed;
+        this.speed = store.getState().speed;
+        this.position.x -= 0.3 + this.speed;
         if (this.position.x < -300) {
             this.destroy();
         }

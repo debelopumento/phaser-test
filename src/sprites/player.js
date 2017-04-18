@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import config from '../config';
-import state from '../states/state';
+import store from '../store';
 
 export default class Player extends Phaser.Sprite {
     constructor({ game, x, y, asset }) {
@@ -18,7 +18,7 @@ export default class Player extends Phaser.Sprite {
         this.speed = 1;
         game.input.onUp.add(() => {
             //this.body.velocity.y = -400 / Math.sqrt(this.speed);
-            this.body.velocity.y = -400 + state.speed;
+            this.body.velocity.y = -400 + store.getState().speed;
         });
 
         const SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
@@ -53,6 +53,6 @@ export default class Player extends Phaser.Sprite {
     }
 
     update() {
-        this.speed = state.speed;
+        this.speed = store.getState().speed;
     }
 }
