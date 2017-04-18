@@ -4,7 +4,7 @@ import TextButton from '../sprites/textButton';
 
 export default class BootState extends Phaser.State {
   init() {
-    this.stage.backgroundColor = '#ddd';
+    this.stage.backgroundColor = '#070e16';
     this.fontsReady = false;
     this.fontsLoaded = this.fontsLoaded.bind(this);
   }

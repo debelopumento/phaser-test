@@ -14,8 +14,4 @@ if (process.env.NODE_ENV === 'production') {
     middleware = applyMiddleware(promise(), thunk);
 }
 
-//export default createStore(allReducers, middleware);
-export default createStore(
-    allReducers,
-    applyMiddleware(promise(), thunk, logger())
-);
+export default createStore(allReducers, middleware);

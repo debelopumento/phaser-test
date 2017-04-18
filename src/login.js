@@ -16,23 +16,6 @@ import axios from 'axios';
 const { object, func } = PropTypes;
 
 class Login extends PureComponent {
-    /*
-    static PropTypes = {
-        gameHighestScore: object,
-        getGameHighestScore: func,
-        newPlayerRegistration: func,
-    };
-
-    static defaultProps = {
-        gameHighestScore: 0,
-        playerData: {},
-    };
-    
-    state = {
-        playerData: {},
-    };
-    */
-
     constructor() {
         super();
 
@@ -46,7 +29,6 @@ class Login extends PureComponent {
 
     playAsAGuest(event) {
         event.preventDefault();
-
         store.dispatch({
             type: 'UPDATE_SCREENNAME',
             payload: 'Guest',
@@ -83,42 +65,6 @@ class Login extends PureComponent {
                                     this.startGame();
                                 }
                             });
-                        /*
-                        axios
-                            .get(
-                                'http://localhost:8080/users/facebookId/' +
-                                    facebookId
-                            )
-                            .then(data => {
-                                if (data.data.length === 0) {
-                                    //show registration input box
-                                    this.setState({ showRegistration: true });
-                                } else {
-                                    const playerScreenName = data.data[
-                                        0
-                                    ].screenName;
-                                    const playerHighestScore = data.data[
-                                        0
-                                    ].highestScore;
-                                    const _id = data.data[0].id;
-                                    store.dispatch(actions.updatePlayerId(_id));
-                                    store.dispatch(
-                                        actions.updateScreenName(
-                                            playerScreenName
-                                        )
-                                    );
-                                    store.dispatch(
-                                        actions.loadPersonalHighestScore(
-                                            playerHighestScore
-                                        )
-                                    );
-                                    this.startGame();
-                                }
-                            })
-                            .catch(e => {
-                                console.log(e);
-                            });
-                        */
                     });
                 }
             });
@@ -138,7 +84,7 @@ class Login extends PureComponent {
     render() {
         return (
             <div>
-                {this.props.showRegistration ? <Registration /> : null}
+                {this.state.showRegistration ? <Registration /> : null}
                 {this.state.showButtons
                     ? <input
                           type="submit"

@@ -18,7 +18,7 @@ const WIDTH = config.gameWidth;
 
 export default class GameState extends Phaser.State {
   init() {
-    this.speed = state.speed;
+    this.speed = 1;
 
     //initialize properties for generating ledges
     let ledgeXPosition = 50;
@@ -122,13 +122,13 @@ export default class GameState extends Phaser.State {
         this.ledge.scale.setTo(0.5, 1.5);
       }
 
-      if (ledgeYPosition < HEIGHT - 100 && ledgeYPosition > 150) {
+      if (ledgeYPosition < HEIGHT - 150 && ledgeYPosition > 150) {
         ledgeYPosition = ledgeYPosition +
           getRandomInt(
             -neighbourLedgeHeightDifference,
             neighbourLedgeHeightDifference
           );
-      } else if (ledgeYPosition > HEIGHT - 100) {
+      } else if (ledgeYPosition > HEIGHT - 150) {
         ledgeYPosition = ledgeYPosition +
           getRandomInt(-neighbourLedgeHeightDifference, 0);
       } else {
@@ -242,12 +242,5 @@ export default class GameState extends Phaser.State {
     }
   }
 
-  render() {
-    this.game.debug.text('player z-depth: ' + this.player.z, 10, 20);
-    this.game.debug.text('bg z-depth: ' + this.bg.z, 10, 40);
-    this.game.debug.text('ledges z-depth: ' + this.ledges.z, 10, 60);
-    this.game.debug.text('backdrop z-depth: ' + this.sky.z, 10, 80);
-    this.game.debug.text('closeup z-depth: ' + this.closeup.z, 10, 100);
-    this.game.debug.text('bg objects: ' + this.bgObjects.z, 10, 120);
-  }
+  render() {}
 }

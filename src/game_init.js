@@ -20,5 +20,3 @@ export default class Game extends Phaser.Game {
         this.state.start('Boot');
     }
 }
-
-//window.game = new Game();

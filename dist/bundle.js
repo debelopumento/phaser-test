@@ -1492,8 +1492,7 @@ if (process.env.NODE_ENV === 'production') {
     middleware = (0, _redux.applyMiddleware)((0, _reduxPromiseMiddleware2.default)(), _reduxThunk2.default);
 }
 
-//export default createStore(allReducers, middleware);
-exports.default = (0, _redux.createStore)(_reducerIndex2.default, (0, _redux.applyMiddleware)((0, _reduxPromiseMiddleware2.default)(), _reduxThunk2.default, (0, _reduxLogger2.default)()));
+exports.default = (0, _redux.createStore)(_reducerIndex2.default, middleware);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../~/process/browser.js */ 1)))
 
 /***/ }),
@@ -1947,7 +1946,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    gameHighestScore: 1,
     speed: 1
 };
 
@@ -6996,7 +6994,7 @@ module.exports = function spread(callback) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _react = __webpack_require__(/*! react */ 43);
@@ -7014,18 +7012,18 @@ var _reactFacebookLogin2 = _interopRequireDefault(_reactFacebookLogin);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var responseFacebook = function responseFacebook(response) {
-  console.log(15, response);
+    console.log(15, response);
 };
 
 var FacebookLoginButton = function FacebookLoginButton() {
-  return _react2.default.createElement(_reactFacebookLogin2.default, {
-    appId: '113731382506643',
-    autoLoad: true,
-    fields: 'name,email,picture',
-    callback: responseFacebook,
-    cssClass: 'my-facebook-button-class',
-    icon: 'fa-facebook'
-  });
+    return _react2.default.createElement(_reactFacebookLogin2.default, {
+        appId: '113731382506643',
+        autoLoad: true,
+        fields: 'name,email,picture',
+        callback: responseFacebook,
+        cssClass: 'my-facebook-button-class',
+        icon: 'fa-facebook'
+    });
 };
 
 exports.default = FacebookLoginButton;
@@ -7101,9 +7099,6 @@ var Game = function (_Phaser$Game) {
 
     return Game;
 }(_phaser2.default.Game);
-
-//window.game = new Game();
-
 
 exports.default = Game;
 
@@ -7181,22 +7176,6 @@ var object = _propTypes.PropTypes.object,
 var Login = function (_PureComponent) {
     _inherits(Login, _PureComponent);
 
-    /*
-    static PropTypes = {
-        gameHighestScore: object,
-        getGameHighestScore: func,
-        newPlayerRegistration: func,
-    };
-     static defaultProps = {
-        gameHighestScore: 0,
-        playerData: {},
-    };
-    
-    state = {
-        playerData: {},
-    };
-    */
-
     function Login() {
         _classCallCheck(this, Login);
 
@@ -7215,7 +7194,6 @@ var Login = function (_PureComponent) {
         key: 'playAsAGuest',
         value: function playAsAGuest(event) {
             event.preventDefault();
-
             _store2.default.dispatch({
                 type: 'UPDATE_SCREENNAME',
                 payload: 'Guest'
@@ -7253,42 +7231,6 @@ var Login = function (_PureComponent) {
                                     _this2.startGame();
                                 }
                             });
-                            /*
-                            axios
-                                .get(
-                                    'http://localhost:8080/users/facebookId/' +
-                                        facebookId
-                                )
-                                .then(data => {
-                                    if (data.data.length === 0) {
-                                        //show registration input box
-                                        this.setState({ showRegistration: true });
-                                    } else {
-                                        const playerScreenName = data.data[
-                                            0
-                                        ].screenName;
-                                        const playerHighestScore = data.data[
-                                            0
-                                        ].highestScore;
-                                        const _id = data.data[0].id;
-                                        store.dispatch(actions.updatePlayerId(_id));
-                                        store.dispatch(
-                                            actions.updateScreenName(
-                                                playerScreenName
-                                            )
-                                        );
-                                        store.dispatch(
-                                            actions.loadPersonalHighestScore(
-                                                playerHighestScore
-                                            )
-                                        );
-                                        this.startGame();
-                                    }
-                                })
-                                .catch(e => {
-                                    console.log(e);
-                                });
-                            */
                         });
                     }
                 });
@@ -7311,7 +7253,7 @@ var Login = function (_PureComponent) {
             return _react2.default.createElement(
                 'div',
                 null,
-                this.props.showRegistration ? _react2.default.createElement(_registration2.default, null) : null,
+                this.state.showRegistration ? _react2.default.createElement(_registration2.default, null) : null,
                 this.state.showButtons ? _react2.default.createElement('input', {
                     type: 'submit',
                     value: 'Play as a Guest',
@@ -7833,8 +7775,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-//const gameData = $('body').data();
-
 var ForegroundAsset = function (_Phaser$Sprite) {
     _inherits(ForegroundAsset, _Phaser$Sprite);
 
@@ -7852,19 +7792,15 @@ var ForegroundAsset = function (_Phaser$Sprite) {
         _this.enableBody = true;
         _this.game.physics.arcade.enable(_this);
         _this.body.immovable = true;
-        //this.speed = state.speed;
         return _this;
     }
 
     _createClass(ForegroundAsset, [{
         key: 'update',
         value: function update() {
-            //this.speed = $('body').data('speed');
             this.position.x -= 0.3 + _state2.default.speed;
-            //this.position.x -= 1.54;
-
             if (this.position.x < -300) {
-                this.kill();
+                this.destroy();
             }
         }
     }]);
@@ -8108,7 +8044,7 @@ var BootState = function (_Phaser$State) {
   _createClass(BootState, [{
     key: 'init',
     value: function init() {
-      this.stage.backgroundColor = '#ddd';
+      this.stage.backgroundColor = '#070e16';
       this.fontsReady = false;
       this.fontsLoaded = this.fontsLoaded.bind(this);
     }
@@ -8245,7 +8181,7 @@ var GameState = function (_Phaser$State) {
     value: function init() {
       var _this2 = this;
 
-      this.speed = _state2.default.speed;
+      this.speed = 1;
 
       //initialize properties for generating ledges
       var ledgeXPosition = 50;
@@ -8329,9 +8265,9 @@ var GameState = function (_Phaser$State) {
           _this2.ledge.scale.setTo(0.5, 1.5);
         }
 
-        if (ledgeYPosition < HEIGHT - 100 && ledgeYPosition > 150) {
+        if (ledgeYPosition < HEIGHT - 150 && ledgeYPosition > 150) {
           ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-neighbourLedgeHeightDifference, neighbourLedgeHeightDifference);
-        } else if (ledgeYPosition > HEIGHT - 100) {
+        } else if (ledgeYPosition > HEIGHT - 150) {
           ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(-neighbourLedgeHeightDifference, 0);
         } else {
           ledgeYPosition = ledgeYPosition + (0, _getRandomInt2.default)(0, neighbourLedgeHeightDifference);
@@ -8432,14 +8368,7 @@ var GameState = function (_Phaser$State) {
     }
   }, {
     key: 'render',
-    value: function render() {
-      this.game.debug.text('player z-depth: ' + this.player.z, 10, 20);
-      this.game.debug.text('bg z-depth: ' + this.bg.z, 10, 40);
-      this.game.debug.text('ledges z-depth: ' + this.ledges.z, 10, 60);
-      this.game.debug.text('backdrop z-depth: ' + this.sky.z, 10, 80);
-      this.game.debug.text('closeup z-depth: ' + this.closeup.z, 10, 100);
-      this.game.debug.text('bg objects: ' + this.bgObjects.z, 10, 120);
-    }
+    value: function render() {}
   }]);
 
   return GameState;
