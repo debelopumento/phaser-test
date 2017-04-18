@@ -78,7 +78,7 @@ export default class GameState extends Phaser.State {
       });
       this.add.existing(this.mg);
       this.mgObjects.add(this.mg);
-      console.log('generated mg object: ', this.mg.x, this.mg.y);
+      console.log('generated mg object: 123', this.mg.x, this.mg.y);
       store.dispatch(gameActions.shouldGenerateMgObject(false));
     };
     this.generateMgObject({ x: 0, y: 50, asset: 'mg-1' });
@@ -122,7 +122,7 @@ export default class GameState extends Phaser.State {
         this.ledge.scale.setTo(0.5, 1.5);
       }
 
-      if (ledgeYPosition < HEIGHT - 100 && ledgeYPosition > 100) {
+      if (ledgeYPosition < HEIGHT - 100 && ledgeYPosition > 150) {
         ledgeYPosition = ledgeYPosition +
           getRandomInt(
             -neighbourLedgeHeightDifference,
@@ -136,9 +136,7 @@ export default class GameState extends Phaser.State {
           getRandomInt(0, neighbourLedgeHeightDifference);
       }
     };
-  }
 
-  create() {
     //create ledge group
     this.ledges = this.add.group();
     this.physics.arcade.enable(this.ledges);
@@ -170,19 +168,29 @@ export default class GameState extends Phaser.State {
     this.add.existing(this.player);
 
     //create closeup environment
-    this.closeup = new CloseupAsset({
-      game: this.game,
-      y: 300,
-      asset: 'closeup-1',
-    });
-    this.closeup.scale.setTo(2, 1.5);
+    const closeupObjects = [
+      { x: 0, y: 300, asset: 'closeup-1', scaleX: '2', scaleY: '1.5' },
+      { x: 1000, y: 300, asset: 'closeup-1', scaleX: '1.5', scaleY: '1.5' },
+      { x: 1500, y: 300, asset: 'closeup-1', scaleX: '2.2', scaleY: '1.5' },
+      { x: 0, y: -20, asset: 'closeup-2', scaleX: '2.2', scaleY: '0.5' },
+      { x: 800, y: -20, asset: 'closeup-2', scaleX: '2.2', scaleY: '0.8' },
+    ];
 
-    this.add.existing(this.closeup);
+    closeupObjects.forEach(obj => {
+      this.closeup = new CloseupAsset({
+        game: this.game,
+        x: obj.x,
+        y: obj.y,
+        asset: obj.asset,
+      });
+      this.closeup.scale.setTo(obj.scaleX, obj.scaleY);
+      this.add.existing(this.closeup);
+    });
 
     //create score
-    this.score = this.game.add.text(WIDTH / 2, 30, 'score: 0', {
-      font: '32px',
-      fill: 'black',
+    this.score = this.game.add.text(WIDTH / 2, 30, '0', {
+      font: '25px',
+      fill: 'white',
     });
     this.timer = 0;
 

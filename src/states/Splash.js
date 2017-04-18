@@ -24,6 +24,7 @@ export default class SplashState extends Phaser.State {
       'mg-3',
       'mg-4',
       'closeup-1',
+      'closeup-2',
     ];
 
     assets.forEach(asset => {

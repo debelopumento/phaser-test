@@ -33,7 +33,6 @@
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
     "html-webpack-plugin": "^2.28.0",
-    "jquery": "^3.2.1",
     "mongoose": "^4.9.3",
     "morgan": "^1.8.1",
     "phaser-ce": "^2.7.3",
@@ -43,7 +42,6 @@
     "react-facebook-login": "^3.5.0",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
-    "redux-logger": "^2.10.2",
     "redux-promise-middleware": "^4.2.0",
     "redux-thunk": "^2.2.0",
     "webfontloader": "^1.6.27"
