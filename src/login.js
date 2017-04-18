@@ -15,7 +15,7 @@ import axios from 'axios';
 
 const { object, func } = PropTypes;
 
-export default class Login extends PureComponent {
+class Login extends PureComponent {
     /*
     static PropTypes = {
         gameHighestScore: object,
@@ -76,7 +76,14 @@ export default class Login extends PureComponent {
                     FB.api('/me', response => {
                         const facebookId = response.id;
                         store.dispatch(actions.updateFacebookId(facebookId));
-
+                        store
+                            .dispatch(actions.lookupPlayer(facebookId))
+                            .then(result => {
+                                if (result) {
+                                    this.startGame();
+                                }
+                            });
+                        /*
                         axios
                             .get(
                                 'http://localhost:8080/users/facebookId/' +
@@ -111,6 +118,7 @@ export default class Login extends PureComponent {
                             .catch(e => {
                                 console.log(e);
                             });
+                        */
                     });
                 }
             });
@@ -130,7 +138,7 @@ export default class Login extends PureComponent {
     render() {
         return (
             <div>
-                {this.state.showRegistration ? <Registration /> : null}
+                {this.props.showRegistration ? <Registration /> : null}
                 {this.state.showButtons
                     ? <input
                           type="submit"
@@ -144,9 +152,7 @@ export default class Login extends PureComponent {
         );
     }
 }
-/*
+
 export default connect(storeState => ({
-    gameHighestScore: storeState.gameHighestScore,
-    playerData: storeState.playerData,
-}));
-*/
+    showRegistration: storeState.showRegistration,
+}))(Login);

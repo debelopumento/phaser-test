@@ -5,6 +5,33 @@ const host = process.env.NODE_ENV === 'production'
     ? window.location.href
     : 'http://localhost:8080/';
 
+export const lookupPlayer = facebookId =>
+    dispatch => {
+        const url = host + 'users/facebookId/' + facebookId;
+        return axios
+            .get(url)
+            .then(data => {
+                if (data.data.length === 0) {
+                    dispatch({
+                        type: 'SHOW_REGISTRATION',
+                        payload: true,
+                    });
+                    return false;
+                } else {
+                    const playerScreenName = data.data[0].screenName;
+                    const playerHighestScore = data.data[0].highestScore;
+                    const _id = data.data[0].id;
+                    dispatch(updatePlayerId(_id));
+                    dispatch(updateScreenName(playerScreenName));
+                    dispatch(loadPersonalHighestScore(playerHighestScore));
+                    return true;
+                }
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
+
 export const loadPersonalHighestScore = score => ({
     type: 'UPDATE_PLAYER_HIGHEST_SCORE',
     payload: score,

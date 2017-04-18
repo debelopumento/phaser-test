@@ -2490,7 +2490,7 @@ module.exports = defaults;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.checkAndUpdateGameHighestScore = exports.getGameHighestScore = exports.newPlayerRegistration = exports.updateFacebookId = exports.updatePlayerId = exports.updatePersonalHighestScore = exports.updateScreenName = exports.loadPersonalHighestScore = undefined;
+exports.checkAndUpdateGameHighestScore = exports.getGameHighestScore = exports.newPlayerRegistration = exports.updateFacebookId = exports.updatePlayerId = exports.updatePersonalHighestScore = exports.updateScreenName = exports.loadPersonalHighestScore = exports.lookupPlayer = undefined;
 
 var _axios = __webpack_require__(/*! axios */ 153);
 
@@ -2503,6 +2503,31 @@ var _store2 = _interopRequireDefault(_store);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var host = process.env.NODE_ENV === 'production' ? window.location.href : 'http://localhost:8080/';
+
+var lookupPlayer = exports.lookupPlayer = function lookupPlayer(facebookId) {
+    return function (dispatch) {
+        var url = host + 'users/facebookId/' + facebookId;
+        return _axios2.default.get(url).then(function (data) {
+            if (data.data.length === 0) {
+                dispatch({
+                    type: 'SHOW_REGISTRATION',
+                    payload: true
+                });
+                return false;
+            } else {
+                var playerScreenName = data.data[0].screenName;
+                var playerHighestScore = data.data[0].highestScore;
+                var _id = data.data[0].id;
+                dispatch(updatePlayerId(_id));
+                dispatch(updateScreenName(playerScreenName));
+                dispatch(loadPersonalHighestScore(playerHighestScore));
+                return true;
+            }
+        }).catch(function (e) {
+            console.log(e);
+        });
+    };
+};
 
 var loadPersonalHighestScore = exports.loadPersonalHighestScore = function loadPersonalHighestScore(score) {
     return {
@@ -7140,23 +7165,47 @@ var Login = function (_PureComponent) {
                         FB.api('/me', function (response) {
                             var facebookId = response.id;
                             _store2.default.dispatch(actions.updateFacebookId(facebookId));
-
-                            _axios2.default.get('http://localhost:8080/users/facebookId/' + facebookId).then(function (data) {
-                                if (data.data.length === 0) {
-                                    //show registration input box
-                                    _this2.setState({ showRegistration: true });
-                                } else {
-                                    var playerScreenName = data.data[0].screenName;
-                                    var playerHighestScore = data.data[0].highestScore;
-                                    var _id = data.data[0].id;
-                                    _store2.default.dispatch(actions.updatePlayerId(_id));
-                                    _store2.default.dispatch(actions.updateScreenName(playerScreenName));
-                                    _store2.default.dispatch(actions.loadPersonalHighestScore(playerHighestScore));
+                            _store2.default.dispatch(actions.lookupPlayer(facebookId)).then(function (result) {
+                                if (result) {
                                     _this2.startGame();
                                 }
-                            }).catch(function (e) {
-                                console.log(e);
                             });
+                            /*
+                            axios
+                                .get(
+                                    'http://localhost:8080/users/facebookId/' +
+                                        facebookId
+                                )
+                                .then(data => {
+                                    if (data.data.length === 0) {
+                                        //show registration input box
+                                        this.setState({ showRegistration: true });
+                                    } else {
+                                        const playerScreenName = data.data[
+                                            0
+                                        ].screenName;
+                                        const playerHighestScore = data.data[
+                                            0
+                                        ].highestScore;
+                                        const _id = data.data[0].id;
+                                        store.dispatch(actions.updatePlayerId(_id));
+                                        store.dispatch(
+                                            actions.updateScreenName(
+                                                playerScreenName
+                                            )
+                                        );
+                                        store.dispatch(
+                                            actions.loadPersonalHighestScore(
+                                                playerHighestScore
+                                            )
+                                        );
+                                        this.startGame();
+                                    }
+                                })
+                                .catch(e => {
+                                    console.log(e);
+                                });
+                            */
                         });
                     }
                 });
@@ -7179,7 +7228,7 @@ var Login = function (_PureComponent) {
             return _react2.default.createElement(
                 'div',
                 null,
-                this.state.showRegistration ? _react2.default.createElement(_registration2.default, null) : null,
+                this.props.showRegistration ? _react2.default.createElement(_registration2.default, null) : null,
                 this.state.showButtons ? _react2.default.createElement('input', {
                     type: 'submit',
                     value: 'Play as a Guest',
@@ -7192,15 +7241,12 @@ var Login = function (_PureComponent) {
 
     return Login;
 }(_react.PureComponent);
-/*
-export default connect(storeState => ({
-    gameHighestScore: storeState.gameHighestScore,
-    playerData: storeState.playerData,
-}));
-*/
 
-
-exports.default = Login;
+exports.default = (0, _reactRedux.connect)(function (storeState) {
+    return {
+        showRegistration: storeState.showRegistration
+    };
+})(Login);
 
 /***/ }),
 /* 250 */
@@ -7317,6 +7363,20 @@ var shouldGenerateMgObjectReducer = function shouldGenerateMgObjectReducer() {
     }
 };
 
+var showRegistrationReducer = function showRegistrationReducer() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    var action = arguments[1];
+
+    switch (action.type) {
+        case 'SHOW_REGISTRATION':
+            {
+                return action.payload;
+            }
+        default:
+            return state;
+    }
+};
+
 var allReducers = (0, _redux.combineReducers)({
     gameHighestScore: gameHighestScoreReducer,
     facebookId: facebookIdReducer,
@@ -7324,7 +7384,8 @@ var allReducers = (0, _redux.combineReducers)({
     playerHighestScore: playerHighestScoreReducer,
     _id: _idReducer,
     shouldGenerateBgObject: shouldGenerateBgObjectReducer,
-    shouldGenerateMgObject: shouldGenerateMgObjectReducer
+    shouldGenerateMgObject: shouldGenerateMgObjectReducer,
+    showRegistration: showRegistrationReducer
 });
 
 exports.default = allReducers;
@@ -8052,51 +8113,16 @@ var SplashState = function (_Phaser$State) {
   }, {
     key: 'preload',
     value: function preload() {
-      //this.load.setPreloadSprite(this.loaderBar);
-      /*
-      const assets = [
-        'sky',
-        'dude',
-        'ledge-1',
-        'ledge-2',
-        'ledge-3',
-        'ledge-4',
-        'bg-1',
-        'bg-2',
-        'bg-3',
-        'bg-4',
-        'bg-5',
-        'mg-1',
-        'mg-2',
-        'mg-3',
-        'mg-4',
-        'closeup-1',
-      ];
-       assets.forEach(function(asset) {
-        const path = 'assets/images/' + asset + '.png';
-        game.load.image(asset, path);
-      });
-      */
+      var _this2 = this;
 
-      this.load.image('sky', 'assets/images/sky.png');
-      this.load.image('star', 'assets/images/star.png');
+      //this.load.setPreloadSprite(this.loaderBar);
+      var assets = ['sky', 'dude', 'ledge-1', 'ledge-2', 'ledge-3', 'ledge-4', 'bg-1', 'bg-2', 'bg-3', 'bg-4', 'bg-5', 'mg-1', 'mg-2', 'mg-3', 'mg-4', 'closeup-1'];
+
+      assets.forEach(function (asset) {
+        var path = 'assets/images/' + asset + '.png';
+        _this2.load.image(asset, path);
+      });
       this.load.spritesheet('dude', 'assets/images/dude.png', 32, 48);
-      this.load.image('mushroom', 'assets/images/mushroom2.png');
-      this.load.image('ledge-1', 'assets/images/ledge-1.png');
-      this.load.image('ledge-2', 'assets/images/ledge-2.png');
-      this.load.image('ledge-3', 'assets/images/ledge-3.png');
-      this.load.image('ledge-4', 'assets/images/ledge-4.png');
-      this.load.image('bg-1', 'assets/images/bg-1.png');
-      this.load.image('bg-2', 'assets/images/bg-2.png');
-      this.load.image('bg-3', 'assets/images/bg-3.png');
-      this.load.image('bg-4', 'assets/images/bg-4.png');
-      this.load.image('bg-5', 'assets/images/bg-5.png');
-      this.load.image('mg-1', 'assets/images/architecture-1.png');
-      this.load.image('mg-2', 'assets/images/architecture-2.png');
-      this.load.image('mg-3', 'assets/images/architecture-3.png');
-      this.load.image('mg-4', 'assets/images/architecture-4.png');
-      this.load.image('mg-4', 'assets/images/architecture-4.png');
-      this.load.image('closeup-1', 'assets/images/closeup-1.png');
       this.load.image('button', 'assets/images/button.png', 40, 10, 3);
     }
   }, {

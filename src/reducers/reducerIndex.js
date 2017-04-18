@@ -69,6 +69,16 @@ const shouldGenerateMgObjectReducer = (state = false, action) => {
     }
 };
 
+const showRegistrationReducer = (state = false, action) => {
+    switch (action.type) {
+        case 'SHOW_REGISTRATION': {
+            return action.payload;
+        }
+        default:
+            return state;
+    }
+};
+
 const allReducers = combineReducers({
     gameHighestScore: gameHighestScoreReducer,
     facebookId: facebookIdReducer,
@@ -77,6 +87,7 @@ const allReducers = combineReducers({
     _id: _idReducer,
     shouldGenerateBgObject: shouldGenerateBgObjectReducer,
     shouldGenerateMgObject: shouldGenerateMgObjectReducer,
+    showRegistration: showRegistrationReducer,
 });
 
 export default allReducers;
