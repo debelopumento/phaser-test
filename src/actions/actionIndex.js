@@ -72,6 +72,11 @@ export const updateFacebookId = facebookId => ({
     payload: facebookId,
 });
 
+export const hideRegistration = () => ({
+    type: 'HIDE_REGISTRATION',
+    payload: false,
+});
+
 export const newPlayerRegistration = screenName =>
     dispatch => {
         const newPlayer = {
@@ -89,6 +94,7 @@ export const newPlayerRegistration = screenName =>
                     payload: data.data.screenName,
                 });
                 dispatch(getGameHighestScore());
+                dispatch(hideRegistration());
                 this.game = new Game();
             })
             .catch(e => {
