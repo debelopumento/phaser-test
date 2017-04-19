@@ -21,29 +21,29 @@ export default class Player extends Phaser.Sprite {
             this.body.velocity.y = -400 + store.getState().speed;
         });
 
-        const SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-
-        const startSpeechRecognition = () => {
-            const speechRecognizer = new SpeechRecognition();
-            speechRecognizer.start();
-            speechRecognizer.onresult = event => {
-                const transcript = event.results[0][0].transcript;
-                if (transcript === 'jump') {
-                    console.log(1, transcript);
-                }
-                this.body.velocity.y = -400;
-                speechRecognizer.stop();
-            };
-            speechRecognizer.onspeechend = () => {
-                //console.log('say some more');
-                startSpeechRecognition();
-            };
-            speechRecognizer.onerror = event => {
-                startSpeechRecognition();
-            };
-        };
-
         if ('webkitSpeechRecognition' in window) {
+            const SpeechRecognition = SpeechRecognition ||
+                webkitSpeechRecognition;
+
+            const startSpeechRecognition = () => {
+                const speechRecognizer = new SpeechRecognition();
+                speechRecognizer.start();
+                speechRecognizer.onresult = event => {
+                    const transcript = event.results[0][0].transcript;
+                    if (transcript === 'jump') {
+                        console.log(1, transcript);
+                    }
+                    this.body.velocity.y = -400;
+                    speechRecognizer.stop();
+                };
+                speechRecognizer.onspeechend = () => {
+                    //console.log('say some more');
+                    startSpeechRecognition();
+                };
+                speechRecognizer.onerror = event => {
+                    startSpeechRecognition();
+                };
+            };
             startSpeechRecognition();
         } else {
             alert(

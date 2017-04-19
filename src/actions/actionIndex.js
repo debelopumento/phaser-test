@@ -1,12 +1,11 @@
 import axios from 'axios';
 import store from '../store';
 
-/*
 const host = process.env.NODE_ENV === 'production'
     ? window.location.href
     : 'http://localhost:8080/';
-*/
-const host = window.location.href;
+
+//const host = window.location.href;
 
 export const lookupPlayer = facebookId =>
     dispatch => {
