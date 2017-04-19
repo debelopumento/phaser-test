@@ -8,6 +8,7 @@ var pixi = path.join(phaserModule, 'build/custom/pixi.js');
 var p2 = path.join(phaserModule, 'build/custom/p2.js');
 
 var definePlugin = new webpack.DefinePlugin({
+  'process.env.NODE_ENV': 'production',
   __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'false')),
 });
 
