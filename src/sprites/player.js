@@ -50,7 +50,10 @@ export default class Player extends Phaser.Sprite {
                 If you are using Google Chrome on a computer, please upgrade!`
             );
             game.input.onUp.add(() => {
-                this.body.velocity.y = -400 + store.getState().speed;
+                //only allow player to jump when body is touching the ground
+                if (this.body.touching.down) {
+                    this.body.velocity.y = -400 + store.getState().speed;
+                }
             });
         }
     }
