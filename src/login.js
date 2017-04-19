@@ -19,7 +19,6 @@ class Login extends PureComponent {
         super();
 
         this.state = {
-            showRegistration: false,
             showButtons: true,
         };
 
@@ -38,7 +37,7 @@ class Login extends PureComponent {
     startGame() {
         this.setState({ showButtons: false });
         store.dispatch(actions.getGameHighestScore());
-        const game = new Game();
+        this.game = new Game();
     }
 
     componentWillMount() {
@@ -83,7 +82,7 @@ class Login extends PureComponent {
     render() {
         return (
             <div>
-                {this.state.showRegistration ? <Registration /> : null}
+                {this.props.showRegistration ? <Registration /> : null}
                 {this.state.showButtons
                     ? <input
                           type="submit"
