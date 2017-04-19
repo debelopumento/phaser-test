@@ -242,6 +242,4 @@ export default class GameState extends Phaser.State {
       this.state.start('Gameover');
     }
   }
-
-  render() {}
 }

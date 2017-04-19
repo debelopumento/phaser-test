@@ -6997,10 +6997,6 @@ var _react = __webpack_require__(/*! react */ 44);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactDom = __webpack_require__(/*! react-dom */ 79);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
 var _reactFacebookLogin = __webpack_require__(/*! react-facebook-login */ 545);
 
 var _reactFacebookLogin2 = _interopRequireDefault(_reactFacebookLogin);
@@ -7147,8 +7143,6 @@ var _reactDom = __webpack_require__(/*! react-dom */ 79);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _reactRedux = __webpack_require__(/*! react-redux */ 218);
-
 var _facebookLogin = __webpack_require__(/*! ./facebookLogin */ 248);
 
 var _facebookLogin2 = _interopRequireDefault(_facebookLogin);
@@ -7160,6 +7154,8 @@ var _store2 = _interopRequireDefault(_store);
 var _game_init = __webpack_require__(/*! ./game_init */ 249);
 
 var _game_init2 = _interopRequireDefault(_game_init);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ 218);
 
 var _actionIndex = __webpack_require__(/*! ./actions/actionIndex */ 99);
 
@@ -7183,8 +7179,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*global fb*/
 
-var object = _propTypes.PropTypes.object,
-    func = _propTypes.PropTypes.func;
+//const { object, func } = PropTypes;
 
 var Login = function (_PureComponent) {
     _inherits(Login, _PureComponent);
@@ -7943,6 +7938,8 @@ var _store = __webpack_require__(/*! ../store */ 30);
 
 var _store2 = _interopRequireDefault(_store);
 
+var _reactRedux = __webpack_require__(/*! react-redux */ 218);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -7970,32 +7967,28 @@ var Player = function (_Phaser$Sprite) {
         _this.body.gravity.y = 980;
         _this.body.collideWorldBounds = false;
         _this.body.bounce.y = 0.1;
-
         _this.animations.add('run', [5, 6, 7, 8], 6, true);
         _this.animations.play('run');
-
         _this.speed = 1;
-        game.input.onUp.add(function () {
-            //this.body.velocity.y = -400 / Math.sqrt(this.speed);
-            _this.body.velocity.y = -400 + _store2.default.getState().speed;
-        });
 
         if ('webkitSpeechRecognition' in window) {
             var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+
+            //if player's highest score is lower than 300, show tutorial alert
+            if (_store2.default.getState().playerHighestScore <= 300) {
+                alert('Say \'Jump\' to make the character jump!');
+            }
 
             var startSpeechRecognition = function startSpeechRecognition() {
                 var speechRecognizer = new SpeechRecognition();
                 speechRecognizer.start();
                 speechRecognizer.onresult = function (event) {
                     var transcript = event.results[0][0].transcript;
-                    if (transcript === 'jump') {
-                        console.log(1, transcript);
-                    }
+                    if (transcript === 'jump') {}
                     _this.body.velocity.y = -400;
                     speechRecognizer.stop();
                 };
                 speechRecognizer.onspeechend = function () {
-                    //console.log('say some more');
                     startSpeechRecognition();
                 };
                 speechRecognizer.onerror = function (event) {
@@ -8004,7 +7997,10 @@ var Player = function (_Phaser$Sprite) {
             };
             startSpeechRecognition();
         } else {
-            alert('Your browser is not supported. If you are using google chrome, please upgrade!');
+            alert('Speech Recognition does not support your browser. \n                Please try out the Voice Control function in this game by using Google Chrome on a computer.\n                If you are using Google Chrome on a computer, please upgrade!');
+            game.input.onUp.add(function () {
+                _this.body.velocity.y = -400 + _store2.default.getState().speed;
+            });
         }
         return _this;
     }
@@ -8391,9 +8387,6 @@ var GameState = function (_Phaser$State) {
         this.state.start('Gameover');
       }
     }
-  }, {
-    key: 'render',
-    value: function render() {}
   }]);
 
   return GameState;

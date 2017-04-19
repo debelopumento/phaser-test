@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import config from '../config';
 import store from '../store';
+import { connect } from 'react-redux';
 
 export default class Player extends Phaser.Sprite {
     constructor({ game, x, y, asset }) {
@@ -11,19 +12,18 @@ export default class Player extends Phaser.Sprite {
         this.body.gravity.y = 980;
         this.body.collideWorldBounds = false;
         this.body.bounce.y = 0.1;
-
         this.animations.add('run', [5, 6, 7, 8], 6, true);
         this.animations.play('run');
-
         this.speed = 1;
-        game.input.onUp.add(() => {
-            //this.body.velocity.y = -400 / Math.sqrt(this.speed);
-            this.body.velocity.y = -400 + store.getState().speed;
-        });
 
         if ('webkitSpeechRecognition' in window) {
             const SpeechRecognition = SpeechRecognition ||
                 webkitSpeechRecognition;
+
+            //if player's highest score is lower than 300, show tutorial alert
+            if (store.getState().playerHighestScore <= 300) {
+                alert(`Say 'Jump' to make the character jump!`);
+            }
 
             const startSpeechRecognition = () => {
                 const speechRecognizer = new SpeechRecognition();
@@ -31,13 +31,11 @@ export default class Player extends Phaser.Sprite {
                 speechRecognizer.onresult = event => {
                     const transcript = event.results[0][0].transcript;
                     if (transcript === 'jump') {
-                        console.log(1, transcript);
                     }
                     this.body.velocity.y = -400;
                     speechRecognizer.stop();
                 };
                 speechRecognizer.onspeechend = () => {
-                    //console.log('say some more');
                     startSpeechRecognition();
                 };
                 speechRecognizer.onerror = event => {
@@ -47,8 +45,13 @@ export default class Player extends Phaser.Sprite {
             startSpeechRecognition();
         } else {
             alert(
-                'Your browser is not supported. If you are using google chrome, please upgrade!'
+                `Speech Recognition does not support your browser. 
+                Please try out the Voice Control function in this game by using Google Chrome on a computer.
+                If you are using Google Chrome on a computer, please upgrade!`
             );
+            game.input.onUp.add(() => {
+                this.body.velocity.y = -400 + store.getState().speed;
+            });
         }
     }
 

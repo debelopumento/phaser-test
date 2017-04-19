@@ -3,7 +3,6 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import FacebookLoginButton from './facebookLogin';
 import store from './store';
 import Game from './game_init';
@@ -12,7 +11,7 @@ import * as actions from './actions/actionIndex';
 import Registration from './registration';
 import axios from 'axios';
 
-const { object, func } = PropTypes;
+//const { object, func } = PropTypes;
 
 class Login extends PureComponent {
     constructor() {
