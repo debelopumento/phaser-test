@@ -1,5 +1,6 @@
 import axios from 'axios';
 import store from '../store';
+import Game from '../game_init';
 
 const host = process.env.NODE_ENV === 'production'
     ? window.location.href
@@ -12,6 +13,7 @@ export const lookupPlayer = facebookId =>
             .get(url)
             .then(data => {
                 if (data.data.length === 0) {
+                    dispatch(updateFacebookId(facebookId));
                     dispatch({
                         type: 'SHOW_REGISTRATION',
                         payload: true,
@@ -70,16 +72,24 @@ export const updateFacebookId = facebookId => ({
     payload: facebookId,
 });
 
-export const newPlayerRegistration = newPlayer =>
+export const newPlayerRegistration = screenName =>
     dispatch => {
-        newPlayer.highestScore = 0;
+        const newPlayer = {
+            screenName: screenName,
+            facebookId: store.getState().facebookId,
+            highestScore: 0,
+        };
+        console.log(5, newPlayer);
         axios
             .post(`${host}users/`, newPlayer)
             .then(data => {
+                console.log(6, data);
                 dispatch({
                     type: 'UPDATE_SCREENNAME',
                     payload: data.data.screenName,
                 });
+                dispatch(getGameHighestScore());
+                this.game = new Game();
             })
             .catch(e => {
                 console.log(e);

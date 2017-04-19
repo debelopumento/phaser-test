@@ -45,9 +45,7 @@ export default class Player extends Phaser.Sprite {
             startSpeechRecognition();
         } else {
             alert(
-                `Speech Recognition does not support your browser. 
-                Please try out the Voice Control function in this game by using Google Chrome on a computer.
-                If you are using Google Chrome on a computer, please upgrade!`
+                `Speech Recognition does not support your browser. Please try out the Voice Control function in this game by using Google Chrome on a computer. If you are using Google Chrome on a computer, please upgrade!`
             );
             game.input.onUp.add(() => {
                 //only allow player to jump when body is touching the ground

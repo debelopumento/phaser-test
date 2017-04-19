@@ -10,19 +10,19 @@ export default class Registration extends React.PureComponent {
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        console.log(2);
     }
     handleSubmit(event) {
+        console.log(3);
         event.preventDefault();
-        const newPlayer = {
-            facebookId: store.getState().facebookId,
-            screenName: this.state.screenName,
-        };
-        store.dispatch(actions.newPlayerRegistration(newPlayer));
+
+        store.dispatch(actions.newPlayerRegistration(this.state.screenName));
     }
 
     handleChange(event) {
         const screenName = event.target.value;
         this.setState({ screenName: screenName });
+        console.log(1);
     }
 
     render() {
