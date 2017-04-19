@@ -74,6 +74,9 @@ const showRegistrationReducer = (state = false, action) => {
         case 'SHOW_REGISTRATION': {
             return action.payload;
         }
+        case 'HIDE_REGISTRATION': {
+            return false;
+        }
         default:
             return state;
     }

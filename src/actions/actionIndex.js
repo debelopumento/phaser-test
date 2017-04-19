@@ -84,15 +84,11 @@ export const newPlayerRegistration = screenName =>
             facebookId: store.getState().facebookId,
             highestScore: 0,
         };
-        console.log(5, newPlayer);
         axios
             .post(`${host}users/`, newPlayer)
             .then(data => {
-                console.log(6, data);
-                dispatch({
-                    type: 'UPDATE_SCREENNAME',
-                    payload: data.data.screenName,
-                });
+                dispatch(updateScreenName(data.data.screenName));
+                dispatch(updatePlayerId(data.data.id));
                 dispatch(getGameHighestScore());
                 dispatch(hideRegistration());
                 this.game = new Game();
