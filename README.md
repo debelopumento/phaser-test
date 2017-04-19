@@ -1,5 +1,5 @@
-#Tobu 	## A Voice Control Runner Game on Google Chrome
-## A game written in Phaser + React + Redux, with Web Speech API
+#Tobu 	
+## A Voice Control Runner Game on Google Chrome, written in Phaser + React + Redux, with Web Speech API
 
 Live site of this game:
 [https://cryptic-atoll-29351.herokuapp.com/](https://cryptic-atoll-29351.herokuapp.com/)
