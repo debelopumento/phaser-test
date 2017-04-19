@@ -10,6 +10,7 @@ export default class SplashState extends Phaser.State {
     const assets = [
       'sky',
       'dude',
+      'bride',
       'ledge-1',
       'ledge-2',
       'ledge-3',
@@ -31,7 +32,9 @@ export default class SplashState extends Phaser.State {
       const path = 'assets/images/' + asset + '.png';
       this.load.image(asset, path);
     });
-    this.load.spritesheet('dude', 'assets/images/dude.png', 32, 48);
+    //this.load.spritesheet('dude', 'assets/images/dude.png', 64, 96);
+    this.load.spritesheet('bride', 'assets/images/bride.png', 64, 64);
+
     this.load.image('button', 'assets/images/button.png', 40, 10, 3);
   }
 

@@ -77,7 +77,6 @@ export default class GameState extends Phaser.State {
       });
       this.add.existing(this.mg);
       this.mgObjects.add(this.mg);
-      console.log('generated mg object: 123', this.mg.x, this.mg.y);
       store.dispatch(gameActions.shouldGenerateMgObject(false));
     };
     this.generateMgObject({ x: 0, y: 50, asset: 'mg-1' });
@@ -85,15 +84,6 @@ export default class GameState extends Phaser.State {
 
     //generate ledge and add it to ledge group
     this.generateLedges = () => {
-      console.log(
-        'ledge',
-        ledgeIndex,
-        ' ',
-        ledgeXPosition,
-        ', ',
-        JSON.stringify(ledgeYPosition)
-      );
-
       const randomLedgeType = ledgeTypes[
         Math.floor(Math.random() * ledgeTypes.length)
       ];
@@ -164,8 +154,9 @@ export default class GameState extends Phaser.State {
       game: this.game,
       x: 150,
       y: 30,
-      asset: 'dude',
+      asset: 'bride',
     });
+    this.player.scale.setTo(0.75);
     this.add.existing(this.player);
 
     //create closeup environment
@@ -193,6 +184,8 @@ export default class GameState extends Phaser.State {
       font: '25px',
       fill: 'white',
     });
+    this.score.font = 'Bangers';
+    this.score.padding.set(12, 12);
     this.timer = 0;
 
     this.game.time.events.loop(Phaser.Timer.SECOND * 1, () => {

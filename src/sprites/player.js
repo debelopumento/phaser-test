@@ -12,7 +12,7 @@ export default class Player extends Phaser.Sprite {
         this.body.gravity.y = 980;
         this.body.collideWorldBounds = false;
         this.body.bounce.y = 0.1;
-        this.animations.add('run', [5, 6, 7, 8], 6, true);
+        this.animations.add('run', [1, 2, 3, 2], 12, true);
         this.animations.play('run');
         this.speed = 1;
 

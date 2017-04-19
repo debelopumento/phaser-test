@@ -11,17 +11,18 @@ import * as actions from './actions/actionIndex';
 import Registration from './registration';
 import axios from 'axios';
 
-//const { object, func } = PropTypes;
-
 class Login extends PureComponent {
     constructor() {
         super();
-
         this.playAsAGuest = this.playAsAGuest.bind(this);
     }
 
     playAsAGuest(event) {
         event.preventDefault();
+        store.dispatch({
+            type: 'HIDE_BUTTONS',
+            payload: null,
+        });
         store.dispatch({
             type: 'UPDATE_SCREENNAME',
             payload: 'Guest',
@@ -30,7 +31,6 @@ class Login extends PureComponent {
     }
 
     startGame() {
-        //this.setState({ showButtons: false });
         store.dispatch(actions.getGameHighestScore());
         this.game = new Game();
     }
