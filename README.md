@@ -4,7 +4,7 @@
 Live site of this game:
 [https://cryptic-atoll-29351.herokuapp.com/](https://cryptic-atoll-29351.herokuapp.com/)
 
-![Screenshot](https://github.com/debelopumento/phaser-test/images/tobu-screenShots.png)
+![Screenshot](https://github.com/debelopumento/phaser-test/blob/dev/images/tobu-screenShots.png?raw=true)
 
 ## Technical
 - The game is built with Phaser game engine.
