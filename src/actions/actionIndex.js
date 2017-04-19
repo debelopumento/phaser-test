@@ -5,8 +5,6 @@ const host = process.env.NODE_ENV === 'production'
     ? window.location.href
     : 'http://localhost:8080/';
 
-//const host = window.location.href;
-
 export const lookupPlayer = facebookId =>
     dispatch => {
         const url = host + 'users/facebookId/' + facebookId;
@@ -20,6 +18,7 @@ export const lookupPlayer = facebookId =>
                     });
                     return false;
                 } else {
+                    console.log(10);
                     const playerScreenName = data.data[0].screenName;
                     const playerHighestScore = data.data[0].highestScore;
                     const _id = data.data[0].id;
@@ -123,3 +122,8 @@ export const checkAndUpdateGameHighestScore = score =>
                 console.log(e);
             });
     };
+
+export const hideButtons = () => ({
+    type: 'HIDE_BUTTONS',
+    payload: false,
+});

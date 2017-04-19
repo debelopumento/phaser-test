@@ -89,6 +89,16 @@ const speedReducer = (state = 1, action) => {
     }
 };
 
+const showButtonsReducer = (state = true, action) => {
+    switch (action.type) {
+        case 'HIDE_BUTTONS': {
+            return false;
+        }
+        default:
+            return state;
+    }
+};
+
 const allReducers = combineReducers({
     gameHighestScore: gameHighestScoreReducer,
     facebookId: facebookIdReducer,
@@ -99,6 +109,7 @@ const allReducers = combineReducers({
     shouldGenerateMgObject: shouldGenerateMgObjectReducer,
     showRegistration: showRegistrationReducer,
     speed: speedReducer,
+    showButtons: showButtonsReducer,
 });
 
 export default allReducers;

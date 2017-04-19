@@ -18,10 +18,6 @@ class Login extends PureComponent {
     constructor() {
         super();
 
-        this.state = {
-            showButtons: true,
-        };
-
         this.playAsAGuest = this.playAsAGuest.bind(this);
     }
 
@@ -35,7 +31,7 @@ class Login extends PureComponent {
     }
 
     startGame() {
-        this.setState({ showButtons: false });
+        //this.setState({ showButtons: false });
         store.dispatch(actions.getGameHighestScore());
         this.game = new Game();
     }
@@ -55,10 +51,12 @@ class Login extends PureComponent {
                 if (response.status === 'connected') {
                     FB.api('/me', response => {
                         const facebookId = response.id;
-                        store.dispatch(actions.updateFacebookId(facebookId));
+
                         store
                             .dispatch(actions.lookupPlayer(facebookId))
                             .then(result => {
+                                store.dispatch(actions.hideButtons());
+
                                 if (result) {
                                     this.startGame();
                                 }
@@ -83,14 +81,14 @@ class Login extends PureComponent {
         return (
             <div>
                 {this.props.showRegistration ? <Registration /> : null}
-                {this.state.showButtons
+                {this.props.showButtons
                     ? <input
                           type="submit"
                           value="Play as a Guest"
                           onClick={this.playAsAGuest}
                       />
                     : null}
-                {this.state.showButtons ? <FacebookLoginButton /> : null}
+                {this.props.showButtons ? <FacebookLoginButton /> : null}
 
             </div>
         );
@@ -99,4 +97,5 @@ class Login extends PureComponent {
 
 export default connect(storeState => ({
     showRegistration: storeState.showRegistration,
+    showButtons: storeState.showButtons,
 }))(Login);

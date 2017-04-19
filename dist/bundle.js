@@ -2468,7 +2468,7 @@ module.exports = defaults;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.checkAndUpdateGameHighestScore = exports.getGameHighestScore = exports.newPlayerRegistration = exports.updateFacebookId = exports.updatePlayerId = exports.updatePersonalHighestScore = exports.updateScreenName = exports.loadPersonalHighestScore = exports.lookupPlayer = undefined;
+exports.hideButtons = exports.checkAndUpdateGameHighestScore = exports.getGameHighestScore = exports.newPlayerRegistration = exports.updateFacebookId = exports.updatePlayerId = exports.updatePersonalHighestScore = exports.updateScreenName = exports.loadPersonalHighestScore = exports.lookupPlayer = undefined;
 
 var _axios = __webpack_require__(/*! axios */ 154);
 
@@ -2482,8 +2482,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var host = process.env.NODE_ENV === 'production' ? window.location.href : 'http://localhost:8080/';
 
-//const host = window.location.href;
-
 var lookupPlayer = exports.lookupPlayer = function lookupPlayer(facebookId) {
     return function (dispatch) {
         var url = host + 'users/facebookId/' + facebookId;
@@ -2495,6 +2493,7 @@ var lookupPlayer = exports.lookupPlayer = function lookupPlayer(facebookId) {
                 });
                 return false;
             } else {
+                console.log(10);
                 var playerScreenName = data.data[0].screenName;
                 var playerHighestScore = data.data[0].highestScore;
                 var _id = data.data[0].id;
@@ -2596,6 +2595,13 @@ var checkAndUpdateGameHighestScore = exports.checkAndUpdateGameHighestScore = fu
         }).catch(function (e) {
             console.log(e);
         });
+    };
+};
+
+var hideButtons = exports.hideButtons = function hideButtons() {
+    return {
+        type: 'HIDE_BUTTONS',
+        payload: false
     };
 };
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../~/process/browser.js */ 1)))
@@ -6999,10 +7005,31 @@ var _reactFacebookLogin = __webpack_require__(/*! react-facebook-login */ 545);
 
 var _reactFacebookLogin2 = _interopRequireDefault(_reactFacebookLogin);
 
+var _game_init = __webpack_require__(/*! ./game_init */ 249);
+
+var _game_init2 = _interopRequireDefault(_game_init);
+
+var _store = __webpack_require__(/*! ./store */ 30);
+
+var _store2 = _interopRequireDefault(_store);
+
+var _actionIndex = __webpack_require__(/*! ./actions/actionIndex */ 99);
+
+var actions = _interopRequireWildcard(_actionIndex);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var responseFacebook = function responseFacebook(response) {
-    console.log(15, response);
+    var facebookId = response.id;
+    _store2.default.dispatch(actions.updateFacebookId(facebookId));
+    _store2.default.dispatch(actions.lookupPlayer(facebookId)).then(function (result) {
+        if (result) {
+            _store2.default.dispatch(actions.hideButtons());
+            var game = new _game_init2.default();
+        }
+    });
 };
 
 var FacebookLoginButton = function FacebookLoginButton() {
@@ -7167,10 +7194,6 @@ var Login = function (_PureComponent) {
 
         var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this));
 
-        _this.state = {
-            showButtons: true
-        };
-
         _this.playAsAGuest = _this.playAsAGuest.bind(_this);
         return _this;
     }
@@ -7188,7 +7211,7 @@ var Login = function (_PureComponent) {
     }, {
         key: 'startGame',
         value: function startGame() {
-            this.setState({ showButtons: false });
+            //this.setState({ showButtons: false });
             _store2.default.dispatch(actions.getGameHighestScore());
             this.game = new _game_init2.default();
         }
@@ -7210,8 +7233,10 @@ var Login = function (_PureComponent) {
                     if (response.status === 'connected') {
                         FB.api('/me', function (response) {
                             var facebookId = response.id;
-                            _store2.default.dispatch(actions.updateFacebookId(facebookId));
+
                             _store2.default.dispatch(actions.lookupPlayer(facebookId)).then(function (result) {
+                                _store2.default.dispatch(actions.hideButtons());
+
                                 if (result) {
                                     _this2.startGame();
                                 }
@@ -7239,12 +7264,12 @@ var Login = function (_PureComponent) {
                 'div',
                 null,
                 this.props.showRegistration ? _react2.default.createElement(_registration2.default, null) : null,
-                this.state.showButtons ? _react2.default.createElement('input', {
+                this.props.showButtons ? _react2.default.createElement('input', {
                     type: 'submit',
                     value: 'Play as a Guest',
                     onClick: this.playAsAGuest
                 }) : null,
-                this.state.showButtons ? _react2.default.createElement(_facebookLogin2.default, null) : null
+                this.props.showButtons ? _react2.default.createElement(_facebookLogin2.default, null) : null
             );
         }
     }]);
@@ -7254,7 +7279,8 @@ var Login = function (_PureComponent) {
 
 exports.default = (0, _reactRedux.connect)(function (storeState) {
     return {
-        showRegistration: storeState.showRegistration
+        showRegistration: storeState.showRegistration,
+        showButtons: storeState.showButtons
     };
 })(Login);
 
@@ -7401,6 +7427,20 @@ var speedReducer = function speedReducer() {
     }
 };
 
+var showButtonsReducer = function showButtonsReducer() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+    var action = arguments[1];
+
+    switch (action.type) {
+        case 'HIDE_BUTTONS':
+            {
+                return false;
+            }
+        default:
+            return state;
+    }
+};
+
 var allReducers = (0, _redux.combineReducers)({
     gameHighestScore: gameHighestScoreReducer,
     facebookId: facebookIdReducer,
@@ -7410,7 +7450,8 @@ var allReducers = (0, _redux.combineReducers)({
     shouldGenerateBgObject: shouldGenerateBgObjectReducer,
     shouldGenerateMgObject: shouldGenerateMgObjectReducer,
     showRegistration: showRegistrationReducer,
-    speed: speedReducer
+    speed: speedReducer,
+    showButtons: showButtonsReducer
 });
 
 exports.default = allReducers;
