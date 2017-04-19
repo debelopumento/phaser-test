@@ -7,7 +7,6 @@ import { Provider } from 'react-redux';
 import FacebookLoginButton from './facebookLogin';
 import store from './store';
 import Game from './game_init';
-import state from './states/state';
 import { connect } from 'react-redux';
 import * as actions from './actions/actionIndex';
 import Registration from './registration';
