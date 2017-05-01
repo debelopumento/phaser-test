@@ -12,16 +12,9 @@ import store from '../store';
 import * as actions from '../actions/actionIndex';
 import * as gameActions from '../actions/action_game';
 
+const HEIGHT = config.gameHeight;
+const WIDTH = config.gameWidth;
 
-const maxWidth = 760;
-const maxHeight = 414;
-const docElement = document.documentElement;
-const WIDTH = docElement.clientWidth > maxWidth
-    ? maxWidth
-    : docElement.clientWidth;
-const HEIGHT = docElement.clientHeight > maxHeight
-    ? maxHeight
-    : docElement.clientHeight;
 export default class GameState extends Phaser.State {
   init() {
     this.speed = 1;
@@ -202,13 +195,6 @@ export default class GameState extends Phaser.State {
   }
 
   update() {
-    let docElement = document.documentElement;
-    let WIDTH = docElement.clientWidth > maxWidth
-      ? maxWidth
-      : docElement.clientWidth;
-    let HEIGHT = docElement.clientHeight > maxHeight
-      ? maxHeight
-      : docElement.clientHeight;     
     //environment
     this.physics.arcade.collide(this.player, this.ledges);
     this.ledgeGenerationRate += 0.00213;
