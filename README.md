@@ -11,6 +11,7 @@ Live site of this game:
 - The Front End of the game is built using HTML5, CSS3, React, Redux.
 - The Backend is built using Node JS with ExpressJS as the web server and MongoDB as the database.
 - The game is deployed on Heroku
+- SpeechRecognition API was implemented but only works on Chrome on desktops. User can say "jump" to make the character jump. The alternative control is tapping or mouse clicking on non-Chrome browsers and mobile devices.
 
 ## Run code locally
 ```sh
@@ -18,5 +19,3 @@ npm install
 npm start
 ```
 Then open [http://localhost:3000/](http://localhost:3000/)
-
-
