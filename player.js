@@ -22,7 +22,7 @@ export default class Player extends Phaser.Sprite {
 
             //if player's highest score is lower than 300, show tutorial alert
             if (store.getState().playerHighestScore <= 300) {
-                alert(`Say 'Jump' or tap / mouse click to make the character jump!`);
+                alert(`Say 'Jump' or tap/click to make the character jump!`);
             }
 
             const startSpeechRecognition = () => {
@@ -30,10 +30,10 @@ export default class Player extends Phaser.Sprite {
                 speechRecognizer.start();
                 speechRecognizer.onresult = event => {
                     const transcript = event.results[0][0].transcript;
-                    if (transcript === 'jump' || this.body.touching.down) {
+                    if (transcript === 'jump') {
+                        this.body.velocity.y = -400;
+                        speechRecognizer.stop();
                     }
-                    this.body.velocity.y = -400;
-                    speechRecognizer.stop();
                 };
                 speechRecognizer.onspeechend = () => {
                     startSpeechRecognition();
@@ -47,13 +47,13 @@ export default class Player extends Phaser.Sprite {
             alert(
                 `Speech Recognition does not support your browser. Please try out the Voice Control function in this game by using Google Chrome on a computer. If you are using Google Chrome on a computer, please upgrade!`
             );
-            game.input.onUp.add(() => {
-                //only allow player to jump when body is touching the ground
-                if (this.body.touching.down) {
-                    this.body.velocity.y = -400 + store.getState().speed;
-                }
-            });
         }
+        game.input.onUp.add(() => {
+            //only allow player to jump when body is touching the ground
+            if (this.body.touching.down) {
+                this.body.velocity.y = -400 + store.getState().speed;
+            }
+        });
     }
 
     update() {
