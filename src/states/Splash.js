@@ -3,8 +3,6 @@ import { centerGameObjects } from '../utils';
 import TextButton from '../sprites/textButton';
 
 export default class SplashState extends Phaser.State {
-  init() {}
-
   preload() {
     //this.load.setPreloadSprite(this.loaderBar);
     const assets = [
@@ -32,7 +30,6 @@ export default class SplashState extends Phaser.State {
       const path = 'assets/images/' + asset + '.png';
       this.load.image(asset, path);
     });
-    //this.load.spritesheet('dude', 'assets/images/dude.png', 64, 96);
     this.load.spritesheet('bride', 'assets/images/bride.png', 64, 64);
 
     this.load.image('button', 'assets/images/button.png', 40, 10, 3);
@@ -52,9 +49,6 @@ export default class SplashState extends Phaser.State {
     });
     this.start.scale.setTo(0.7, 0.7);
     this.add.existing(this.start);
-    this.start.onInputDown.add(() => {
-      //this.state.start('Game');
-    });
     this.state.start('Game');
   }
 }
