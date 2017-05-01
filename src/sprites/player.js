@@ -22,7 +22,7 @@ export default class Player extends Phaser.Sprite {
 
             //if player's highest score is lower than 300, show tutorial alert
             if (store.getState().playerHighestScore <= 300) {
-                alert(`Say 'Jump' to make the character jump!`);
+                alert(`Say 'Jump' or tap / mouse click to make the character jump!`);
             }
 
             const startSpeechRecognition = () => {
@@ -30,7 +30,7 @@ export default class Player extends Phaser.Sprite {
                 speechRecognizer.start();
                 speechRecognizer.onresult = event => {
                     const transcript = event.results[0][0].transcript;
-                    if (transcript === 'jump') {
+                    if (transcript === 'jump' || this.body.touching.down) {
                     }
                     this.body.velocity.y = -400;
                     speechRecognizer.stop();
